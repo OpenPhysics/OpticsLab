@@ -44,6 +44,7 @@ import { Tandem } from "scenerystack/tandem";
 import { describe, expect, it } from "vitest";
 import { type ComponentKey, createDefaultElement } from "../src/common/model/ComponentFactory.js";
 import { OpticsScene } from "../src/common/model/optics/OpticsScene.js";
+import type { BaseOpticalElementView } from "../src/common/view/BaseOpticalElementView.js";
 import { createOpticalElementView } from "../src/common/view/OpticalElementViewFactory.js";
 import { trackRegistry } from "../src/common/view/TrackRegistry.js";
 import { ViewOptionsModel } from "../src/common/view/ViewOptionsModel.js";
@@ -117,7 +118,7 @@ const ALL_KEYS: ComponentKey[] = [
  */
 async function forceGC(earlyExitRef?: WeakRef<object>): Promise<void> {
   for (let i = 0; i < 15; i++) {
-    global.gc?.();
+    globalThis.gc?.();
     // Yield to a new macrotask so the GC has processed any pending finalization.
     await new Promise<void>((r) => setTimeout(r, 50));
     if (earlyExitRef !== undefined && earlyExitRef.deref() === undefined) {
@@ -172,11 +173,11 @@ function createWithViewAndExternalListener(
   // Simulate an external UI component (e.g. EditContainerNode) subscribing
   // to geometry-change notifications.  rebuildEmitter.dispose() must remove
   // this listener so it does not prevent the view from being collected.
-  view?.rebuildEmitter.addListener(() => {
+  (view as BaseOpticalElementView | null)?.rebuildEmitter.addListener(() => {
     /* no-op: simulates EditContainerNode syncing edit controls */
   });
   // Trigger the emitter once so the listener is exercised before disposal.
-  view?.rebuild();
+  (view as BaseOpticalElementView | null)?.rebuild();
 
   // Normal disposal: rebuildEmitter.dispose() removes the external listener.
   view?.dispose();
@@ -217,11 +218,11 @@ function createWithViewSelected(
   const elementRef = new WeakRef<object>(el);
   const viewRef = view ? new WeakRef<object>(view) : null;
   // Rebuild first so the selection frame has real child bounds to measure.
-  view?.rebuild();
+  (view as BaseOpticalElementView | null)?.rebuild();
   // Exercise select → deselect → select to stress bookkeeping state changes.
-  view?.setSelected(true);
-  view?.setSelected(false);
-  view?.setSelected(true);
+  (view as BaseOpticalElementView | null)?.setSelected(true);
+  (view as BaseOpticalElementView | null)?.setSelected(false);
+  (view as BaseOpticalElementView | null)?.setSelected(true);
   view?.dispose();
   el.dispose();
   return { elementRef, viewRef };
@@ -272,7 +273,7 @@ describe("Memory leak regression", () => {
   const mvt = ModelViewTransform2.createSinglePointScaleInvertedYMapping(Vector2.ZERO, new Vector2(500, 400), 100);
 
   it("global.gc is available (--expose-gc)", () => {
-    expect(global.gc).toBeDefined();
+    expect(globalThis.gc).toBeDefined();
   });
 
   it("sanity: plain object is collected", async () => {
