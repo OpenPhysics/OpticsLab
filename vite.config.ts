@@ -51,10 +51,11 @@ export default defineConfig({
       registerType: "autoUpdate",
       includeAssets: ["favicon.ico", "icons/apple-touch-icon.png"],
       manifest: {
-        name: "opticsLab",
+        name: "Optics Lab",
         // biome-ignore lint/style/useNamingConvention: Web App Manifest spec requires snake_case keys
-        short_name: "opticsLab",
-        description: "opticsLab simulation",
+        short_name: "OpticsLab",
+        description:
+          "Web-based geometric optics simulation with ray sources, mirrors, lenses, beam splitters, and refraction interfaces.",
         // biome-ignore lint/style/useNamingConvention: Web App Manifest spec requires snake_case keys
         theme_color: "#1a1a2e",
         // biome-ignore lint/style/useNamingConvention: Web App Manifest spec requires snake_case keys
