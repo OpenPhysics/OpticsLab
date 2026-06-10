@@ -1,6 +1,8 @@
 #!/bin/sh
-# Pre-commit hook: auto-format and lint the project with Biome.
+# Pre-commit hook: auto-format and lint with Biome.
 # Aborts the commit if unfixable lint errors remain after auto-fix.
+#
+# Activated by: npm install (prepare script sets core.hooksPath)
 
 STAGED=$(git diff --cached --name-only --diff-filter=ACMR | grep -E '\.(ts|js|json|html)$')
 
@@ -10,18 +12,10 @@ fi
 
 echo "Running Biome fix on staged files..."
 
-BIOME="./node_modules/.bin/biome"
-
-if [ ! -f "$BIOME" ]; then
-  echo "Biome not found at $BIOME. Run 'npm install' first."
-  exit 1
-fi
-
-$BIOME check --write . --no-errors-on-unmatched
+npm run fix --silent -- --no-errors-on-unmatched
 
 STATUS=$?
 
-# Re-stage the files that were originally staged (biome may have modified them)
 echo "$STAGED" | xargs git add
 
 if [ $STATUS -ne 0 ]; then

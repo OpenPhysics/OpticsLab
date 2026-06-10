@@ -49,6 +49,6 @@ After changes, run `npm run lint && npm run check && npm run build`.
 ## Development notes
 
 - **Pure client-side** — no backend, database, or external services
-- **Git hooks** — `.githooks/` (not Husky). `npm install` runs `prepare` to set `core.hooksPath`. Pre-commit auto-fixes with Biome; pre-push runs lint + type-check
 - **ES2024 target** — `tsconfig.json` and Vite `build.target` use ES2024 (Vite 8+). If build fails on unknown target, run `npm ci`
 - **Tests** — Vitest with `happy-dom` and Canvas 2D mock (`tests/setup.ts`); no browser required
+- **Hook bypass** — `npm run commit:skip` / `npm run push:skip` (OpticsLab-only convenience scripts)

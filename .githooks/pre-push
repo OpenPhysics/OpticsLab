@@ -1,16 +1,10 @@
 #!/bin/sh
-# Pre-push hook: run full lint and type-check before pushing.
-# Blocks the push if there are lint errors or type errors.
-
-BIOME="./node_modules/.bin/biome"
-
-if [ ! -f "$BIOME" ]; then
-  echo "Biome not found at $BIOME. Run 'npm install' first."
-  exit 1
-fi
+# Pre-push hook: run lint and type-check before pushing.
+#
+# Activated by: npm install (prepare script sets core.hooksPath)
 
 echo "Running Biome lint check..."
-$BIOME lint .
+npm run lint --silent
 LINT_STATUS=$?
 
 if [ $LINT_STATUS -ne 0 ]; then

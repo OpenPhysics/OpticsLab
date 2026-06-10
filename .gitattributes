@@ -1,5 +1,34 @@
-# Normalise all text files to LF in the repository (avoids CRLF warnings on WSL/Windows)
+# Ensure consistent LF line endings for all text files
 * text=auto eol=lf
 
-# Ensure shell scripts always use LF (fixes "cannot exec" on WSL)
+# Explicitly set common file types
+*.ts text eol=lf
+*.tsx text eol=lf
+*.js text eol=lf
+*.mjs text eol=lf
+*.json text eol=lf
+*.css text eol=lf
+*.html text eol=lf
+*.md text eol=lf
+*.svg text eol=lf
+*.yml text eol=lf
+*.yaml text eol=lf
+
+# Git hooks (SceneryStack sims use .githooks/)
 .githooks/* text eol=lf
+
+# Binary files (no conversion)
+*.png binary
+*.jpg binary
+*.jpeg binary
+*.gif binary
+*.webp binary
+*.ico binary
+*.mp4 binary
+*.webm binary
+*.ogg binary
+*.wav binary
+*.woff binary
+*.woff2 binary
+*.ttf binary
+*.wasm binary
