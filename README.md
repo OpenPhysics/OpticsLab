@@ -1,15 +1,15 @@
 # OpticsLab
 
-A web-based simulation for geometric optical scenes, built with TypeScript and [SceneryStack](https://scenerystack.org/).
+A web-based geometric optics simulation built with [SceneryStack](https://scenerystack.org/). Build scenes
+with light sources, mirrors, lenses, beam splitters, and refracting interfaces.
 
 ## Features
 
-- Multiple light source types: rays, parallel and divergent beams, and point sources.
-- Reflection at linear and curved mirrors.
-- Beam splitters.
-- Refraction at linear and curved interfaces.
-- Ideal lenses and mirrors.
-- Spherical lenses.
+- Ray, parallel-beam, divergent-beam, and point light sources
+- Reflection at linear and curved mirrors; refraction at curved interfaces
+- Ideal lenses and mirrors, spherical lenses, and beam splitters
+- English and French UI, projector color profile, and PWA support
+- Vitest unit tests for core optics model logic
 
 ## Quick Start
 
@@ -30,18 +30,10 @@ npm start        # dev server → http://localhost:5173
 | `npm run lint` | Biome lint check |
 | `npm run format` | Auto-format all files |
 | `npm run fix` | Lint + auto-fix |
-| `npm run icons` | Regenerate icons from `public/icons/icon.svg` |
+| `npm test` | Run Vitest unit tests |
+| `npm run generate-svg-icon` | Generate `public/icons/icon.svg` from optics script |
+| `npm run icons` | Regenerate PNG icons from `public/icons/icon.svg` |
 | `npm run clean` | Remove `dist/` |
-
-## Deployment
-
-The repository includes GitHub Actions workflows:
-
-- **`ci.yml`** — Runs on every push and pull request: Biome (format, lint, assist), TypeScript check, and production build
-- **`deploy.yml`** — Builds and deploys to GitHub Pages on push to `main`
-
-For GitHub Pages deployment, set **Settings → Pages → Source** to **GitHub Actions**. For other hosting
-targets, upload the contents of `dist/` to any static file server.
 
 ## Tech Stack
 
