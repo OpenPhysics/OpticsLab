@@ -40,8 +40,6 @@ Geometric optics simulation: ray tracing through lenses, mirrors, beam splitters
 ```bash
 npm test                  # Vitest unit tests
 npm run generate-svg-icon # Regenerate icon SVG before icons
-npm run commit:skip       # git commit --no-verify (bypass hooks)
-npm run push:skip         # git push --no-verify (bypass hooks)
 ```
 
 After changes, run `npm run lint && npm run check && npm run build`.
@@ -51,4 +49,3 @@ After changes, run `npm run lint && npm run check && npm run build`.
 - **Pure client-side** — no backend, database, or external services
 - **ES2024 target** — `tsconfig.json` and Vite `build.target` use ES2024 (Vite 8+). If build fails on unknown target, run `npm ci`
 - **Tests** — Vitest with `happy-dom` and Canvas 2D mock (`tests/setup.ts`); no browser required
-- **Hook bypass** — `npm run commit:skip` / `npm run push:skip` (OpticsLab-only convenience scripts)
