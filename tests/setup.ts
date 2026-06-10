@@ -149,22 +149,22 @@ class MockAudioContext {
     return Promise.resolve();
   }
 }
-(globalThis as Record<string, unknown>).AudioContext = MockAudioContext;
-(globalThis as Record<string, unknown>).webkitAudioContext = MockAudioContext;
+(globalThis as Record<string, unknown>)["AudioContext"] = MockAudioContext;
+(globalThis as Record<string, unknown>)["webkitAudioContext"] = MockAudioContext;
 
 // ── Canvas 2D mock (patch before any scenerystack import) ───────────────────
 const origGetContext: typeof HTMLCanvasElement.prototype.getContext = HTMLCanvasElement.prototype.getContext;
-HTMLCanvasElement.prototype.getContext = function (contextId: string, ...args: unknown[]) {
+HTMLCanvasElement.prototype.getContext = function (this: HTMLCanvasElement, contextId: string, ...args: unknown[]) {
   if (contextId === "2d") {
     const ctx = createMockContext2D();
-    (ctx as Record<string, unknown>).canvas = this;
+    (ctx as unknown as Record<string, unknown>)["canvas"] = this;
     return ctx as unknown as ReturnType<typeof origGetContext>;
   }
   return origGetContext.call(this, contextId, ...args) as ReturnType<typeof origGetContext>;
 } as typeof origGetContext;
 
 // ── SceneryStack init ───────────────────────────────────────────────────────
-import { init } from "scenerystack/init";
+import { init, madeWithSceneryStackSplashDataURI } from "scenerystack/init";
 
 init({
   name: "opticsLab",
@@ -172,6 +172,7 @@ init({
   brand: "made-with-scenerystack",
   locale: "en",
   availableLocales: ["en"],
+  splashDataURI: madeWithSceneryStackSplashDataURI,
   allowLocaleSwitching: false,
   colorProfiles: ["default"],
 });
