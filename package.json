@@ -43,7 +43,7 @@
     "clean": "rm -rf dist",
     "generate-svg-icon": "tsx scripts/opticsToSVG.ts",
     "icons": "npm run generate-svg-icon && tsx scripts/generate-icons.ts",
-    "prepare": "git config core.hooksPath .githooks",
+    "prepare": "git rev-parse --is-inside-work-tree >/dev/null 2>&1 && git config core.hooksPath .githooks || true",
     "commit:skip": "git commit --no-verify",
     "push:skip": "git push --no-verify"
   },
