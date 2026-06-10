@@ -37,7 +37,7 @@ export default defineConfig({
   // So the build can be served from an arbitrary path
   base: "./",
   build: {
-    // Requires Vite 8+ / esbuild ≥0.24 (see package-lock). Run `npm ci` if build errors on ES2024.
+    // Requires Vite 8+ / esbuild ≥0.24. Run `npm ci` if build errors on ES2024.
     target: "es2024",
   },
   server: {
