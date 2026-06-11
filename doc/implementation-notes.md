@@ -1,4 +1,4 @@
-# Implementation notes (OpticsLab)
+# Implementation Notes - OpticsLab Simulation
 
 Notes for developers maintaining or extending the simulation. For **physics assumptions**, see [`model.md`](model.md). For **setup and scripts**, see the root [`README.md`](../README.md).
 
