@@ -8,6 +8,7 @@
 import { LocalizedString, type ReadOnlyProperty } from "scenerystack";
 import opticsLab from "../OpticsLabNamespace.js";
 import stringsEn from "./strings_en.json";
+import stringsEs from "./strings_es.json";
 import stringsFr from "./strings_fr.json";
 
 // ── Compile-time key-parity check ─────────────────────────────────────────────
@@ -25,6 +26,7 @@ export class StringManager {
     this.stringProperties = LocalizedString.getNestedStringProperties({
       en: stringsEn,
       fr: stringsFr,
+      es: stringsEs,
     });
   }
 
