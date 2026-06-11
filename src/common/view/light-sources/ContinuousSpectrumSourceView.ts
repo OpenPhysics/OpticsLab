@@ -24,7 +24,7 @@ import {
   CONT_SPECTRUM_SAMPLE_WL,
   CONT_SPECTRUM_STROKE_WIDTH,
 } from "../../../OpticsLabConstants.js";
-import opticsLab from "../../../OpticsLabNamespace.js";
+import OpticsLabNamespace from "../../../OpticsLabNamespace.js";
 import type { ContinuousSpectrumSource } from "../../model/light-sources/ContinuousSpectrumSource.js";
 import { BaseOpticalElementView } from "../BaseOpticalElementView.js";
 import { attachTranslationDrag, type DragHandle, makeEndpointHandle } from "../ViewHelpers.js";
@@ -212,4 +212,4 @@ export class ContinuousSpectrumSourceView extends BaseOpticalElementView {
   }
 }
 
-opticsLab.register("ContinuousSpectrumSourceView", ContinuousSpectrumSourceView);
+OpticsLabNamespace.register("ContinuousSpectrumSourceView", ContinuousSpectrumSourceView);

@@ -30,7 +30,7 @@ import {
   SPHERICAL_CURVATURE_D_MIN,
   SPHERICAL_MIN_VERTEX_COUNT,
 } from "../../../OpticsLabConstants.js";
-import opticsLab from "../../../OpticsLabNamespace.js";
+import OpticsLabNamespace from "../../../OpticsLabNamespace.js";
 import type { GlassPathPoint } from "../../model/glass/Glass.js";
 import type { SphericalLens } from "../../model/glass/SphericalLens.js";
 import { buildDiamondShape, createHandle } from "../ViewHelpers.js";
@@ -577,7 +577,7 @@ export class SphericalLensView extends GlassView {
   }
 }
 
-opticsLab.register("SphericalLensView", SphericalLensView);
+OpticsLabNamespace.register("SphericalLensView", SphericalLensView);
 
 /**
  * Local mirror of SphericalLens.computeCurveShift (not exported from the model).

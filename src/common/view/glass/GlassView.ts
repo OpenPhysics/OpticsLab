@@ -23,7 +23,7 @@ import {
   PRISM_EDGE_ADD_RADIUS,
   PRISM_VERTEX_REMOVE_RADIUS,
 } from "../../../OpticsLabConstants.js";
-import opticsLab from "../../../OpticsLabNamespace.js";
+import OpticsLabNamespace from "../../../OpticsLabNamespace.js";
 import type { Glass, GlassPathPoint } from "../../model/glass/Glass.js";
 import {
   distance,
@@ -390,4 +390,4 @@ export class GlassView extends BaseOpticalElementView {
   }
 }
 
-opticsLab.register("GlassView", GlassView);
+OpticsLabNamespace.register("GlassView", GlassView);

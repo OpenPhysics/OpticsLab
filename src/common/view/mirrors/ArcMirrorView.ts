@@ -17,7 +17,7 @@ import {
   MIRROR_FOCAL_MARKER_SIZE_M,
   MIRROR_FRONT_WIDTH,
 } from "../../../OpticsLabConstants.js";
-import opticsLab from "../../../OpticsLabNamespace.js";
+import OpticsLabNamespace from "../../../OpticsLabNamespace.js";
 import type { ArcMirror } from "../../model/mirrors/ArcMirror.js";
 import { circumcenter, sampleArcPoints } from "../../model/optics/Geometry.js";
 import { BaseOpticalElementView } from "../BaseOpticalElementView.js";
@@ -205,4 +205,4 @@ export class ArcMirrorView extends BaseOpticalElementView {
   }
 }
 
-opticsLab.register("ArcMirrorView", ArcMirrorView);
+OpticsLabNamespace.register("ArcMirrorView", ArcMirrorView);

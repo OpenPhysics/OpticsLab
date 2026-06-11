@@ -1,6 +1,6 @@
 import { Screen } from "scenerystack/sim";
 import type { OpticsLabScreenOptions } from "../common/SimScreen.js";
-import opticsLab from "../OpticsLabNamespace.js";
+import OpticsLabNamespace from "../OpticsLabNamespace.js";
 import { DiffractionModel } from "./DiffractionModel.js";
 import { DiffractionScreenView } from "./DiffractionScreenView.js";
 
@@ -20,4 +20,4 @@ export class DiffractionScreen extends Screen<DiffractionModel, DiffractionScree
   }
 }
 
-opticsLab.register("DiffractionScreen", DiffractionScreen);
+OpticsLabNamespace.register("DiffractionScreen", DiffractionScreen);

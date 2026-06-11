@@ -22,7 +22,7 @@ import {
   IDEAL_MIRROR_TICK_LINE_WIDTH,
   MIRROR_FOCAL_MARKER_SIZE_M,
 } from "../../../OpticsLabConstants.js";
-import opticsLab from "../../../OpticsLabNamespace.js";
+import OpticsLabNamespace from "../../../OpticsLabNamespace.js";
 import type { IdealCurvedMirror } from "../../model/mirrors/IdealCurvedMirror.js";
 import { BaseOpticalElementView } from "../BaseOpticalElementView.js";
 import {
@@ -227,4 +227,4 @@ export class IdealCurvedMirrorView extends BaseOpticalElementView {
   }
 }
 
-opticsLab.register("IdealCurvedMirrorView", IdealCurvedMirrorView);
+OpticsLabNamespace.register("IdealCurvedMirrorView", IdealCurvedMirrorView);

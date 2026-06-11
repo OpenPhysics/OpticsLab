@@ -19,7 +19,7 @@
 
 import type { ModelViewTransform2 } from "scenerystack/phetcommon";
 import { Tandem } from "scenerystack/tandem";
-import opticsLab from "../../../OpticsLabNamespace.js";
+import OpticsLabNamespace from "../../../OpticsLabNamespace.js";
 import type { GlassPathPoint } from "../../model/glass/Glass.js";
 import type { SphericalLens } from "../../model/glass/SphericalLens.js";
 import type { ViewOptionsModel } from "../ViewOptionsModel.js";
@@ -112,4 +112,4 @@ export class SymmetricLensView extends SphericalLensView {
   }
 }
 
-opticsLab.register("SymmetricLensView", SymmetricLensView);
+OpticsLabNamespace.register("SymmetricLensView", SymmetricLensView);

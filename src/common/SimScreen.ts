@@ -1,5 +1,5 @@
 import { Screen, type ScreenOptions } from "scenerystack/sim";
-import opticsLab from "../OpticsLabNamespace.js";
+import OpticsLabNamespace from "../OpticsLabNamespace.js";
 import type { OpticsLabPreferencesModel } from "../preferences/OpticsLabPreferencesModel.js";
 import { RayTracingCommonModel } from "./model/SimModel.js";
 import type { ComponentKey } from "./view/ComponentCarousel.js";
@@ -32,4 +32,4 @@ export class RayTracingCommonScreen extends Screen<RayTracingCommonModel, RayTra
   }
 }
 
-opticsLab.register("RayTracingCommonScreen", RayTracingCommonScreen);
+OpticsLabNamespace.register("RayTracingCommonScreen", RayTracingCommonScreen);

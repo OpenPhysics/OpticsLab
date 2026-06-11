@@ -1,6 +1,6 @@
 import { RayTracingCommonModel } from "../common/model/SimModel.js";
-import opticsLab from "../OpticsLabNamespace.js";
+import OpticsLabNamespace from "../OpticsLabNamespace.js";
 
 export class IntroModel extends RayTracingCommonModel {}
 
-opticsLab.register("IntroModel", IntroModel);
+OpticsLabNamespace.register("IntroModel", IntroModel);

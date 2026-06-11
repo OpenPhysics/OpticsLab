@@ -7,8 +7,8 @@
  */
 
 import { BooleanProperty } from "scenerystack/axon";
-import opticsLab from "../../OpticsLabNamespace.js";
+import OpticsLabNamespace from "../../OpticsLabNamespace.js";
 
 export const handlesVisibleProperty = new BooleanProperty(true);
 
-opticsLab.register("handlesVisibleProperty", handlesVisibleProperty);
+OpticsLabNamespace.register("handlesVisibleProperty", handlesVisibleProperty);

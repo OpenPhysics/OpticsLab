@@ -1,5 +1,5 @@
 import type { Tandem } from "scenerystack/tandem";
-import opticsLab from "../../OpticsLabNamespace.js";
+import OpticsLabNamespace from "../../OpticsLabNamespace.js";
 import opticsLabQueryParameters from "../../preferences/opticsLabQueryParameters.js";
 import { DetectorElement } from "./detectors/DetectorElement.js";
 import { OpticsScene } from "./optics/OpticsScene.js";
@@ -32,4 +32,4 @@ export class RayTracingCommonModel {
   }
 }
 
-opticsLab.register("RayTracingCommonModel", RayTracingCommonModel);
+OpticsLabNamespace.register("RayTracingCommonModel", RayTracingCommonModel);

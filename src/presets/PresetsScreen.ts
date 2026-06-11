@@ -1,6 +1,6 @@
 import { Screen } from "scenerystack/sim";
 import type { OpticsLabScreenOptions } from "../common/SimScreen.js";
-import opticsLab from "../OpticsLabNamespace.js";
+import OpticsLabNamespace from "../OpticsLabNamespace.js";
 import { PresetsModel } from "./PresetsModel.js";
 import { PresetsScreenView } from "./PresetsScreenView.js";
 
@@ -20,4 +20,4 @@ export class PresetsScreen extends Screen<PresetsModel, PresetsScreenView> {
   }
 }
 
-opticsLab.register("PresetsScreen", PresetsScreen);
+OpticsLabNamespace.register("PresetsScreen", PresetsScreen);

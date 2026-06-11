@@ -18,7 +18,7 @@ import { Circle, Node, RichDragListener, Text } from "scenerystack/scenery";
 import { Tandem } from "scenerystack/tandem";
 import OpticsLabColors from "../../OpticsLabColors.js";
 import { FONT_11PX } from "../../OpticsLabConstants.js";
-import opticsLab from "../../OpticsLabNamespace.js";
+import OpticsLabNamespace from "../../OpticsLabNamespace.js";
 import type { Observer } from "../model/optics/OpticsTypes.js";
 
 export const DEFAULT_OBSERVER: Observer = {
@@ -166,4 +166,4 @@ export class ObserverNode extends Node {
   }
 }
 
-opticsLab.register("ObserverNode", ObserverNode);
+OpticsLabNamespace.register("ObserverNode", ObserverNode);

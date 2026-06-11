@@ -22,7 +22,7 @@ import {
   IDEAL_LENS_LINE_WIDTH,
   MIRROR_FOCAL_MARKER_SIZE_M,
 } from "../../../OpticsLabConstants.js";
-import opticsLab from "../../../OpticsLabNamespace.js";
+import OpticsLabNamespace from "../../../OpticsLabNamespace.js";
 import type { IdealLens } from "../../model/glass/IdealLens.js";
 import { BaseOpticalElementView } from "../BaseOpticalElementView.js";
 import {
@@ -251,4 +251,4 @@ export class IdealLensView extends BaseOpticalElementView {
   }
 }
 
-opticsLab.register("IdealLensView", IdealLensView);
+OpticsLabNamespace.register("IdealLensView", IdealLensView);

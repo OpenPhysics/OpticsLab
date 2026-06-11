@@ -1,7 +1,7 @@
 import { Property } from "scenerystack/axon";
 import { StringUnionIO, type Tandem } from "scenerystack/tandem";
 import { RayTracingCommonModel } from "../common/model/SimModel.js";
-import opticsLab from "../OpticsLabNamespace.js";
+import OpticsLabNamespace from "../OpticsLabNamespace.js";
 import { getPresetDescriptors, PRESET_ID_VALUES, type PresetId } from "./PresetScenes.js";
 
 const PresetIdIO = StringUnionIO(PRESET_ID_VALUES);
@@ -38,4 +38,4 @@ export class PresetsModel extends RayTracingCommonModel {
   }
 }
 
-opticsLab.register("PresetsModel", PresetsModel);
+OpticsLabNamespace.register("PresetsModel", PresetsModel);

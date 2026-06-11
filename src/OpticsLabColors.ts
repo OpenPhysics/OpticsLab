@@ -5,8 +5,8 @@
  * support for different color profiles (default and projector mode).
  */
 
-import { Color, ProfileColorProperty } from "scenerystack";
-import opticsLab from "./OpticsLabNamespace.js";
+import { Color, ProfileColorProperty } from "scenerystack/scenery";
+import OpticsLabNamespace from "./OpticsLabNamespace.js";
 
 // ── Base colors ───────────────────────────────────────────────────────────
 const BLACK = new Color(0, 0, 0);
@@ -18,7 +18,7 @@ function profileColor(
   defaultColor: Color | string,
   projectorColor: Color | string,
 ): ProfileColorProperty {
-  return new ProfileColorProperty(opticsLab, name, {
+  return new ProfileColorProperty(OpticsLabNamespace, name, {
     default: defaultColor,
     projector: projectorColor,
   });
@@ -313,8 +313,6 @@ const OpticsLabColors = {
     "rgba(160, 100, 10, 0.5)",
   ),
 };
-
-opticsLab.register("OpticsLabColors", OpticsLabColors);
 
 /**
  * Returns the fill color for any glass element, scaling opacity with the

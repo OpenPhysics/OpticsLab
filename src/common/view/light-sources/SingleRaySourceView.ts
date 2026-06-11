@@ -17,7 +17,7 @@ import {
   SINGLE_RAY_ORIGIN_RADIUS_PX,
   SINGLE_RAY_ORIGIN_STROKE_WIDTH,
 } from "../../../OpticsLabConstants.js";
-import opticsLab from "../../../OpticsLabNamespace.js";
+import OpticsLabNamespace from "../../../OpticsLabNamespace.js";
 import type { SingleRaySource } from "../../model/light-sources/SingleRaySource.js";
 import { BaseOpticalElementView } from "../BaseOpticalElementView.js";
 import { attachTranslationDrag, type DragHandle, makeEndpointHandle } from "../ViewHelpers.js";
@@ -154,4 +154,4 @@ export class SingleRaySourceView extends BaseOpticalElementView {
   }
 }
 
-opticsLab.register("SingleRaySourceView", SingleRaySourceView);
+OpticsLabNamespace.register("SingleRaySourceView", SingleRaySourceView);

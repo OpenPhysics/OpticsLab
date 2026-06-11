@@ -32,7 +32,7 @@ import {
   ROTATION_INDICATOR_RADIUS,
   ROTATION_INDICATOR_START_ANGLE,
 } from "../../../OpticsLabConstants.js";
-import opticsLab from "../../../OpticsLabNamespace.js";
+import OpticsLabNamespace from "../../../OpticsLabNamespace.js";
 import type { Glass } from "../../model/glass/Glass.js";
 import { createHandle } from "../ViewHelpers.js";
 import type { ViewOptionsModel } from "../ViewOptionsModel.js";
@@ -387,4 +387,4 @@ export class TypedPrismView extends GlassView {
   }
 }
 
-opticsLab.register("TypedPrismView", TypedPrismView);
+OpticsLabNamespace.register("TypedPrismView", TypedPrismView);

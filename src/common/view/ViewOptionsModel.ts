@@ -19,7 +19,7 @@ import { BooleanProperty, NumberProperty } from "scenerystack/axon";
 import { Range } from "scenerystack/dot";
 import type { Tandem } from "scenerystack/tandem";
 import { RAY_STUB_LENGTH_MAX_PX, RAY_STUB_LENGTH_MIN_PX } from "../../OpticsLabConstants.js";
-import opticsLab from "../../OpticsLabNamespace.js";
+import OpticsLabNamespace from "../../OpticsLabNamespace.js";
 import opticsLabQueryParameters from "../../preferences/opticsLabQueryParameters.js";
 
 export class ViewOptionsModel {
@@ -69,4 +69,4 @@ export class ViewOptionsModel {
   }
 }
 
-opticsLab.register("ViewOptionsModel", ViewOptionsModel);
+OpticsLabNamespace.register("ViewOptionsModel", ViewOptionsModel);

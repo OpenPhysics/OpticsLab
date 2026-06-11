@@ -5,8 +5,8 @@
  * Provides access to localized strings for all components.
  */
 
-import { LocalizedString, type ReadOnlyProperty } from "scenerystack";
-import opticsLab from "../OpticsLabNamespace.js";
+import type { ReadOnlyProperty } from "scenerystack/axon";
+import { LocalizedString } from "scenerystack/chipper";
 import stringsEn from "./strings_en.json";
 import stringsEs from "./strings_es.json";
 import stringsFr from "./strings_fr.json";
@@ -18,28 +18,29 @@ void (stringsEn satisfies typeof stringsFr);
 // biome-ignore lint/complexity/noVoid: intentional compile-time type assertion
 void (stringsFr satisfies typeof stringsEn);
 
+// ── Build the reactive string property tree ───────────────────────────────────
+const stringProperties = LocalizedString.getNestedStringProperties({
+  en: stringsEn,
+  fr: stringsFr,
+  es: stringsEs,
+});
+
 export class StringManager {
-  private static instance: StringManager;
-  private readonly stringProperties;
+  private static instance: StringManager | null = null;
 
   private constructor() {
-    this.stringProperties = LocalizedString.getNestedStringProperties({
-      en: stringsEn,
-      fr: stringsFr,
-      es: stringsEs,
-    });
+    // Private — obtain via getInstance()
   }
 
   public static getInstance(): StringManager {
-    if (!StringManager.instance) {
+    if (StringManager.instance === null) {
       StringManager.instance = new StringManager();
-      opticsLab.register("StringManager", StringManager.instance);
     }
     return StringManager.instance;
   }
 
   public getTitleStringProperty(): ReadOnlyProperty<string> {
-    return this.stringProperties.titleStringProperty;
+    return stringProperties.titleStringProperty;
   }
 
   public getScreenNames(): {
@@ -50,11 +51,11 @@ export class StringManager {
     diffractionStringProperty: ReadOnlyProperty<string>;
   } {
     return {
-      simStringProperty: this.stringProperties.screens.simStringProperty,
-      introStringProperty: this.stringProperties.screens.introStringProperty,
-      labStringProperty: this.stringProperties.screens.labStringProperty,
-      presetsStringProperty: this.stringProperties.screens.presetsStringProperty,
-      diffractionStringProperty: this.stringProperties.screens.diffractionStringProperty,
+      simStringProperty: stringProperties.screens.simStringProperty,
+      introStringProperty: stringProperties.screens.introStringProperty,
+      labStringProperty: stringProperties.screens.labStringProperty,
+      presetsStringProperty: stringProperties.screens.presetsStringProperty,
+      diffractionStringProperty: stringProperties.screens.diffractionStringProperty,
     };
   }
 
@@ -76,21 +77,21 @@ export class StringManager {
     observerModeStringProperty: ReadOnlyProperty<string>;
   } {
     return {
-      gridStringProperty: this.stringProperties.ui.gridStringProperty,
-      toolsStringProperty: this.stringProperties.ui.toolsStringProperty,
-      downloadSceneStringProperty: this.stringProperties.ui.downloadSceneStringProperty,
-      rayDensityStringProperty: this.stringProperties.ui.rayDensityStringProperty,
-      measuringTapeStringProperty: this.stringProperties.ui.measuringTapeStringProperty,
-      protractorStringProperty: this.stringProperties.ui.protractorStringProperty,
-      extendedRaysStringProperty: this.stringProperties.ui.extendedRaysStringProperty,
-      showHandlesStringProperty: this.stringProperties.ui.showHandlesStringProperty,
-      focalMarkersStringProperty: this.stringProperties.ui.focalMarkersStringProperty,
-      showRayArrowsStringProperty: this.stringProperties.ui.showRayArrowsStringProperty,
-      rayStubsStringProperty: this.stringProperties.ui.rayStubsStringProperty,
-      rayStubLengthStringProperty: this.stringProperties.ui.rayStubLengthStringProperty,
-      metersUnitStringProperty: this.stringProperties.ui.metersUnitStringProperty,
-      showImagesStringProperty: this.stringProperties.ui.showImagesStringProperty,
-      observerModeStringProperty: this.stringProperties.ui.observerModeStringProperty,
+      gridStringProperty: stringProperties.ui.gridStringProperty,
+      toolsStringProperty: stringProperties.ui.toolsStringProperty,
+      downloadSceneStringProperty: stringProperties.ui.downloadSceneStringProperty,
+      rayDensityStringProperty: stringProperties.ui.rayDensityStringProperty,
+      measuringTapeStringProperty: stringProperties.ui.measuringTapeStringProperty,
+      protractorStringProperty: stringProperties.ui.protractorStringProperty,
+      extendedRaysStringProperty: stringProperties.ui.extendedRaysStringProperty,
+      showHandlesStringProperty: stringProperties.ui.showHandlesStringProperty,
+      focalMarkersStringProperty: stringProperties.ui.focalMarkersStringProperty,
+      showRayArrowsStringProperty: stringProperties.ui.showRayArrowsStringProperty,
+      rayStubsStringProperty: stringProperties.ui.rayStubsStringProperty,
+      rayStubLengthStringProperty: stringProperties.ui.rayStubLengthStringProperty,
+      metersUnitStringProperty: stringProperties.ui.metersUnitStringProperty,
+      showImagesStringProperty: stringProperties.ui.showImagesStringProperty,
+      observerModeStringProperty: stringProperties.ui.observerModeStringProperty,
     };
   }
 
@@ -124,7 +125,7 @@ export class StringManager {
     coreRefractiveIndexStringProperty: ReadOnlyProperty<string>;
     coreFractionStringProperty: ReadOnlyProperty<string>;
   } {
-    const controlStrings = this.stringProperties.controls;
+    const controlStrings = stringProperties.controls;
     return {
       wavelengthStringProperty: controlStrings.wavelengthStringProperty,
       brightnessStringProperty: controlStrings.brightnessStringProperty,
@@ -196,7 +197,7 @@ export class StringManager {
     trackStringProperty: ReadOnlyProperty<string>;
     fiberOpticStringProperty: ReadOnlyProperty<string>;
   } {
-    const c = this.stringProperties.components;
+    const c = stringProperties.components;
     return {
       pointSourceStringProperty: c.pointSourceStringProperty,
       arcSourceStringProperty: c.arcSourceStringProperty,
@@ -259,7 +260,7 @@ export class StringManager {
     maxRayDepthStringProperty: ReadOnlyProperty<string>;
     maxRayDepthDescriptionStringProperty: ReadOnlyProperty<string>;
   } {
-    const p = this.stringProperties.preferences;
+    const p = stringProperties.preferences;
     return {
       simulationStringProperty: p.simulationStringProperty,
       snapToGridStringProperty: p.snapToGridStringProperty,
@@ -297,7 +298,7 @@ export class StringManager {
     microscopeStringProperty: ReadOnlyProperty<string>;
     telescopeStringProperty: ReadOnlyProperty<string>;
   } {
-    const p = this.stringProperties.presets;
+    const p = stringProperties.presets;
     return {
       choosePresetStringProperty: p.choosePresetStringProperty,
       emptyLabStringProperty: p.emptyLabStringProperty,
@@ -343,7 +344,7 @@ export class StringManager {
       tab2StringProperty: ReadOnlyProperty<string>;
     };
   } {
-    const d = this.stringProperties.infoDialog;
+    const d = stringProperties.infoDialog;
     return {
       titleStringProperty: d.titleStringProperty,
       tab1LabelStringProperty: d.tab1LabelStringProperty,
@@ -424,7 +425,7 @@ export class StringManager {
       };
     };
   } {
-    const instructionStrings = this.stringProperties.instructions;
+    const instructionStrings = stringProperties.instructions;
     return {
       sections: {
         parameterAdjustmentStringProperty: instructionStrings.sections.parameterAdjustmentStringProperty,

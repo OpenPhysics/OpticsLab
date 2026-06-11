@@ -4,7 +4,7 @@
 
 import type { Tandem } from "scenerystack/tandem";
 import { IOType, ObjectLiteralIO, PhetioObject } from "scenerystack/tandem";
-import opticsLab from "../../../OpticsLabNamespace.js";
+import OpticsLabNamespace from "../../../OpticsLabNamespace.js";
 import { deserializeElement, LIVE_ELEMENT_STATE_KEY } from "./elementSerialization.js";
 import type { OpticalElement } from "./OpticsTypes.js";
 
@@ -61,4 +61,4 @@ export default class OpticalElementPhetioObject extends PhetioObject {
   );
 }
 
-opticsLab.register("OpticalElementPhetioObject", OpticalElementPhetioObject);
+OpticsLabNamespace.register("OpticalElementPhetioObject", OpticalElementPhetioObject);

@@ -13,7 +13,7 @@
  * Pattern mirrors ViewSnapState.ts and TrackRegistry.ts.
  */
 
-import opticsLab from "../../OpticsLabNamespace.js";
+import OpticsLabNamespace from "../../OpticsLabNamespace.js";
 import type { CommandHistory } from "../model/optics/CommandHistory.js";
 
 class SceneHistoryRegistryImpl {
@@ -32,4 +32,4 @@ class SceneHistoryRegistryImpl {
 
 export const sceneHistoryRegistry = new SceneHistoryRegistryImpl();
 
-opticsLab.register("sceneHistoryRegistry", sceneHistoryRegistry);
+OpticsLabNamespace.register("sceneHistoryRegistry", sceneHistoryRegistry);

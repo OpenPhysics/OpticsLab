@@ -30,7 +30,7 @@ import {
   TRACK_BREAK_DISTANCE_M,
   TRACK_SNAP_DISTANCE_M,
 } from "../../OpticsLabConstants.js";
-import opticsLab from "../../OpticsLabNamespace.js";
+import OpticsLabNamespace from "../../OpticsLabNamespace.js";
 import type { Point } from "../model/optics/Geometry.js";
 import {
   dot,
@@ -618,7 +618,7 @@ export function buildDiamondShape(cx: number, cy: number, size: number): Shape {
     .close();
 }
 
-opticsLab.register("ViewHelpers", {
+OpticsLabNamespace.register("ViewHelpers", {
   createHandle,
   buildLineHitShape,
   createLineBodyHitPath,

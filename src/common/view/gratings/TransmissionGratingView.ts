@@ -16,7 +16,7 @@ import {
   TRANSMISSION_GRATING_TICK_COUNT,
   TRANSMISSION_GRATING_TICK_HALF_PX,
 } from "../../../OpticsLabConstants.js";
-import opticsLab from "../../../OpticsLabNamespace.js";
+import OpticsLabNamespace from "../../../OpticsLabNamespace.js";
 import type { TransmissionGrating } from "../../model/gratings/TransmissionGrating.js";
 import { BaseOpticalElementView } from "../BaseOpticalElementView.js";
 import {
@@ -155,4 +155,4 @@ export class TransmissionGratingView extends BaseOpticalElementView {
   }
 }
 
-opticsLab.register("TransmissionGratingView", TransmissionGratingView);
+OpticsLabNamespace.register("TransmissionGratingView", TransmissionGratingView);

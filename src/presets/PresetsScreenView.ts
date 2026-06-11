@@ -8,7 +8,7 @@ import { RayTracingCommonView } from "../common/view/SimScreenView.js";
 import { StringManager } from "../i18n/StringManager.js";
 import OpticsLabColors from "../OpticsLabColors.js";
 import { FONT_13PX, FONT_BOLD_13PX, PANEL_CORNER_RADIUS } from "../OpticsLabConstants.js";
-import opticsLab from "../OpticsLabNamespace.js";
+import OpticsLabNamespace from "../OpticsLabNamespace.js";
 import type { OpticsLabPreferencesModel } from "../preferences/OpticsLabPreferencesModel.js";
 import { getPresetDescriptors, type PresetId } from "./PresetScenes.js";
 import type { PresetsModel } from "./PresetsModel.js";
@@ -94,4 +94,4 @@ export class PresetsScreenView extends RayTracingCommonView {
   }
 }
 
-opticsLab.register("PresetsScreenView", PresetsScreenView);
+OpticsLabNamespace.register("PresetsScreenView", PresetsScreenView);

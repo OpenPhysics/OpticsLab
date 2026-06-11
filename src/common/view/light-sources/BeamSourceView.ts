@@ -10,7 +10,7 @@ import { Path, type RichDragListener } from "scenerystack/scenery";
 import { VisibleColor } from "scenerystack/scenery-phet";
 import type { Tandem } from "scenerystack/tandem";
 import { BEAM_SOURCE_BEAM_WIDTH, BEAM_SOURCE_SHIELD_WIDTH } from "../../../OpticsLabConstants.js";
-import opticsLab from "../../../OpticsLabNamespace.js";
+import OpticsLabNamespace from "../../../OpticsLabNamespace.js";
 import type { BeamSource } from "../../model/light-sources/BeamSource.js";
 import { BaseOpticalElementView } from "../BaseOpticalElementView.js";
 import {
@@ -141,4 +141,4 @@ export class BeamSourceView extends BaseOpticalElementView {
   }
 }
 
-opticsLab.register("BeamSourceView", BeamSourceView);
+OpticsLabNamespace.register("BeamSourceView", BeamSourceView);

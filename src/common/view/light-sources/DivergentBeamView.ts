@@ -18,7 +18,7 @@ import {
   BEAM_SOURCE_DIV_LINE_WIDTH,
   BEAM_SOURCE_SHIELD_WIDTH,
 } from "../../../OpticsLabConstants.js";
-import opticsLab from "../../../OpticsLabNamespace.js";
+import OpticsLabNamespace from "../../../OpticsLabNamespace.js";
 import type { DivergentBeam } from "../../model/light-sources/DivergentBeam.js";
 import { BaseOpticalElementView } from "../BaseOpticalElementView.js";
 import {
@@ -183,4 +183,4 @@ export class DivergentBeamView extends BaseOpticalElementView {
   }
 }
 
-opticsLab.register("DivergentBeamView", DivergentBeamView);
+OpticsLabNamespace.register("DivergentBeamView", DivergentBeamView);

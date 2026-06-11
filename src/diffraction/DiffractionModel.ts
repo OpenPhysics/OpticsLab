@@ -1,5 +1,5 @@
 import { RayTracingCommonModel } from "../common/model/SimModel.js";
-import opticsLab from "../OpticsLabNamespace.js";
+import OpticsLabNamespace from "../OpticsLabNamespace.js";
 
 /**
  * Diffraction screen uses the same ray-tracing scene as other lab screens.
@@ -8,4 +8,4 @@ import opticsLab from "../OpticsLabNamespace.js";
  */
 export class DiffractionModel extends RayTracingCommonModel {}
 
-opticsLab.register("DiffractionModel", DiffractionModel);
+OpticsLabNamespace.register("DiffractionModel", DiffractionModel);

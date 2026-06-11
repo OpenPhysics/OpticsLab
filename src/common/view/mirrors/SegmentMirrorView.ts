@@ -5,7 +5,7 @@ import { Path, type RichDragListener } from "scenerystack/scenery";
 import type { Tandem } from "scenerystack/tandem";
 import OpticsLabColors from "../../../OpticsLabColors.js";
 import { MIRROR_BACK_WIDTH, MIRROR_FRONT_WIDTH } from "../../../OpticsLabConstants.js";
-import opticsLab from "../../../OpticsLabNamespace.js";
+import OpticsLabNamespace from "../../../OpticsLabNamespace.js";
 import type { SegmentMirror } from "../../model/mirrors/SegmentMirror.js";
 import { BaseOpticalElementView } from "../BaseOpticalElementView.js";
 import {
@@ -124,4 +124,4 @@ export class SegmentMirrorView extends BaseOpticalElementView {
   }
 }
 
-opticsLab.register("SegmentMirrorView", SegmentMirrorView);
+OpticsLabNamespace.register("SegmentMirrorView", SegmentMirrorView);

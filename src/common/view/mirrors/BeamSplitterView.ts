@@ -13,7 +13,7 @@ import { Path, type RichDragListener } from "scenerystack/scenery";
 import type { Tandem } from "scenerystack/tandem";
 import OpticsLabColors from "../../../OpticsLabColors.js";
 import { MIRROR_BACK_WIDTH, MIRROR_FRONT_WIDTH } from "../../../OpticsLabConstants.js";
-import opticsLab from "../../../OpticsLabNamespace.js";
+import OpticsLabNamespace from "../../../OpticsLabNamespace.js";
 import type { BeamSplitterElement } from "../../model/mirrors/BeamSplitterElement.js";
 import { BaseOpticalElementView } from "../BaseOpticalElementView.js";
 import {
@@ -132,4 +132,4 @@ export class BeamSplitterView extends BaseOpticalElementView {
   }
 }
 
-opticsLab.register("BeamSplitterView", BeamSplitterView);
+OpticsLabNamespace.register("BeamSplitterView", BeamSplitterView);

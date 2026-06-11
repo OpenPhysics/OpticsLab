@@ -19,7 +19,7 @@ import {
   MIRROR_FOCAL_MARKER_SIZE_M,
   MIRROR_FRONT_WIDTH,
 } from "../../../OpticsLabConstants.js";
-import opticsLab from "../../../OpticsLabNamespace.js";
+import OpticsLabNamespace from "../../../OpticsLabNamespace.js";
 import type { AperturedParabolicMirror } from "../../model/mirrors/AperturedParabolicMirror.js";
 import type { Point } from "../../model/optics/Geometry.js";
 import { distance } from "../../model/optics/Geometry.js";
@@ -311,4 +311,4 @@ export class AperturedParabolicMirrorView extends BaseOpticalElementView {
   }
 }
 
-opticsLab.register("AperturedParabolicMirrorView", AperturedParabolicMirrorView);
+OpticsLabNamespace.register("AperturedParabolicMirrorView", AperturedParabolicMirrorView);

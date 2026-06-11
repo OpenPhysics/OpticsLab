@@ -34,7 +34,7 @@ import {
   PANEL_X_MARGIN,
   PANEL_Y_MARGIN,
 } from "../../../OpticsLabConstants.js";
-import opticsLab from "../../../OpticsLabNamespace.js";
+import OpticsLabNamespace from "../../../OpticsLabNamespace.js";
 import type { DetectorHit } from "../../model/detectors/DetectorElement.js";
 
 /** Normalized positions (0–1) at which reference ticks are drawn. */
@@ -264,4 +264,4 @@ export class DetectorChartPanel extends Panel {
   }
 }
 
-opticsLab.register("DetectorChartPanel", DetectorChartPanel);
+OpticsLabNamespace.register("DetectorChartPanel", DetectorChartPanel);

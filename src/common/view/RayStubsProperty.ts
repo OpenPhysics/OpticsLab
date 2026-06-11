@@ -12,7 +12,7 @@
 
 import { BooleanProperty, NumberProperty } from "scenerystack/axon";
 import { Range } from "scenerystack/dot";
-import opticsLab from "../../OpticsLabNamespace.js";
+import OpticsLabNamespace from "../../OpticsLabNamespace.js";
 
 export const RAY_STUB_LENGTH_DEFAULT_PX = 50;
 export const RAY_STUB_LENGTH_MIN_PX = 10;
@@ -24,5 +24,5 @@ export const rayStubLengthPxProperty = new NumberProperty(RAY_STUB_LENGTH_DEFAUL
   range: new Range(RAY_STUB_LENGTH_MIN_PX, RAY_STUB_LENGTH_MAX_PX),
 });
 
-opticsLab.register("rayStubsEnabledProperty", rayStubsEnabledProperty);
-opticsLab.register("rayStubLengthPxProperty", rayStubLengthPxProperty);
+OpticsLabNamespace.register("rayStubsEnabledProperty", rayStubsEnabledProperty);
+OpticsLabNamespace.register("rayStubLengthPxProperty", rayStubLengthPxProperty);

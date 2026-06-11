@@ -25,7 +25,7 @@ import { InteractiveHighlighting, Path, type RichDragListener } from "scenerysta
 import type { Tandem } from "scenerystack/tandem";
 import OpticsLabColors, { glassFill } from "../../../OpticsLabColors.js";
 import { GLASS_STROKE_WIDTH } from "../../../OpticsLabConstants.js";
-import opticsLab from "../../../OpticsLabNamespace.js";
+import OpticsLabNamespace from "../../../OpticsLabNamespace.js";
 import type { FiberOpticElement } from "../../model/fiber/FiberOpticElement.js";
 import type { Point } from "../../model/optics/Geometry.js";
 import { BaseOpticalElementView } from "../BaseOpticalElementView.js";
@@ -303,4 +303,4 @@ export class FiberOpticView extends BaseOpticalElementView {
   }
 }
 
-opticsLab.register("FiberOpticView", FiberOpticView);
+OpticsLabNamespace.register("FiberOpticView", FiberOpticView);

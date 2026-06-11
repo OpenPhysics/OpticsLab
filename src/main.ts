@@ -24,7 +24,6 @@ import { StringManager } from "./i18n/StringManager.js";
 import { IntroScreen } from "./intro/IntroScreen.js";
 import { LabScreen } from "./lab/LabScreen.js";
 import OpticsLabColors from "./OpticsLabColors.js";
-import opticsLab from "./OpticsLabNamespace.js";
 import {
   createDiffractionScreenIcon,
   createIntroScreenIcon,
@@ -158,6 +157,5 @@ onReadyToLaunch(() => {
   };
 
   const sim = new Sim(stringManager.getTitleStringProperty(), screens, simOptions);
-  opticsLab.register("sim", sim);
   sim.start();
 });

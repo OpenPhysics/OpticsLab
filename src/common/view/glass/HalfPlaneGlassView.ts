@@ -20,7 +20,7 @@ import {
   HALF_PLANE_GLASS_DEPTH_PX,
   HALF_PLANE_LINE_EXTEND_PX,
 } from "../../../OpticsLabConstants.js";
-import opticsLab from "../../../OpticsLabNamespace.js";
+import OpticsLabNamespace from "../../../OpticsLabNamespace.js";
 import type { HalfPlaneGlass } from "../../model/glass/HalfPlaneGlass.js";
 import { BaseOpticalElementView } from "../BaseOpticalElementView.js";
 import {
@@ -188,4 +188,4 @@ export class HalfPlaneGlassView extends BaseOpticalElementView {
   }
 }
 
-opticsLab.register("HalfPlaneGlassView", HalfPlaneGlassView);
+OpticsLabNamespace.register("HalfPlaneGlassView", HalfPlaneGlassView);

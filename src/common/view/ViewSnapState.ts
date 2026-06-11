@@ -11,7 +11,7 @@
 
 import type { TReadOnlyProperty } from "scenerystack/axon";
 import { GRID_SPACING_M } from "../../OpticsLabConstants.js";
-import opticsLab from "../../OpticsLabNamespace.js";
+import OpticsLabNamespace from "../../OpticsLabNamespace.js";
 
 class ViewSnapState {
   private _snapToGridProperty: TReadOnlyProperty<boolean> | null = null;
@@ -36,4 +36,4 @@ class ViewSnapState {
 
 export const viewSnapState = new ViewSnapState();
 
-opticsLab.register("viewSnapState", viewSnapState);
+OpticsLabNamespace.register("viewSnapState", viewSnapState);

@@ -1,6 +1,6 @@
 import { RayTracingCommonView } from "../common/view/SimScreenView.js";
-import opticsLab from "../OpticsLabNamespace.js";
+import OpticsLabNamespace from "../OpticsLabNamespace.js";
 
 export class IntroScreenView extends RayTracingCommonView {}
 
-opticsLab.register("IntroScreenView", IntroScreenView);
+OpticsLabNamespace.register("IntroScreenView", IntroScreenView);

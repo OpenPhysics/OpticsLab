@@ -13,7 +13,7 @@ import {
   MAX_RAY_DEPTH_PROPERTY_MAX,
   MAX_RAY_DEPTH_PROPERTY_MIN,
 } from "../OpticsLabConstants.js";
-import opticsLab from "../OpticsLabNamespace.js";
+import OpticsLabNamespace from "../OpticsLabNamespace.js";
 import opticsLabQueryParameters from "./opticsLabQueryParameters.js";
 
 export type SignConvention = "newCartesian" | "realIsPositive";
@@ -111,4 +111,4 @@ export class OpticsLabPreferencesModel {
   }
 }
 
-opticsLab.register("OpticsLabPreferencesModel", OpticsLabPreferencesModel);
+OpticsLabNamespace.register("OpticsLabPreferencesModel", OpticsLabPreferencesModel);

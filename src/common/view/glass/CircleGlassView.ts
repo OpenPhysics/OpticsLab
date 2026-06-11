@@ -13,7 +13,7 @@ import { Path, type RichDragListener } from "scenerystack/scenery";
 import type { Tandem } from "scenerystack/tandem";
 import OpticsLabColors, { glassFill } from "../../../OpticsLabColors.js";
 import { GLASS_STROKE_WIDTH } from "../../../OpticsLabConstants.js";
-import opticsLab from "../../../OpticsLabNamespace.js";
+import OpticsLabNamespace from "../../../OpticsLabNamespace.js";
 import type { CircleGlass } from "../../model/glass/CircleGlass.js";
 import { BaseOpticalElementView } from "../BaseOpticalElementView.js";
 import { attachTranslationDrag, type DragHandle, makeEndpointHandle } from "../ViewHelpers.js";
@@ -118,4 +118,4 @@ export class CircleGlassView extends BaseOpticalElementView {
   }
 }
 
-opticsLab.register("CircleGlassView", CircleGlassView);
+OpticsLabNamespace.register("CircleGlassView", CircleGlassView);

@@ -12,7 +12,7 @@
  * are registered in one place.
  */
 
-import opticsLab from "../../OpticsLabNamespace.js";
+import OpticsLabNamespace from "../../OpticsLabNamespace.js";
 import type { OpticalElement } from "../model/optics/OpticsTypes.js";
 import { buildEditControls as buildEditControlsFromRegistry } from "./ElementRegistry.js";
 import type { EditControlContext, EditControlsResult } from "./edit-controls/EditControlsResult.js";
@@ -34,4 +34,4 @@ export function buildEditControls(
   return buildEditControlsFromRegistry(element, triggerRebuild, context);
 }
 
-opticsLab.register("buildEditControls", buildEditControls);
+OpticsLabNamespace.register("buildEditControls", buildEditControls);

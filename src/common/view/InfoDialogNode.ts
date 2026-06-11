@@ -13,7 +13,7 @@ import { Tandem } from "scenerystack/tandem";
 import { StringManager } from "../../i18n/StringManager.js";
 import OpticsLabColors from "../../OpticsLabColors.js";
 import { CONTROL_ICON_SIZE, PANEL_CORNER_RADIUS, PANEL_X_MARGIN, PANEL_Y_MARGIN } from "../../OpticsLabConstants.js";
-import opticsLab from "../../OpticsLabNamespace.js";
+import OpticsLabNamespace from "../../OpticsLabNamespace.js";
 
 const CONTENT_WIDTH = 380;
 const TITLE_FONT = new PhetFont({ size: 15, weight: "bold" });
@@ -359,4 +359,4 @@ export class InfoDialogNode extends Node {
   }
 }
 
-opticsLab.register("InfoDialogNode", InfoDialogNode);
+OpticsLabNamespace.register("InfoDialogNode", InfoDialogNode);

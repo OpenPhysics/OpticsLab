@@ -21,7 +21,7 @@
 import { Emitter, type TReadOnlyProperty } from "scenerystack/axon";
 import { Bounds2 } from "scenerystack/dot";
 import { Color, Node, Rectangle, type RichDragListener } from "scenerystack/scenery";
-import opticsLab from "../../OpticsLabNamespace.js";
+import OpticsLabNamespace from "../../OpticsLabNamespace.js";
 import { unlinkHandleVisibility } from "./ViewHelpers.js";
 
 const SELECTION_PAD = 8; // px of padding around content bounds
@@ -178,4 +178,4 @@ export abstract class BaseOpticalElementView extends Node {
   }
 }
 
-opticsLab.register("BaseOpticalElementView", BaseOpticalElementView);
+OpticsLabNamespace.register("BaseOpticalElementView", BaseOpticalElementView);

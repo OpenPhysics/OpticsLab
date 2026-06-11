@@ -20,7 +20,7 @@
  * 10. Light-source rendering
  */
 
-import opticsLab from "./OpticsLabNamespace.js";
+import OpticsLabNamespace from "./OpticsLabNamespace.js";
 
 // ── 1. App chrome ─────────────────────────────────────────────────────────────
 
@@ -618,4 +618,4 @@ const OpticsLabConstants = {
   controlPanelYMargin: CONTROL_PANEL_Y_MARGIN,
 };
 
-opticsLab.register("OpticsLabConstants", OpticsLabConstants);
+OpticsLabNamespace.register("OpticsLabConstants", OpticsLabConstants);

@@ -18,7 +18,7 @@ import { init, madeWithSceneryStackSplashDataURI } from "scenerystack/init";
 init({
   // Internal identifier used by SceneryStack for URL parameters and phetmarks.
   // Use kebab-case matching the package.json "name" field.
-  name: "opticsLab",
+  name: "optics-lab",
 
   // Displayed in the About dialog (Help menu → About).
   version: "0.0.0",

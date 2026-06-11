@@ -13,7 +13,7 @@ import {
   RAY_DENSITY_MAX,
   RAY_DENSITY_MIN,
 } from "../OpticsLabConstants.js";
-import opticsLab from "../OpticsLabNamespace.js";
+import OpticsLabNamespace from "../OpticsLabNamespace.js";
 
 const opticsLabQueryParameters = QueryStringMachine.getAll({
   /*
@@ -134,7 +134,7 @@ const opticsLabQueryParameters = QueryStringMachine.getAll({
   },
 });
 
-opticsLab.register("opticsLabQueryParameters", opticsLabQueryParameters);
+OpticsLabNamespace.register("opticsLabQueryParameters", opticsLabQueryParameters);
 
 // Log query parameters
 logGlobal("phet.chipper.queryParameters");

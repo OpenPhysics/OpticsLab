@@ -29,7 +29,7 @@ import {
   CAROUSEL_ITEMS_PER_PAGE,
   FONT_11PX,
 } from "../../OpticsLabConstants.js";
-import opticsLab from "../../OpticsLabNamespace.js";
+import OpticsLabNamespace from "../../OpticsLabNamespace.js";
 import { type ComponentKey, createDefaultElement } from "../model/ComponentFactory.js";
 import type { OpticalElement } from "../model/optics/OpticsTypes.js";
 import {
@@ -252,4 +252,4 @@ export function createComponentCarousel(
   return carousel;
 }
 
-opticsLab.register("ComponentCarousel", { createComponentCarousel });
+OpticsLabNamespace.register("ComponentCarousel", { createComponentCarousel });

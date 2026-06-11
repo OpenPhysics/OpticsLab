@@ -8,8 +8,8 @@
  */
 
 import { BooleanProperty } from "scenerystack/axon";
-import opticsLab from "../../OpticsLabNamespace.js";
+import OpticsLabNamespace from "../../OpticsLabNamespace.js";
 
 export const focalMarkersVisibleProperty = new BooleanProperty(true);
 
-opticsLab.register("focalMarkersVisibleProperty", focalMarkersVisibleProperty);
+OpticsLabNamespace.register("focalMarkersVisibleProperty", focalMarkersVisibleProperty);

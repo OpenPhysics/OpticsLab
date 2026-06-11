@@ -15,7 +15,7 @@ import {
   POINT_SOURCE_SPOKE_OUTER_PX,
   SOURCE_GLOW_STROKE_WIDTH,
 } from "../../../OpticsLabConstants.js";
-import opticsLab from "../../../OpticsLabNamespace.js";
+import OpticsLabNamespace from "../../../OpticsLabNamespace.js";
 import type { PointSourceElement } from "../../model/light-sources/PointSourceElement.js";
 import { BaseOpticalElementView } from "../BaseOpticalElementView.js";
 import { attachTranslationDrag } from "../ViewHelpers.js";
@@ -104,4 +104,4 @@ export class PointSourceView extends BaseOpticalElementView {
   }
 }
 
-opticsLab.register("PointSourceView", PointSourceView);
+OpticsLabNamespace.register("PointSourceView", PointSourceView);

@@ -29,7 +29,7 @@ import {
   PANEL_X_MARGIN,
   PANEL_Y_MARGIN,
 } from "../../OpticsLabConstants.js";
-import opticsLab from "../../OpticsLabNamespace.js";
+import OpticsLabNamespace from "../../OpticsLabNamespace.js";
 import type { SignConvention } from "../../preferences/OpticsLabPreferencesModel.js";
 import type { OpticalElement } from "../model/optics/OpticsTypes.js";
 import { buildEditControls } from "./EditControlFactory.js";
@@ -213,4 +213,4 @@ export class EditContainerNode extends Node {
   }
 }
 
-opticsLab.register("EditContainerNode", EditContainerNode);
+OpticsLabNamespace.register("EditContainerNode", EditContainerNode);

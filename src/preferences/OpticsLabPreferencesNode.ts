@@ -22,7 +22,7 @@ import {
   SLIDER_TRACK_HEIGHT,
   SLIDER_TRACK_WIDTH,
 } from "../OpticsLabConstants.js";
-import opticsLab from "../OpticsLabNamespace.js";
+import OpticsLabNamespace from "../OpticsLabNamespace.js";
 import type { OpticsLabPreferencesModel } from "./OpticsLabPreferencesModel.js";
 
 export class OpticsLabPreferencesNode extends VBox {
@@ -263,4 +263,4 @@ export class OpticsLabPreferencesNode extends VBox {
   }
 }
 
-opticsLab.register("OpticsLabPreferencesNode", OpticsLabPreferencesNode);
+OpticsLabNamespace.register("OpticsLabPreferencesNode", OpticsLabPreferencesNode);

@@ -26,7 +26,7 @@ import {
   DEFAULT_COMPONENT_GLASS_INDEX,
   DEFAULT_SINGLE_RAY_BRIGHTNESS,
 } from "../OpticsLabConstants.js";
-import opticsLab from "../OpticsLabNamespace.js";
+import OpticsLabNamespace from "../OpticsLabNamespace.js";
 
 // ── Preset identifiers ──────────────────────────────────────────────────────
 
@@ -175,4 +175,4 @@ export function getPresetDescriptors(): PresetDescriptor[] {
   ];
 }
 
-opticsLab.register("PresetScenes", { getPresetDescriptors });
+OpticsLabNamespace.register("PresetScenes", { getPresetDescriptors });

@@ -17,7 +17,7 @@ import {
   REFLECTION_GRATING_GROOVE_COUNT,
   REFLECTION_GRATING_GROOVE_LENGTH_PX,
 } from "../../../OpticsLabConstants.js";
-import opticsLab from "../../../OpticsLabNamespace.js";
+import OpticsLabNamespace from "../../../OpticsLabNamespace.js";
 import type { ReflectionGrating } from "../../model/gratings/ReflectionGrating.js";
 import { BaseOpticalElementView } from "../BaseOpticalElementView.js";
 import {
@@ -173,4 +173,4 @@ export class ReflectionGratingView extends BaseOpticalElementView {
   }
 }
 
-opticsLab.register("ReflectionGratingView", ReflectionGratingView);
+OpticsLabNamespace.register("ReflectionGratingView", ReflectionGratingView);

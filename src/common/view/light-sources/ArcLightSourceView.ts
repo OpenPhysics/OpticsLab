@@ -27,7 +27,7 @@ import {
   ARC_SOURCE_SPOKE_OUTER_OFFSET_PX,
   SOURCE_GLOW_STROKE_WIDTH,
 } from "../../../OpticsLabConstants.js";
-import opticsLab from "../../../OpticsLabNamespace.js";
+import OpticsLabNamespace from "../../../OpticsLabNamespace.js";
 import type { ArcLightSource } from "../../model/light-sources/ArcLightSource.js";
 import { BaseOpticalElementView } from "../BaseOpticalElementView.js";
 import { sceneHistoryRegistry } from "../SceneHistoryRegistry.js";
@@ -319,4 +319,4 @@ export class ArcLightSourceView extends BaseOpticalElementView {
   }
 }
 
-opticsLab.register("ArcLightSourceView", ArcLightSourceView);
+OpticsLabNamespace.register("ArcLightSourceView", ArcLightSourceView);

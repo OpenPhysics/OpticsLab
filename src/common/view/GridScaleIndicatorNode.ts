@@ -14,7 +14,7 @@ import type { ModelViewTransform2 } from "scenerystack/phetcommon";
 import { Node, Path, Rectangle, Text } from "scenerystack/scenery";
 import { PhetFont } from "scenerystack/scenery-phet";
 import OpticsLabColors from "../../OpticsLabColors.js";
-import opticsLab from "../../OpticsLabNamespace.js";
+import OpticsLabNamespace from "../../OpticsLabNamespace.js";
 
 // ── Visual constants (view pixels) ────────────────────────────────────────────
 const ARROW_HEAD_LENGTH = 7; // length of each arrowhead arm along the shaft
@@ -112,4 +112,4 @@ export class GridScaleIndicatorNode extends Node {
   }
 }
 
-opticsLab.register("GridScaleIndicatorNode", GridScaleIndicatorNode);
+OpticsLabNamespace.register("GridScaleIndicatorNode", GridScaleIndicatorNode);

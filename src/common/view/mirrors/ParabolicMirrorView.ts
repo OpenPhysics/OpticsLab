@@ -17,7 +17,7 @@ import {
   MIRROR_FRONT_WIDTH,
   PARABOLIC_MIRROR_SEGMENT_COUNT,
 } from "../../../OpticsLabConstants.js";
-import opticsLab from "../../../OpticsLabNamespace.js";
+import OpticsLabNamespace from "../../../OpticsLabNamespace.js";
 import type { ParabolicMirror } from "../../model/mirrors/ParabolicMirror.js";
 import type { Point } from "../../model/optics/Geometry.js";
 import { BaseOpticalElementView } from "../BaseOpticalElementView.js";
@@ -240,4 +240,4 @@ export class ParabolicMirrorView extends BaseOpticalElementView {
   }
 }
 
-opticsLab.register("ParabolicMirrorView", ParabolicMirrorView);
+OpticsLabNamespace.register("ParabolicMirrorView", ParabolicMirrorView);

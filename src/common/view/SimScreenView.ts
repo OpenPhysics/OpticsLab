@@ -10,7 +10,7 @@ import { Tandem } from "scenerystack/tandem";
 import { StringManager } from "../../i18n/StringManager.js";
 import OpticsLabColors from "../../OpticsLabColors.js";
 import { ACQUISITION_PASSES_PER_FRAME, PIXELS_PER_METER, RESET_BUTTON_MARGIN } from "../../OpticsLabConstants.js";
-import opticsLab from "../../OpticsLabNamespace.js";
+import OpticsLabNamespace from "../../OpticsLabNamespace.js";
 import type { OpticsLabPreferencesModel } from "../../preferences/OpticsLabPreferencesModel.js";
 import opticsLabQueryParameters from "../../preferences/opticsLabQueryParameters.js";
 import { DetectorElement } from "../model/detectors/DetectorElement.js";
@@ -848,4 +848,4 @@ function ElementTypeToAccessibleName(type: string): string {
   return type.replace(/([a-z])([A-Z])/g, "$1 $2").replace(/^./, (c) => c.toUpperCase());
 }
 
-opticsLab.register("RayTracingCommonView", RayTracingCommonView);
+OpticsLabNamespace.register("RayTracingCommonView", RayTracingCommonView);

@@ -16,7 +16,7 @@ import type { ModelViewTransform2 } from "scenerystack/phetcommon";
 import { Circle, Node, Text } from "scenerystack/scenery";
 import OpticsLabColors from "../../OpticsLabColors.js";
 import { FONT_BOLD_9PX } from "../../OpticsLabConstants.js";
-import opticsLab from "../../OpticsLabNamespace.js";
+import OpticsLabNamespace from "../../OpticsLabNamespace.js";
 import type { DetectedImage } from "../model/optics/OpticsTypes.js";
 
 const MARKER_RADIUS = 6; // px
@@ -107,4 +107,4 @@ export class ImageOverlayNode extends Node {
   }
 }
 
-opticsLab.register("ImageOverlayNode", ImageOverlayNode);
+OpticsLabNamespace.register("ImageOverlayNode", ImageOverlayNode);

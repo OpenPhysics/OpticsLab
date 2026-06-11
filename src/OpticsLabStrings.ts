@@ -16,7 +16,7 @@
  *  5. Tandem ID strings
  */
 
-import opticsLab from "./OpticsLabNamespace.js";
+import OpticsLabNamespace from "./OpticsLabNamespace.js";
 
 // ── 1. Optical element serialization type strings ─────────────────────────────
 //
@@ -171,7 +171,7 @@ export const TANDEM_DIFFRACTION_SCREEN = "diffractionScreen";
 
 // ─────────────────────────────────────────────────────────────────────────────
 
-opticsLab.register("OpticsLabStrings", {
+OpticsLabNamespace.register("OpticsLabStrings", {
   ELEMENT_TYPE_POINT_SOURCE,
   ELEMENT_TYPE_BEAM,
   ELEMENT_TYPE_DIVERGENT_BEAM,

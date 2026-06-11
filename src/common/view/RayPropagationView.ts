@@ -31,7 +31,7 @@ import {
   RAY_CLIP_MARGIN_PX,
   RAY_LINE_WIDTH,
 } from "../../OpticsLabConstants.js";
-import opticsLab from "../../OpticsLabNamespace.js";
+import OpticsLabNamespace from "../../OpticsLabNamespace.js";
 import type { ViewMode } from "../model/optics/OpticsTypes.js";
 import type { TracedSegment } from "../model/optics/RayTracer.js";
 import type { ViewOptionsModel } from "./ViewOptionsModel.js";
@@ -447,4 +447,4 @@ export class RayPropagationView extends CanvasNode {
   }
 }
 
-opticsLab.register("RayPropagationView", RayPropagationView);
+OpticsLabNamespace.register("RayPropagationView", RayPropagationView);

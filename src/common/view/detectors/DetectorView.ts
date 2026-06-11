@@ -34,7 +34,7 @@ import {
   MIRROR_BACK_WIDTH,
   MIRROR_FRONT_WIDTH,
 } from "../../../OpticsLabConstants.js";
-import opticsLab from "../../../OpticsLabNamespace.js";
+import OpticsLabNamespace from "../../../OpticsLabNamespace.js";
 import type { DetectorElement } from "../../model/detectors/DetectorElement.js";
 import { circumcenter, sampleArcPoints } from "../../model/optics/Geometry.js";
 import { BaseOpticalElementView } from "../BaseOpticalElementView.js";
@@ -364,4 +364,4 @@ export class DetectorView extends BaseOpticalElementView {
   }
 }
 
-opticsLab.register("DetectorView", DetectorView);
+OpticsLabNamespace.register("DetectorView", DetectorView);
