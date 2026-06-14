@@ -25,6 +25,7 @@ import { ImageOverlayNode } from "./ImageOverlayNode.js";
 import { InfoDialogNode } from "./InfoDialogNode.js";
 import { ObserverNode } from "./ObserverNode.js";
 import { createOpticalElementView, type OpticalElementView } from "./OpticalElementViewFactory.js";
+import { OpticsLabScreenSummaryContent } from "./OpticsLabScreenSummaryContent.js";
 import { RayPropagationView } from "./RayPropagationView.js";
 import { sceneHistoryRegistry } from "./SceneHistoryRegistry.js";
 import { downloadSceneSVG } from "./SceneSVGExporter.js";
@@ -231,7 +232,9 @@ export class RayTracingCommonView extends ScreenView {
     options?: ScreenViewOptions,
     carouselComponents?: ComponentKey[],
   ) {
-    super(options);
+    // Register the accessible screen summary (Interactive Description), shared by
+    // all OpticsLab screens via this common view.
+    super({ ...options, screenSummaryContent: new OpticsLabScreenSummaryContent() });
 
     this.model = model;
     sceneHistoryRegistry.setHistory(model.scene.history);

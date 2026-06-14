@@ -205,5 +205,13 @@
       "tab1": "Onglet Parcours",
       "tab2": "Onglet Outils"
     }
+  },
+  "a11y": {
+    "screenSummary": {
+      "playArea": "La zone de jeu est un banc optique où les rayons lumineux traversent des éléments optiques tels que des lentilles, des miroirs, des séparateurs de faisceau, des réseaux et des détecteurs. Les rayons tracent leur trajet à mesure que la scène change.",
+      "controlArea": "Les commandes ajoutent des éléments optiques depuis un carrousel de composants, modifient les paramètres de l'élément sélectionné, utilisent des outils de mesure, et téléchargent ou réinitialisent la scène. Un bouton Tout réinitialiser ramène la simulation à son état initial.",
+      "interactionHint": "Ajoutez des éléments optiques depuis le carrousel et disposez-les sur le banc pour tracer les rayons lumineux à travers votre montage."
+    },
+    "currentDetails": "Disposez des éléments optiques sur le banc et observez comment les rayons lumineux les traversent."
   }
 }

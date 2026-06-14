@@ -27,6 +27,15 @@ Geometric optics simulation: ray tracing through lenses, mirrors, beam splitters
 - Access modifiers required on class members
 - JSDoc on public methods and classes
 
+## Accessibility
+
+Follows the shared [OpenPhysics accessibility convention](https://github.com/OpenPhysics/OpenPhysics/blob/main/ACCESSIBILITY.md).
+All four screens share `RayTracingCommonView`, which registers `OpticsLabScreenSummaryContent`
+via the `screenSummaryContent` super-option and orders the PDOM through a wrapper `Node`'s
+`pdomOrder`. A11y strings live under the top-level `a11y` key in each locale JSON, via
+`StringManager.getA11yStrings()`. Current-details is static (scene elements are a PhetioGroup);
+it can be made live by deriving an element-count Property.
+
 ## Documentation
 
 | File | Contents |

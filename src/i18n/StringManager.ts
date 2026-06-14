@@ -43,6 +43,15 @@ export class StringManager {
     return stringProperties.titleStringProperty;
   }
 
+  /**
+   * Accessibility (Interactive Description) StringProperties: the screen-summary
+   * regions and current-details paragraph. See the shared OpenPhysics
+   * ACCESSIBILITY.md convention.
+   */
+  public getA11yStrings() {
+    return stringProperties.a11y;
+  }
+
   public getScreenNames(): {
     simStringProperty: ReadOnlyProperty<string>;
     introStringProperty: ReadOnlyProperty<string>;
