@@ -23,6 +23,7 @@ import { Shape } from "scenerystack/kite";
 import { Circle, HBox, Node, Path, Text, VBox } from "scenerystack/scenery";
 import { FlatAppearanceStrategy, Panel, RoundPushButton } from "scenerystack/sun";
 import { Tandem } from "scenerystack/tandem";
+import { StringManager } from "../../../i18n/StringManager.js";
 import OpticsLabColors from "../../../OpticsLabColors.js";
 import {
   DETECTOR_CHART_HEIGHT,
@@ -142,6 +143,7 @@ export class DetectorChartPanel extends Panel {
       yMargin: 6,
       baseColor: OpticsLabColors.panelFillProperty,
       buttonAppearanceStrategy: FlatAppearanceStrategy,
+      accessibleName: StringManager.getInstance().getA11yStrings().acquireDetectorStringProperty,
       tandem: tandem?.createTandem("acquireButton") ?? Tandem.OPTIONAL,
     });
 

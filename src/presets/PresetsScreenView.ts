@@ -52,6 +52,7 @@ export class PresetsScreenView extends RayTracingCommonView {
       highlightFill: OpticsLabColors.comboBoxHighlightFillProperty,
       xMargin: 10,
       yMargin: 6,
+      accessibleName: presetStrings.choosePresetStringProperty,
       ...(viewTandem && { tandem: viewTandem.createTandem("presetComboBox") }),
       ...(!viewTandem && { tandem: Tandem.OPTIONAL }),
     });

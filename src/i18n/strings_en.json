@@ -212,6 +212,7 @@
       "controlArea": "The controls add optical elements from a component carousel, edit the selected element's parameters, use measuring tools, and download or reset the scene. A Reset All button returns the simulation to its starting state.",
       "interactionHint": "Add optical elements from the carousel and arrange them on the bench to trace light rays through your setup."
     },
-    "currentDetails": "Arrange optical elements on the bench and observe how light rays trace through them."
+    "currentDetails": "Arrange optical elements on the bench and observe how light rays trace through them.",
+    "acquireDetector": "Acquire detector reading"
   }
 }

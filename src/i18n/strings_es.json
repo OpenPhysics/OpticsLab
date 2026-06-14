@@ -212,6 +212,7 @@
       "controlArea": "Los controles agregan elementos ópticos desde un carrusel de componentes, editan los parámetros del elemento seleccionado, usan herramientas de medición, y descargan o reinician la escena. Un botón Restablecer todo devuelve la simulación a su estado inicial.",
       "interactionHint": "Agrega elementos ópticos desde el carrusel y colócalos en el banco para trazar los rayos de luz a través de tu montaje."
     },
-    "currentDetails": "Coloca elementos ópticos en el banco y observa cómo los rayos de luz los atraviesan."
+    "currentDetails": "Coloca elementos ópticos en el banco y observa cómo los rayos de luz los atraviesan.",
+    "acquireDetector": "Adquirir lectura del detector"
   }
 }
