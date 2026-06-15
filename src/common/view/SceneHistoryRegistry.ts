@@ -6,7 +6,7 @@
  * threading the reference through every call site.
  *
  * Lifecycle:
- *   SimScreenView calls setHistory(model.scene.history) during construction.
+ *   RayTracingCommonView calls setHistory(model.scene.history) during construction.
  *   Drag and slider helpers call sceneHistoryRegistry.history to get the
  *   CommandHistory instance (null-safe: no-op when history is not set).
  *
@@ -19,7 +19,7 @@ import type { CommandHistory } from "../model/optics/CommandHistory.js";
 class SceneHistoryRegistryImpl {
   private _history: CommandHistory | null = null;
 
-  /** Called once by SimScreenView during construction. */
+  /** Called once by RayTracingCommonView during construction. */
   public setHistory(history: CommandHistory | null): void {
     this._history = history;
   }

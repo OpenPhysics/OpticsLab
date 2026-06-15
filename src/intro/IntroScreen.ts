@@ -1,5 +1,6 @@
 import { Screen } from "scenerystack/sim";
-import type { OpticsLabScreenOptions } from "../common/SimScreen.js";
+import type { OpticsLabScreenOptions } from "../common/RayTracingCommonScreen.js";
+import { OpticsLabKeyboardHelpContent } from "../common/view/OpticsLabKeyboardHelpContent.js";
 import OpticsLabNamespace from "../OpticsLabNamespace.js";
 import { IntroModel } from "./IntroModel.js";
 import { IntroScreenView } from "./IntroScreenView.js";
@@ -15,7 +16,10 @@ export class IntroScreen extends Screen<IntroModel, IntroScreenView> {
           { tandem: options.tandem.createTandem("view") },
           options.carouselComponents,
         ),
-      options,
+      {
+        ...options,
+        createKeyboardHelpNode: () => new OpticsLabKeyboardHelpContent(),
+      },
     );
   }
 }

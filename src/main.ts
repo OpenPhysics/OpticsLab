@@ -18,7 +18,6 @@ import "./brand.js";
 import { onReadyToLaunch, PreferencesModel, Sim } from "scenerystack/sim";
 import { Tandem } from "scenerystack/tandem";
 import type { ComponentKey } from "./common/view/ComponentCarousel.js";
-import { KeyboardShortcutsNode } from "./common/view/KeyboardShortcutsNode.js";
 import { DiffractionScreen } from "./diffraction/DiffractionScreen.js";
 import { StringManager } from "./i18n/StringManager.js";
 import { IntroScreen } from "./intro/IntroScreen.js";
@@ -49,7 +48,6 @@ onReadyToLaunch(() => {
 
   const commonScreenOptions = {
     backgroundColorProperty: OpticsLabColors.backgroundColorProperty,
-    createKeyboardHelpNode: () => new KeyboardShortcutsNode(),
     opticsLabPreferences,
   };
 

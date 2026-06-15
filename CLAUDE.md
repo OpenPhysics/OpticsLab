@@ -12,7 +12,7 @@ Geometric optics simulation: ray tracing through lenses, mirrors, beam splitters
 
 | Area | Location |
 |---|---|
-| Scene model | `src/common/model/SimModel.ts`, `OpticsScene.ts`, `RayTracer.ts` |
+| Scene model | `src/common/model/RayTracingCommonModel.ts`, `OpticsScene.ts`, `RayTracer.ts` |
 | Elements | `src/common/model/{glass,mirrors,light-sources,blockers,gratings,detectors}/` |
 | Views | `src/common/view/`, `OpticalElementViewFactory.ts`, `RayPropagationView.ts` |
 | Presets | `src/presets/PresetScenes.ts`, `PresetsScreenView.ts` |

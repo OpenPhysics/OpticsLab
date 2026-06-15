@@ -1,5 +1,6 @@
 import { Screen } from "scenerystack/sim";
-import type { OpticsLabScreenOptions } from "../common/SimScreen.js";
+import type { OpticsLabScreenOptions } from "../common/RayTracingCommonScreen.js";
+import { OpticsLabKeyboardHelpContent } from "../common/view/OpticsLabKeyboardHelpContent.js";
 import OpticsLabNamespace from "../OpticsLabNamespace.js";
 import { LabModel } from "./LabModel.js";
 import { LabScreenView } from "./LabScreenView.js";
@@ -15,7 +16,10 @@ export class LabScreen extends Screen<LabModel, LabScreenView> {
           { tandem: options.tandem.createTandem("view") },
           options.carouselComponents,
         ),
-      options,
+      {
+        ...options,
+        createKeyboardHelpNode: () => new OpticsLabKeyboardHelpContent(),
+      },
     );
   }
 }

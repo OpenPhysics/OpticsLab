@@ -1,6 +1,6 @@
 import { Property } from "scenerystack/axon";
 import { StringUnionIO, type Tandem } from "scenerystack/tandem";
-import { RayTracingCommonModel } from "../common/model/SimModel.js";
+import { RayTracingCommonModel } from "../common/model/RayTracingCommonModel.js";
 import OpticsLabNamespace from "../OpticsLabNamespace.js";
 import { getPresetDescriptors, PRESET_ID_VALUES, type PresetId } from "./PresetScenes.js";
 

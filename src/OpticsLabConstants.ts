@@ -455,7 +455,7 @@ export const CAROUSEL_OFFSET_FROM_PAGE_CONTROL = 6;
 /** Default half-size (m) of newly created elements. */
 export const CAROUSEL_DEFAULT_HALF_SIZE_M = 0.6;
 
-// ── 17. SimScreenView / UI layout ────────────────────────────────────────────
+// ── 17. RayTracingCommonView / UI layout ────────────────────────────────────────────
 
 /** Gap (px) between the carousel bottom edge and the grid scale indicator. */
 export const GRID_SCALE_INDICATOR_MARGIN = 10;

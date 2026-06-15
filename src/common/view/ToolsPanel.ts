@@ -11,7 +11,7 @@
  *   • AccordionBox wrapper with the title "Tools"
  *
  * The panel itself stays at the scene origin so child positions are expressed
- * in the same coordinate space as the rest of SimScreenView.  The AccordionBox
+ * in the same coordinate space as the rest of RayTracingCommonView.  The AccordionBox
  * is pinned to the upper-right safe area via `visibleBoundsProperty`.
  *
  * Exposed members
@@ -57,7 +57,7 @@ import {
 } from "../../OpticsLabConstants.js";
 import opticsLabQueryParameters from "../../preferences/opticsLabQueryParameters.js";
 import type { OpticalElement } from "../model/optics/OpticsTypes.js";
-import type { RayTracingCommonModel } from "../model/SimModel.js";
+import type { RayTracingCommonModel } from "../model/RayTracingCommonModel.js";
 import { DEFAULT_OBSERVER } from "./ObserverNode.js";
 import {
   dragHandleIcon,
@@ -338,7 +338,7 @@ export class ToolsPanel extends Node {
 
   /**
    * Reset all local properties and tool positions to their initial values.
-   * Called by the ResetAllButton listener in SimScreenView.
+   * Called by the ResetAllButton listener in RayTracingCommonView.
    */
   public reset(): void {
     this.extendedRaysProperty.reset();

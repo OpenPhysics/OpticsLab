@@ -4,7 +4,7 @@ import { ComboBox, type ComboBoxItem } from "scenerystack/sun";
 import { Tandem } from "scenerystack/tandem";
 import type { ComponentKey } from "../common/view/ComponentCarousel.js";
 import { createOpticalElementView } from "../common/view/OpticalElementViewFactory.js";
-import { RayTracingCommonView } from "../common/view/SimScreenView.js";
+import { RayTracingCommonView } from "../common/view/RayTracingCommonView.js";
 import { StringManager } from "../i18n/StringManager.js";
 import OpticsLabColors from "../OpticsLabColors.js";
 import { FONT_13PX, FONT_BOLD_13PX, PANEL_CORNER_RADIUS } from "../OpticsLabConstants.js";

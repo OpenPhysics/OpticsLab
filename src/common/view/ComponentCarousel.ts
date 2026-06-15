@@ -154,7 +154,7 @@ export type AddElementCallback = (element: OpticalElement) => OpticalElementView
  *   model coordinates when the user drags an icon onto the canvas.
  * @param globalToLocal - converts a point from global (display/window) coordinates to
  *   ScreenView-local (layout-bounds) coordinates. Pass `(p) => screenView.globalToLocalPoint(p)`
- *   from the SimScreenView. Required so that pointer positions are correctly mapped to model
+ *   from the RayTracingCommonView. Required so that pointer positions are correctly mapped to model
  *   coordinates regardless of how the sim is scaled/offset in the browser window.
  * @param onAddElement - called with the newly created OpticalElement; should
  *   add it to the model, create its view, and return the view (or null).

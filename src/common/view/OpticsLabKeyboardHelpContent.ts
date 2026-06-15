@@ -1,11 +1,12 @@
 /**
- * KeyboardShortcutsNode.ts
+ * OpticsLabKeyboardHelpContent.ts
  *
- * Keyboard help overlay: moving components (PhET-standard draggable help),
- * parameter adjustment, help toggle, and basic sim actions.
+ * Keyboard-help dialog content: moving components (PhET-standard draggable help),
+ * parameter adjustment, tools, help toggle, and basic sim actions. Wired into each Screen
+ * via the createKeyboardHelpNode screen option (never in main.ts).
  */
 
-import { KeyboardHelpSection, KeyboardHelpSectionRow, Node } from "scenerystack";
+import { KeyboardHelpSection, KeyboardHelpSectionRow } from "scenerystack";
 import {
   BasicActionsKeyboardHelpSection,
   KeyboardHelpIconFactory,
@@ -18,10 +19,8 @@ import { StringManager } from "../../i18n/StringManager.js";
 import OpticsLabColors from "../../OpticsLabColors.js";
 import { KEYBOARD_HELP_TEXT_MAX_WIDTH } from "../../OpticsLabConstants.js";
 
-export class KeyboardShortcutsNode extends Node {
+export class OpticsLabKeyboardHelpContent extends TwoColumnKeyboardHelpContent {
   public constructor() {
-    super();
-
     const strings = StringManager.getInstance().getInstructionsStrings();
 
     const sectionOptions = {
@@ -142,12 +141,7 @@ export class KeyboardShortcutsNode extends Node {
       },
     });
 
-    const helpContent = new TwoColumnKeyboardHelpContent(
-      [moveDraggableSection, adjustmentSection, toolsSection],
-      [simHelpSection, basicActionsSection],
-    );
-
-    this.addChild(helpContent);
+    super([moveDraggableSection, adjustmentSection, toolsSection], [simHelpSection, basicActionsSection]);
 
     KeyboardHelpSection.alignHelpSectionIcons([moveDraggableSection, adjustmentSection, toolsSection]);
     KeyboardHelpSection.alignHelpSectionIcons([simHelpSection]);

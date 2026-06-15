@@ -4,7 +4,7 @@
  * Groups the component-carousel toolbox, its vertical page-control dots, and
  * the grid-scale indicator into a single Node.  The panel stays at the scene
  * origin (local = parent space) so that Scenery positioning calls issued inside
- * the constructor target the same coordinate space as the rest of SimScreenView.
+ * the constructor target the same coordinate space as the rest of RayTracingCommonView.
  *
  * Responsibilities
  * ─────────────────
@@ -14,7 +14,7 @@
  *  • Register the gridSizeProperty listener that rebuilds the indicator when the
  *    grid spacing changes.
  *
- * SimScreenView adds this panel to the scene graph as a single child and reads
+ * RayTracingCommonView adds this panel to the scene graph as a single child and reads
  * `carousel` and `pageControl` for PDOM ordering.
  */
 
@@ -33,7 +33,7 @@ import {
   GRID_SCALE_INDICATOR_MARGIN,
 } from "../../OpticsLabConstants.js";
 import type { OpticalElement } from "../model/optics/OpticsTypes.js";
-import type { RayTracingCommonModel } from "../model/SimModel.js";
+import type { RayTracingCommonModel } from "../model/RayTracingCommonModel.js";
 import { type ComponentKey, createComponentCarousel } from "./ComponentCarousel.js";
 import { GridScaleIndicatorNode } from "./GridScaleIndicatorNode.js";
 import type { OpticalElementView } from "./OpticalElementViewFactory.js";

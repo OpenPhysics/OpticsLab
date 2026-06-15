@@ -5,7 +5,7 @@
  * listeners. Centralises what was previously module-level mutable globals
  * in ViewHelpers.ts, making the dependency explicit and the singleton mockable.
  *
- * Lifecycle: SimScreenView calls setSnapToGrid() and setGridSpacingM() once
+ * Lifecycle: RayTracingCommonView calls setSnapToGrid() and setGridSpacingM() once
  * during construction; ViewHelpers reads from the singleton during drag events.
  */
 

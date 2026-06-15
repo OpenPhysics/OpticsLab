@@ -1,9 +1,9 @@
 import { Screen, type ScreenOptions } from "scenerystack/sim";
 import OpticsLabNamespace from "../OpticsLabNamespace.js";
 import type { OpticsLabPreferencesModel } from "../preferences/OpticsLabPreferencesModel.js";
-import { RayTracingCommonModel } from "./model/SimModel.js";
+import { RayTracingCommonModel } from "./model/RayTracingCommonModel.js";
 import type { ComponentKey } from "./view/ComponentCarousel.js";
-import { RayTracingCommonView } from "./view/SimScreenView.js";
+import { RayTracingCommonView } from "./view/RayTracingCommonView.js";
 
 /** Extends the base ScreenOptions with the preferences model required by RayTracingCommonView. */
 export type OpticsLabScreenOptions = ScreenOptions & {

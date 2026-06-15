@@ -15,7 +15,7 @@ import type { OpticsLabPreferencesModel } from "../../preferences/OpticsLabPrefe
 import opticsLabQueryParameters from "../../preferences/opticsLabQueryParameters.js";
 import { DetectorElement } from "../model/detectors/DetectorElement.js";
 import type { OpticalElement } from "../model/optics/OpticsTypes.js";
-import type { RayTracingCommonModel } from "../model/SimModel.js";
+import type { RayTracingCommonModel } from "../model/RayTracingCommonModel.js";
 import { BaseOpticalElementView } from "./BaseOpticalElementView.js";
 import { CarouselPanel } from "./CarouselPanel.js";
 import type { ComponentKey } from "./ComponentCarousel.js";
@@ -768,7 +768,7 @@ export class RayTracingCommonView extends ScreenView {
     view.bodyDragListener.isPressedProperty.lazyLink(pressedListener);
 
     // Unlink when the view is disposed so the closure (which captures view,
-    // element, and this SimScreenView) doesn't prevent garbage collection.
+    // element, and this RayTracingCommonView) doesn't prevent garbage collection.
     view.disposeEmitter.addListener(() => {
       view.bodyDragListener.isPressedProperty.unlink(pressedListener);
     });
