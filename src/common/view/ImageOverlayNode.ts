@@ -12,6 +12,7 @@
  * to clear when switching away from that mode.
  */
 
+import { toFixed } from "scenerystack/dot";
 import type { ModelViewTransform2 } from "scenerystack/phetcommon";
 import { Circle, Node, Text } from "scenerystack/scenery";
 import OpticsLabColors from "../../OpticsLabColors.js";
@@ -60,8 +61,8 @@ export class ImageOverlayNode extends Node {
         const fillBase = OpticsLabColors.imageRealFillBaseColorProperty.value;
         const strokeBase = OpticsLabColors.imageRealStrokeBaseColorProperty.value;
         marker = new Circle(MARKER_RADIUS, {
-          fill: `rgba(${fillBase.r},${fillBase.g},${fillBase.b},${(alpha * 0.85).toFixed(3)})`,
-          stroke: `rgba(${strokeBase.r},${strokeBase.g},${strokeBase.b},${alpha.toFixed(3)})`,
+          fill: `rgba(${fillBase.r},${fillBase.g},${fillBase.b},${toFixed(alpha * 0.85, 3)})`,
+          stroke: `rgba(${strokeBase.r},${strokeBase.g},${strokeBase.b},${toFixed(alpha, 3)})`,
           lineWidth: 1.5,
           x: vx,
           y: vy,
@@ -72,7 +73,7 @@ export class ImageOverlayNode extends Node {
         const strokeBase = OpticsLabColors.imageVirtualObjectStrokeBaseColorProperty.value;
         marker = new Circle(MARKER_RADIUS, {
           fill: null,
-          stroke: `rgba(${strokeBase.r},${strokeBase.g},${strokeBase.b},${alpha.toFixed(3)})`,
+          stroke: `rgba(${strokeBase.r},${strokeBase.g},${strokeBase.b},${toFixed(alpha, 3)})`,
           lineWidth: 1.5,
           lineDash: [3, 2],
           x: vx,
@@ -84,7 +85,7 @@ export class ImageOverlayNode extends Node {
         const strokeBase = OpticsLabColors.imageVirtualStrokeBaseColorProperty.value;
         marker = new Circle(MARKER_RADIUS, {
           fill: null,
-          stroke: `rgba(${strokeBase.r},${strokeBase.g},${strokeBase.b},${alpha.toFixed(3)})`,
+          stroke: `rgba(${strokeBase.r},${strokeBase.g},${strokeBase.b},${toFixed(alpha, 3)})`,
           lineWidth: 1.5,
           lineDash: [3, 2],
           x: vx,

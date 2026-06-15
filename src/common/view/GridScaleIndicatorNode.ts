@@ -9,6 +9,7 @@
  * white projector colour profiles.
  */
 
+import { toFixed } from "scenerystack/dot";
 import { Shape } from "scenerystack/kite";
 import type { ModelViewTransform2 } from "scenerystack/phetcommon";
 import { Node, Path, Rectangle, Text } from "scenerystack/scenery";
@@ -98,7 +99,7 @@ export class GridScaleIndicatorNode extends Node {
     // ── Label ─────────────────────────────────────────────────────────────
     // All valid spacings are multiples of 0.1, so 1 decimal place suffices
     // unless the value is a whole number.
-    const labelStr = Number.isInteger(gridSpacing) ? `${gridSpacing} m` : `${gridSpacing.toFixed(1)} m`;
+    const labelStr = Number.isInteger(gridSpacing) ? `${gridSpacing} m` : `${toFixed(gridSpacing, 1)} m`;
     this._label.string = labelStr;
     this._label.centerX = widthPx / 2;
     this._label.bottom = -TICK_HALF_HEIGHT - LABEL_GAP;

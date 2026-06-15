@@ -14,6 +14,7 @@
  */
 
 import type { Bounds2 } from "scenerystack/dot";
+import { toFixed } from "scenerystack/dot";
 import type { ModelViewTransform2 } from "scenerystack/phetcommon";
 import { CanvasNode, type CanvasNodeOptions } from "scenerystack/scenery";
 import { VisibleColor } from "scenerystack/scenery-phet";
@@ -240,7 +241,7 @@ export class RayPropagationView extends CanvasNode {
       if (!lines || lines.length === 0) {
         continue;
       }
-      context.strokeStyle = `rgba(${EXT_R},${EXT_G},${EXT_B},${(b / RAY_ALPHA_BUCKETS).toFixed(3)})`;
+      context.strokeStyle = `rgba(${EXT_R},${EXT_G},${EXT_B},${toFixed(b / RAY_ALPHA_BUCKETS, 3)})`;
       context.beginPath();
       for (const [cx1, cy1, cx2, cy2] of lines) {
         context.moveTo(cx1, cy1);
@@ -302,7 +303,7 @@ export class RayPropagationView extends CanvasNode {
         obsAlpha = Math.min(1, obsAlpha * CONT_SPECTRUM_RAY_ALPHA_MULTIPLIER);
       }
 
-      context.strokeStyle = `rgba(${c.r},${c.g},${c.b},${obsAlpha.toFixed(3)})`;
+      context.strokeStyle = `rgba(${c.r},${c.g},${c.b},${toFixed(obsAlpha, 3)})`;
       context.beginPath();
       context.moveTo(vx1, vy1);
       context.lineTo(vx2, vy2);
@@ -360,7 +361,7 @@ export class RayPropagationView extends CanvasNode {
       }
 
       const c = VisibleColor.wavelengthToColor(seg.wavelength ?? 550);
-      context.strokeStyle = `rgba(${c.r},${c.g},${c.b},${alpha.toFixed(3)})`;
+      context.strokeStyle = `rgba(${c.r},${c.g},${c.b},${toFixed(alpha, 3)})`;
       context.beginPath();
       context.moveTo(clipped[0], clipped[1]);
       context.lineTo(clipped[2], clipped[3]);
@@ -435,7 +436,7 @@ export class RayPropagationView extends CanvasNode {
       const baseY = my - uy * (ARROW_LENGTH * 0.5);
 
       const c = VisibleColor.wavelengthToColor(seg.wavelength ?? 550);
-      context.fillStyle = `rgba(${c.r},${c.g},${c.b},${alpha.toFixed(3)})`;
+      context.fillStyle = `rgba(${c.r},${c.g},${c.b},${toFixed(alpha, 3)})`;
       context.beginPath();
       context.moveTo(tipX, tipY);
       context.lineTo(baseX + px * ARROW_HALF_WIDTH, baseY + py * ARROW_HALF_WIDTH);

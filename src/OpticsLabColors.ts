@@ -5,6 +5,7 @@
  * support for different color profiles (default and projector mode).
  */
 
+import { toFixed } from "scenerystack/dot";
 import { Color, ProfileColorProperty } from "scenerystack/scenery";
 import OpticsLabNamespace from "./OpticsLabNamespace.js";
 
@@ -321,7 +322,7 @@ const OpticsLabColors = {
  */
 export function glassFill(refIndex: number): string {
   const opacity = 0.05 + ((refIndex - 1.0) / 2.0) * 0.35;
-  return `rgba(100, 160, 255, ${opacity.toFixed(3)})`;
+  return `rgba(100, 160, 255, ${toFixed(opacity, 3)})`;
 }
 
 export default OpticsLabColors;
