@@ -29,7 +29,7 @@ Geometric optics simulation: ray tracing through lenses, mirrors, beam splitters
 
 ## Accessibility
 
-Follows the shared [OpenPhysics accessibility convention](https://github.com/OpenPhysics/OpenPhysics/blob/main/ACCESSIBILITY.md).
+Follows the shared [OpenPhysics accessibility convention](https://github.com/OpenPhysics/Baton/blob/main/ACCESSIBILITY.md).
 All four screens share `RayTracingCommonView`, which registers `OpticsLabScreenSummaryContent`
 via the `screenSummaryContent` super-option and orders the PDOM through a wrapper `Node`'s
 `pdomOrder`. A11y strings live under the top-level `a11y` key in each locale JSON, via
