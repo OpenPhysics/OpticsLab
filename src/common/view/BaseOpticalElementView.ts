@@ -20,7 +20,8 @@
 
 import { Emitter, type TReadOnlyProperty } from "scenerystack/axon";
 import { Bounds2 } from "scenerystack/dot";
-import { Color, Node, Rectangle, type RichDragListener } from "scenerystack/scenery";
+import { Node, Rectangle, type RichDragListener } from "scenerystack/scenery";
+import OpticsLabColors from "../../OpticsLabColors.js";
 import OpticsLabNamespace from "../../OpticsLabNamespace.js";
 import { unlinkHandleVisibility } from "./ViewHelpers.js";
 
@@ -47,7 +48,7 @@ export abstract class BaseOpticalElementView extends Node {
 
     // Selection frame – added first so it renders behind all content children.
     this._selectionFrame = new Rectangle(0, 0, 0, 0, 4, 4, {
-      stroke: new Color(255, 220, 0, 0.75),
+      stroke: OpticsLabColors.selectionFrameStrokeProperty,
       lineWidth: 2,
       lineDash: [5, 3],
       fill: null,
@@ -112,13 +113,16 @@ export abstract class BaseOpticalElementView extends Node {
    * Like `property.linkAttribute(node, attr)` but also registers for automatic
    * cleanup on dispose, preventing global properties from retaining disposed views.
    */
-  // biome-ignore lint/suspicious/noExplicitAny: linkAttribute requires any for the target object
-  protected trackLinkAttribute<T>(property: TReadOnlyProperty<T>, object: any, attributeName: string): void {
+  protected trackLinkAttribute<T, K extends string>(
+    property: TReadOnlyProperty<T>,
+    object: Record<K, T>,
+    attributeName: K,
+  ): void {
     // linkAttribute() returns void, so we must store the listener explicitly.
     const listener = (value: T) => {
       object[attributeName] = value;
     };
-    property.link(listener as unknown as (value: unknown) => void);
+    property.link(listener);
     this._linkedAttributes.push({
       property: property as TReadOnlyProperty<unknown>,
       handle: listener as unknown as (value: unknown) => void,

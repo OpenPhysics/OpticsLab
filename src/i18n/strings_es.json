@@ -43,7 +43,10 @@
     "rayStubLength": "Longitud del segmento (px)",
     "metersUnit": "m",
     "showImages": "Mostrar imágenes",
-    "observerMode": "Observador"
+    "observerMode": "Observador",
+    "observerLabel": "observador",
+    "detectorIntensityAxis": "Intensidad (u.a.)",
+    "detectorHits": "Impactos:"
   },
   "controls": {
     "brightness": "Brillo",

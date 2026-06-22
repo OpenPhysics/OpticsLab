@@ -33,6 +33,13 @@ const OpticsLabColors = {
   panelFillProperty: profileColor("panelFill", new Color(25, 25, 45, 0.95), new Color(245, 245, 250, 0.98)),
   panelStrokeProperty: profileColor("panelStroke", new Color(120, 120, 140), new Color(180, 180, 200)),
 
+  // Selection frame drawn around the active optical element
+  selectionFrameStrokeProperty: profileColor(
+    "selectionFrameStroke",
+    new Color(255, 220, 0, 0.75),
+    new Color(255, 220, 0, 0.75),
+  ),
+
   // Preferences checkboxes
   checkboxPreferencesColorProperty: profileColor(
     "checkboxPreferencesColor",

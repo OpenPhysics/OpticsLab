@@ -43,7 +43,10 @@
     "rayStubLength": "Stub Length (px)",
     "metersUnit": "m",
     "showImages": "Show Images",
-    "observerMode": "Observer"
+    "observerMode": "Observer",
+    "observerLabel": "observer",
+    "detectorIntensityAxis": "Intensity (a.u.)",
+    "detectorHits": "Hits:"
   },
   "controls": {
     "brightness": "Brightness",

@@ -43,7 +43,10 @@
     "rayStubLength": "Longueur du tronçon (px)",
     "metersUnit": "m",
     "showImages": "Afficher les images",
-    "observerMode": "Observateur"
+    "observerMode": "Observateur",
+    "observerLabel": "observateur",
+    "detectorIntensityAxis": "Intensité (u.a.)",
+    "detectorHits": "Impacts :"
   },
   "controls": {
     "brightness": "Luminosité",

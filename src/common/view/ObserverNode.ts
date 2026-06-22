@@ -16,6 +16,7 @@ import type { Property } from "scenerystack/axon";
 import type { ModelViewTransform2 } from "scenerystack/phetcommon";
 import { Circle, Node, RichDragListener, Text } from "scenerystack/scenery";
 import { Tandem } from "scenerystack/tandem";
+import { StringManager } from "../../i18n/StringManager.js";
 import OpticsLabColors from "../../OpticsLabColors.js";
 import { FONT_11PX } from "../../OpticsLabConstants.js";
 import OpticsLabNamespace from "../../OpticsLabNamespace.js";
@@ -65,7 +66,7 @@ export class ObserverNode extends Node {
     this.centerDot.focusable = true;
     this.centerDot.accessibleHelpText = "Press arrow keys to move the observer";
 
-    this.labelNode = new Text("observer", {
+    this.labelNode = new Text(StringManager.getInstance().getUIStrings().observerLabelStringProperty, {
       font: FONT_11PX,
       fill: OpticsLabColors.observerLabelFillProperty,
     });

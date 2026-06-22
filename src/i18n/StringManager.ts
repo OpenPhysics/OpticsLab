@@ -84,6 +84,9 @@ export class StringManager {
     metersUnitStringProperty: ReadOnlyProperty<string>;
     showImagesStringProperty: ReadOnlyProperty<string>;
     observerModeStringProperty: ReadOnlyProperty<string>;
+    observerLabelStringProperty: ReadOnlyProperty<string>;
+    detectorIntensityAxisStringProperty: ReadOnlyProperty<string>;
+    detectorHitsStringProperty: ReadOnlyProperty<string>;
   } {
     return {
       gridStringProperty: stringProperties.ui.gridStringProperty,
@@ -101,6 +104,9 @@ export class StringManager {
       metersUnitStringProperty: stringProperties.ui.metersUnitStringProperty,
       showImagesStringProperty: stringProperties.ui.showImagesStringProperty,
       observerModeStringProperty: stringProperties.ui.observerModeStringProperty,
+      observerLabelStringProperty: stringProperties.ui.observerLabelStringProperty,
+      detectorIntensityAxisStringProperty: stringProperties.ui.detectorIntensityAxisStringProperty,
+      detectorHitsStringProperty: stringProperties.ui.detectorHitsStringProperty,
     };
   }
 

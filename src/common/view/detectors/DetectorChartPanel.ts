@@ -121,7 +121,7 @@ export class DetectorChartPanel extends Panel {
     });
 
     // Y-axis label — rotated 90° to the left of the chart area
-    const yAxisLabel = new Text("Intensity (a.u.)", {
+    const yAxisLabel = new Text(StringManager.getInstance().getUIStrings().detectorIntensityAxisStringProperty, {
       font: FONT_9PX,
       fill: OpticsLabColors.detectorFrontStrokeProperty,
       rotation: -Math.PI / 2,
@@ -148,7 +148,7 @@ export class DetectorChartPanel extends Panel {
     });
 
     // Readouts for integrated intensity
-    const hitCountLabel = new Text("Hits:", {
+    const hitCountLabel = new Text(StringManager.getInstance().getUIStrings().detectorHitsStringProperty, {
       font: FONT_9PX,
       fill: OpticsLabColors.detectorFrontStrokeProperty,
       pickable: false,
