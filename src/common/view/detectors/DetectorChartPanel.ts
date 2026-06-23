@@ -78,9 +78,17 @@ export class DetectorChartPanel extends Panel {
   private readonly liveBars: BarPlot;
   private readonly acquiredBars: BarPlot;
   private currentNumBins: number;
-  private readonly acquireButton: RoundPushButton;
   private readonly hitCountText: Text;
   private readonly totalPowerText: Text;
+
+  /**
+   * Descendant nodes that link to long-lived global Properties — the
+   * OpticsLabColors ProfileColorProperties and the StringManager string
+   * Properties.  Panel/Node.dispose() does NOT recursively dispose children,
+   * so these must be disposed explicitly or the global Properties retain them
+   * (and, via scenery's child→parent back-references, the whole DetectorView).
+   */
+  private readonly disposeNodes: Node[];
 
   public constructor(options: { onAcquire: () => void }, tandem?: Tandem) {
     const chartTransform = new ChartTransform({
@@ -197,13 +205,30 @@ export class DetectorChartPanel extends Panel {
     this.liveBars = liveBars;
     this.acquiredBars = acquiredBars;
     this.currentNumBins = DETECTOR_NUM_BINS;
-    this.acquireButton = acquireButton;
     this.hitCountText = hitCountValue;
     this.totalPowerText = totalPowerValue;
+
+    // Every node created here that links to a global color/string Property.
+    // The bars and ChartRectangle also observe chartTransform, so they are
+    // disposed before chartTransform.dispose() below.
+    this.disposeNodes = [
+      chartRectangle,
+      liveBars,
+      acquiredBars,
+      chartTicksPath,
+      yAxisLabel,
+      hitCountLabel,
+      hitCountValue,
+      powerLabel,
+      totalPowerValue,
+      acquireButton,
+    ];
   }
 
   public override dispose(): void {
-    this.acquireButton.dispose();
+    for (const node of this.disposeNodes) {
+      node.dispose();
+    }
     this.chartTransform.dispose();
     super.dispose();
   }
