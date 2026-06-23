@@ -15,6 +15,7 @@
 
 import type { Bounds2 } from "scenerystack/dot";
 import { toFixed } from "scenerystack/dot";
+import { type EmptySelfOptions, optionize } from "scenerystack/phet-core";
 import type { ModelViewTransform2 } from "scenerystack/phetcommon";
 import { CanvasNode, type CanvasNodeOptions } from "scenerystack/scenery";
 import { VisibleColor } from "scenerystack/scenery-phet";
@@ -132,11 +133,15 @@ export class RayPropagationView extends CanvasNode {
     viewOptions: ViewOptionsModel,
     options?: CanvasNodeOptions,
   ) {
-    super({
-      canvasBounds,
-      pickable: false, // rays are non-interactive
-      ...options,
-    });
+    super(
+      optionize<CanvasNodeOptions, EmptySelfOptions, CanvasNodeOptions>()(
+        {
+          canvasBounds,
+          pickable: false, // rays are non-interactive
+        },
+        options,
+      ),
+    );
     this.modelViewTransform = modelViewTransform;
     this.viewOptions = viewOptions;
     viewOptions.rayArrowsVisibleProperty.lazyLink(this._invalidatePaintListener);

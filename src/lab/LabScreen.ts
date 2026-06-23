@@ -1,4 +1,5 @@
-import { Screen } from "scenerystack/sim";
+import { type EmptySelfOptions, optionize } from "scenerystack/phet-core";
+import { Screen, type ScreenOptions } from "scenerystack/sim";
 import type { OpticsLabScreenOptions } from "../common/RayTracingCommonScreen.js";
 import { OpticsLabKeyboardHelpContent } from "../common/view/OpticsLabKeyboardHelpContent.js";
 import OpticsLabNamespace from "../OpticsLabNamespace.js";
@@ -16,10 +17,12 @@ export class LabScreen extends Screen<LabModel, LabScreenView> {
           { tandem: options.tandem.createTandem("view") },
           options.carouselComponents,
         ),
-      {
-        ...options,
-        createKeyboardHelpNode: () => new OpticsLabKeyboardHelpContent(),
-      },
+      optionize<OpticsLabScreenOptions, EmptySelfOptions, ScreenOptions>()(
+        {
+          createKeyboardHelpNode: () => new OpticsLabKeyboardHelpContent(),
+        },
+        options,
+      ),
     );
   }
 }
