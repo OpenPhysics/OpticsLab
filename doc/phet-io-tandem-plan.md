@@ -1,3 +1,5 @@
+> **Superseded / historical.** This is a planning and audit document from an earlier instrumentation pass. It may not match the current tandem surface or file layout. For current architecture, see [implementation-notes.md](implementation-notes.md) and the root [README.md](../README.md).
+
 # PhET-iO / tandem instrumentation (OpticsLab)
 
 This document records how OpticsLab is wired for [PhET-iO](https://github.com/phetsims/phet-io)-style instrumentation using **SceneryStack**’s `tandem` package, following patterns from [circuit-construction-kit-common](https://github.com/phetsims/circuit-construction-kit-common) (constructor tandem threading, featured `*Property` nodes, `PhetioGroup` for dynamic collections, read-only emitters, and `Tandem.OPT_OUT` for non-API UI).

@@ -35,7 +35,7 @@ Screen<Model, View>( modelFactory, viewFactory, options )
 - **Diffraction** is a separate screen with a reduced **carousel** set (see `main.ts`).
 - Shared options include **`OpticsLabPreferencesModel`**, **`createKeyboardHelpNode`**, and **`carouselComponents`**.
 
-The common ray-tracing UI lives in **`RayTracingCommonView`** (`SimScreenView.ts`) and **`RayTracingCommonModel`** / **`OpticsScene`**: one **`OpticsScene`** owns all **`OpticalElement`** instances and runs **`RayTracer`** when the scene is dirty.
+The common ray-tracing UI lives in **`RayTracingCommonView`** (`RayTracingCommonView.ts`) and **`RayTracingCommonModel`** / **`OpticsScene`**: one **`OpticsScene`** owns all **`OpticalElement`** instances and runs **`RayTracer`** when the scene is dirty.
 
 ---
 
@@ -56,7 +56,7 @@ Every element implements:
 
 - Holds **`elements[]`** and **`SceneSettings`** (mode, ray density, max depth, grid, observer, etc.).
 - **`invalidate()`** marks the cached trace stale; **`simulate()`** clears detector state, builds **`RayTracer`**, runs **`trace()`**, caches **`TraceResult`**.
-- The view typically calls **`invalidate()`** on model changes and **`simulate()`** each frame (see **`SimScreenView`**).
+- The view typically calls **`invalidate()`** on model changes and **`simulate()`** each frame (see **`RayTracingCommonView`**).
 
 ### `RayTracer` (`optics/RayTracer.ts`)
 
@@ -79,7 +79,7 @@ Shared math: intersections, Snell/Fresnel helpers, arc sampling, etc. **Glass-sp
 ### Coordinates
 
 - **Model space**: metres, **y up** (standard optics sketch convention).
-- **View space**: Scenery pixels, **y down**; use **`ModelViewTransform2`** (inverted Y) from the screen view. Comments in **`SimScreenView`** document scale (e.g. pixels per metre).
+- **View space**: Scenery pixels, **y down**; use **`ModelViewTransform2`** (inverted Y) from the screen view. Comments in **`RayTracingCommonView`** document scale (e.g. pixels per metre).
 
 ### Single registry for views + edit panels
 
@@ -99,7 +99,7 @@ Shared math: intersections, Snell/Fresnel helpers, arc sampling, etc. **Glass-sp
 
 ### Element views and `BaseOpticalElementView`
 
-Many views extend **`BaseOpticalElementView`**: handles **`modelViewTransform`**, **`rebuildEmitter`** (notify edit panel after drags), and **`bodyDragListener`** for picking/moving the whole element. **`SimScreenView._setupView`** reparents nodes during drag and returns dropped tools to the carousel.
+Many views extend **`BaseOpticalElementView`**: handles **`modelViewTransform`**, **`rebuildEmitter`** (notify edit panel after drags), and **`bodyDragListener`** for picking/moving the whole element. **`RayTracingCommonView._setupView`** reparents nodes during drag and returns dropped tools to the carousel.
 
 ### Rays on canvas
 
@@ -134,7 +134,7 @@ Prefer **named constants** over magic numbers in new code.
 
 - **`npm run lint`** — `biome check .` (format + lint + assist).
 - **`npm run check`** — `tsc --noEmit` (currently **`src/`** only per `tsconfig.json`; **`scripts/`** uses **tsx** without project check).
-- **`npm run build`** — `tsc && vite build` (PWA plugin in **`vite.config.js`**).
+- **`npm run build`** — `tsc && vite build` (PWA plugin in **`vite.config.ts`**).
 - **Git hooks** (`.githooks/pre-commit`): **`biome check --write`** on staged TS/JS/JSON/HTML.
 
 ---
@@ -159,6 +159,6 @@ Prefer **named constants** over magic numbers in new code.
 | Scene + cache + JSON | `src/common/model/optics/OpticsScene.ts` |
 | Types + ray/result shapes | `src/common/model/optics/OpticsTypes.ts` |
 | Registry | `src/common/view/ElementRegistry.ts` |
-| Shared screen UI | `src/common/view/SimScreenView.ts` |
+| Shared screen UI | `src/common/view/RayTracingCommonView.ts` |
 | Preferences | `src/preferences/` |
 | Screen entry | `src/main.ts` |

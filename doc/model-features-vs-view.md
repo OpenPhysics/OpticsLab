@@ -1,6 +1,8 @@
+> **Superseded / historical.** This document is an April 2026 audit snapshot and may not reflect the current codebase (for example, undo/redo is wired in `RayTracingCommonView`). For current architecture, see [implementation-notes.md](implementation-notes.md) and the root [README.md](../README.md).
+
 # Model features vs. what the view uses
 
-This note records **model or trace outputs that exist in code but are not surfaced** (or only partly surfaced) in the main ray-tracing screen UI (`RayTracingCommonView` / `SimScreenView`). It is a snapshot for future UI or instrumentation work—not a guarantee every item should be exposed.
+This note records **model or trace outputs that exist in code but are not surfaced** (or only partly surfaced) in the main ray-tracing screen UI (`RayTracingCommonView`). It is a snapshot for future UI or instrumentation work—not a guarantee every item should be exposed.
 
 ---
 

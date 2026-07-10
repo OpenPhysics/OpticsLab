@@ -5,9 +5,23 @@ with light sources, mirrors, lenses, beam splitters, and refracting interfaces.
 
 ## Features
 
+Four screens (see `src/main.ts`):
+
+- **Intro** — guided entry to the optical bench and component carousel
+- **Lab** — open-ended scene building with the full standard component set
+- **Presets** — load curated preset scenes from a combo box, then explore and edit
+- **Diffraction** — transmission and reflection gratings plus a focused subset of supporting optics
+
+Optical elements and tools (Intro / Lab / Presets unless noted):
+
 - Ray, parallel-beam, divergent-beam, and point light sources
 - Reflection at linear and curved mirrors; refraction at curved interfaces
 - Ideal lenses and mirrors, spherical lenses, and beam splitters
+- **Detectors** with live and acquired intensity charts and an Acquire control
+- **Gratings** (transmission and reflection) on the Diffraction screen
+- Tools panel: grid, ray density, measuring tape, protractor, extended rays, and related view options
+- **Undo / redo** for add and remove element actions (keyboard shortcuts; see a11y strings)
+
 - English and French UI, projector color profile, and PWA support
 - Vitest unit tests for core optics model logic
 

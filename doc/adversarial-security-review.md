@@ -1,3 +1,5 @@
+> **Superseded / historical.** This is a point-in-time security and correctness review (2026-04-07). Findings may have been addressed since; do not treat it as a current threat model. For current architecture, see [implementation-notes.md](implementation-notes.md) and the root [README.md](../README.md).
+
 # Adversarial Security & Correctness Review
 
 **Date:** 2026-04-07
