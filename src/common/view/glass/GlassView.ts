@@ -34,10 +34,17 @@ import {
   segment,
 } from "../../model/optics/Geometry.js";
 import { BaseOpticalElementView } from "../BaseOpticalElementView.js";
+import { sceneHistoryRegistry } from "../SceneHistoryRegistry.js";
 import { attachTranslationDrag, type DragHandle, makeEndpointHandle, unlinkHandleVisibility } from "../ViewHelpers.js";
 
 export class GlassView extends BaseOpticalElementView {
   private _bodyDragListener!: RichDragListener;
+  /**
+   * Stable array backing the body drag listener. Contents are refreshed in
+   * place by rebuildHandlesAndDragListener() when the path gains or loses
+   * vertices; the listener itself is created exactly once.
+   */
+  private readonly bodyDragPoints: Array<{ get: () => Point; set: (p: Point) => void }> = [];
   private readonly glassPath: Path;
   private readonly handlesContainer: Node;
   private handles: DragHandle[] = [];
@@ -110,15 +117,6 @@ export class GlassView extends BaseOpticalElementView {
     this.addButtons = [];
     this.handlesContainer.removeAllChildren();
 
-    // Dispose the old body drag listener before replacing it. Removing it from
-    // the input-listener list is not enough: the undisposed RichDragListener
-    // keeps its internal DragListener, KeyboardDragListener, isPressedProperty,
-    // and all their TinyEmitters alive (along with closures that capture `this`).
-    if (this._bodyDragListener) {
-      this.glassPath.removeInputListener(this._bodyDragListener);
-      this._bodyDragListener.dispose();
-    }
-
     this.handleVerts = this.isPrism ? [...this.glass.path] : (this.handleVertsOption ?? []);
     this.handles = this.handleVerts.map((vert, index) => {
       const handle = makeEndpointHandle(
@@ -157,22 +155,34 @@ export class GlassView extends BaseOpticalElementView {
       }
     }
 
-    const allVertPoints = this.glass.path.map((v) => ({
-      get: (): Point => ({ x: v.x, y: v.y }),
-      set: (p: Point): void => {
-        v.x = p.x;
-        v.y = p.y;
-      },
-    }));
-    this._bodyDragListener = attachTranslationDrag(
-      this.glassPath,
-      allVertPoints,
-      () => {
-        this.rebuild();
-      },
-      this.modelViewTransform,
-      this.glassTandem.createTandem("bodyDragListener"),
-    );
+    // Repopulate the stable points array in place rather than recreating the
+    // body drag listener. External observers (RayTracingCommonView) link to
+    // bodyDragListener.isPressedProperty once at view creation — disposing and
+    // recreating the listener here would sever that link, silently breaking
+    // drag-layer reparenting and drop-on-carousel deletion after a vertex
+    // add/remove. attachTranslationDrag reads the array contents afresh on
+    // every drag start, so in-place mutation is safe.
+    this.bodyDragPoints.length = 0;
+    for (const v of this.glass.path) {
+      this.bodyDragPoints.push({
+        get: (): Point => ({ x: v.x, y: v.y }),
+        set: (p: Point): void => {
+          v.x = p.x;
+          v.y = p.y;
+        },
+      });
+    }
+    if (!this._bodyDragListener) {
+      this._bodyDragListener = attachTranslationDrag(
+        this.glassPath,
+        this.bodyDragPoints,
+        () => {
+          this.rebuild();
+        },
+        this.modelViewTransform,
+        this.glassTandem.createTandem("bodyDragListener"),
+      );
+    }
   }
 
   private createAddButton(edgeIndex: number): Node {
@@ -212,8 +222,32 @@ export class GlassView extends BaseOpticalElementView {
           const clickMidX = (a.x + b.x) / 2;
           const clickMidY = (a.y + b.y) / 2;
           this.glass.addVertexOnEdge(edgeIndex, { x: clickMidX, y: clickMidY });
-          this.rebuildHandlesAndDragListener();
-          this.rebuild();
+          this.refreshAfterVertexChange();
+
+          // Record as an undoable command (already applied, so push not execute).
+          // The inserted vertex is tracked by object identity so undo/redo stay
+          // correct even after later drags mutate its coordinates.
+          const insertAt = (idx + 1) % len;
+          const inserted = glassPath[insertAt];
+          const history = sceneHistoryRegistry.history;
+          if (history && inserted) {
+            history.push({
+              description: "Add vertex",
+              execute: () => {
+                if (!glassPath.includes(inserted)) {
+                  glassPath.splice(Math.min(insertAt, glassPath.length), 0, inserted);
+                }
+                this.refreshAfterVertexChange();
+              },
+              undo: () => {
+                const insertedIndex = glassPath.indexOf(inserted);
+                if (insertedIndex >= 0) {
+                  this.glass.removeVertex(insertedIndex);
+                }
+                this.refreshAfterVertexChange();
+              },
+            });
+          }
         }
       },
     });
@@ -247,11 +281,43 @@ export class GlassView extends BaseOpticalElementView {
         event.handle();
         const idx = this.glass.path.indexOf(vert);
         if (idx >= 0 && this.glass.removeVertex(idx)) {
-          this.rebuildHandlesAndDragListener();
-          this.rebuild();
+          this.refreshAfterVertexChange();
+
+          // Record as an undoable command (already applied, so push not execute).
+          const history = sceneHistoryRegistry.history;
+          if (history) {
+            history.push({
+              description: "Remove vertex",
+              execute: () => {
+                const i = this.glass.path.indexOf(vert);
+                if (i >= 0) {
+                  this.glass.removeVertex(i);
+                }
+                this.refreshAfterVertexChange();
+              },
+              undo: () => {
+                this.glass.path.splice(Math.min(idx, this.glass.path.length), 0, vert);
+                this.refreshAfterVertexChange();
+              },
+            });
+          }
         }
       },
     });
+  }
+
+  /**
+   * Refresh handles and geometry after the path gained or lost a vertex.
+   * Safe to call from undo/redo commands that may outlive this view: the
+   * model mutation has already happened, so a disposed view just skips the
+   * visual refresh (a fresh view built from the model will be correct).
+   */
+  private refreshAfterVertexChange(): void {
+    if (this.isDisposed) {
+      return;
+    }
+    this.rebuildHandlesAndDragListener();
+    this.rebuild();
   }
 
   /**

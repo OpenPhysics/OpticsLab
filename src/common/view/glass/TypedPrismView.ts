@@ -34,7 +34,7 @@ import {
 } from "../../../OpticsLabConstants.js";
 import OpticsLabNamespace from "../../../OpticsLabNamespace.js";
 import type { Glass } from "../../model/glass/Glass.js";
-import { createHandle } from "../ViewHelpers.js";
+import { createDragHistoryHooks, createHandle } from "../ViewHelpers.js";
 import type { ViewOptionsModel } from "../ViewOptionsModel.js";
 import { GlassView } from "./GlassView.js";
 
@@ -145,15 +145,67 @@ export class TypedPrismView extends GlassView {
   // Drag wiring
   // ═══════════════════════════════════════════════════════════════════════════
 
+  /** Flatten the prism geometry (path points + width/height/rotation) into a snapshot for undo. */
+  private capturePrismState(): number[] {
+    const values: number[] = [];
+    for (const p of this.glass.path) {
+      values.push(p.x, p.y);
+    }
+    if (hasWidthHeight(this.glass)) {
+      values.push(this.glass.width, this.glass.height, this.glass.rotation);
+    }
+    return values;
+  }
+
+  /** Restore a snapshot produced by capturePrismState() and refresh the view. */
+  private restorePrismState(values: number[]): void {
+    const path = this.glass.path;
+    for (let i = 0; i < path.length; i++) {
+      const p = path[i];
+      const x = values[2 * i];
+      const y = values[2 * i + 1];
+      if (p && x !== undefined && y !== undefined) {
+        p.x = x;
+        p.y = y;
+      }
+    }
+    if (hasWidthHeight(this.glass)) {
+      const o = path.length * 2;
+      const w = values[o];
+      const h = values[o + 1];
+      const r = values[o + 2];
+      // Assign the fields directly — the path coordinates above already hold
+      // the exact restored shape, so recomputing via setWidth/setHeight would
+      // discard them.
+      if (w !== undefined) {
+        this.glass.width = w;
+      }
+      if (h !== undefined) {
+        this.glass.height = h;
+      }
+      if (r !== undefined) {
+        this.glass.rotation = r;
+      }
+    }
+    this.rebuild();
+  }
+
   /**
    * Scale drag: dragging the handle at vertexIndex moves that vertex radially,
    * and ALL other vertices are scaled by the same ratio so the prism shape is
    * preserved.
    */
   private attachScaleDrag(handle: Circle, vertexIndex: number): void {
+    const historyHooks = createDragHistoryHooks(
+      "Resize prism",
+      () => this.capturePrismState(),
+      (values) => this.restorePrismState(values),
+    );
     const drag = new RichDragListener({
       tandem: this.glassTandem.createTandem(`scaleDragListener${vertexIndex}`),
       transform: this.modelViewTransform,
+      start: historyHooks.start,
+      end: historyHooks.end,
       drag: (_event, listener) => {
         const { x: dx, y: dy } = listener.modelDelta;
         const c = this.getCentroid();
@@ -206,9 +258,16 @@ export class TypedPrismView extends GlassView {
    * faces keep a minimum positive width (width − height ≥ DOVE_MIN_TOP_FACE).
    */
   private attachWidthHeightDrag(handle: Circle, vertexIndex: number, wh: WidthHeightGlass, isDove: boolean): void {
+    const historyHooks = createDragHistoryHooks(
+      "Resize prism",
+      () => this.capturePrismState(),
+      (values) => this.restorePrismState(values),
+    );
     const drag = new RichDragListener({
       tandem: this.glassTandem.createTandem(`widthHeightDragListener${vertexIndex}`),
       transform: this.modelViewTransform,
+      start: historyHooks.start,
+      end: historyHooks.end,
       drag: (_event, listener) => {
         const { x: dx, y: dy } = listener.modelDelta;
         const path = this.glass.path;
@@ -276,9 +335,16 @@ export class TypedPrismView extends GlassView {
    * about its centroid.
    */
   private attachRotationDrag(): void {
+    const historyHooks = createDragHistoryHooks(
+      "Rotate prism",
+      () => this.capturePrismState(),
+      (values) => this.restorePrismState(values),
+    );
     const drag = new RichDragListener({
       tandem: this.glassTandem.createTandem("rotationDragListener"),
       transform: this.modelViewTransform,
+      start: historyHooks.start,
+      end: historyHooks.end,
       drag: (_event, listener) => {
         const { x: dx, y: dy } = listener.modelDelta;
         if (Math.abs(dx) < ROTATION_DRAG_DELTA_MIN && Math.abs(dy) < ROTATION_DRAG_DELTA_MIN) {
