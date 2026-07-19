@@ -30,7 +30,7 @@ export class SingleRaySource extends BaseLightSource {
 
   public override emitRays(_rayDensity: number, _mode: ViewMode): SimulationRay[] {
     const dir = normalize(subtract(this.p2, this.p1));
-    return [this.makeRay(point(this.p1.x, this.p1.y), dir, this.brightness, true)];
+    return [this.makeRay(point(this.p1.x, this.p1.y), dir, this.brightness, true, this.id, 0)];
   }
 
   public serialize(): Record<string, unknown> {

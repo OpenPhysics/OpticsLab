@@ -455,6 +455,48 @@ export function pointsBounds(points: readonly Point[]): Bounds {
   return { minX, minY, maxX, maxY };
 }
 
+/**
+ * Compute the AABB of a circular arc from p1 to p2 passing through p3.
+ * Unlike pointsBounds([p1, p2, p3]), this includes the axis-extreme points
+ * of the circle that lie on the arc, so the box fully encloses the bulge
+ * (essential for spatial-index culling — an underestimated box lets rays
+ * pass through the element without being tested).
+ * Falls back to the bounding box of the three points when they are collinear.
+ */
+export function arcBounds(p1: Point, p2: Point, p3: Point): Bounds {
+  const bounds = pointsBounds([p1, p2, p3]);
+  const cc = circumcenter(p1, p2, p3);
+  if (!cc) {
+    return bounds;
+  }
+  const { center, radius } = cc;
+
+  // A point q on the circle lies on the p1→p3→p2 arc iff q is on the same
+  // side of the chord p1–p2 as p3 (same test as Glass.isHitOnArc).
+  const chordDx = p2.x - p1.x;
+  const chordDy = p2.y - p1.y;
+  const sideP3 = chordDx * (p3.y - p1.y) - chordDy * (p3.x - p1.x);
+
+  const extremes: Point[] = [
+    point(center.x + radius, center.y),
+    point(center.x - radius, center.y),
+    point(center.x, center.y + radius),
+    point(center.x, center.y - radius),
+  ];
+  let { minX, minY, maxX, maxY } = bounds;
+  for (const q of extremes) {
+    const sideQ = chordDx * (q.y - p1.y) - chordDy * (q.x - p1.x);
+    // Boundary cases (sideQ ≈ 0) are included — a slight overestimate is harmless.
+    if (Math.sign(sideQ) === Math.sign(sideP3) || sideQ === 0) {
+      minX = Math.min(minX, q.x);
+      minY = Math.min(minY, q.y);
+      maxX = Math.max(maxX, q.x);
+      maxY = Math.max(maxY, q.y);
+    }
+  }
+  return { minX, minY, maxX, maxY };
+}
+
 // ── Fresnel Equations ────────────────────────────────────────────────────────
 
 /**

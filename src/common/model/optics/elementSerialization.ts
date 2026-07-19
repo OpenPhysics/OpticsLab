@@ -12,10 +12,13 @@
 import { ARCHETYPE_DEFAULT_WAVELENGTH_NM, DEFAULT_BEAM_BRIGHTNESS } from "../../../OpticsLabConstants.js";
 import {
   ELEMENT_TYPE_APERTURE,
+  ELEMENT_TYPE_APERTURED_PARABOLIC_MIRROR,
   ELEMENT_TYPE_ARC_MIRROR,
   ELEMENT_TYPE_ARC_SOURCE,
   ELEMENT_TYPE_BEAM,
   ELEMENT_TYPE_BEAM_SPLITTER,
+  ELEMENT_TYPE_BICONCAVE_LENS,
+  ELEMENT_TYPE_BICONVEX_LENS,
   ELEMENT_TYPE_CIRCLE_GLASS,
   ELEMENT_TYPE_CONTINUOUS_SPECTRUM_SOURCE,
   ELEMENT_TYPE_DETECTOR,
@@ -30,6 +33,8 @@ import {
   ELEMENT_TYPE_PARABOLIC_MIRROR,
   ELEMENT_TYPE_PARALLELOGRAM_PRISM,
   ELEMENT_TYPE_PLANE_GLASS,
+  ELEMENT_TYPE_PLANO_CONCAVE_LENS,
+  ELEMENT_TYPE_PLANO_CONVEX_LENS,
   ELEMENT_TYPE_POINT_SOURCE,
   ELEMENT_TYPE_PORRO_PRISM,
   ELEMENT_TYPE_REFLECTION_GRATING,
@@ -45,6 +50,8 @@ import { ApertureElement } from "../blockers/ApertureElement.js";
 import { LineBlocker } from "../blockers/LineBlocker.js";
 import { DetectorElement } from "../detectors/DetectorElement.js";
 import { FiberOpticElement } from "../fiber/FiberOpticElement.js";
+import { BiconcaveLens } from "../glass/BiconcaveLens.js";
+import { BiconvexLens } from "../glass/BiconvexLens.js";
 import { CircleGlass } from "../glass/CircleGlass.js";
 import { DovePrism } from "../glass/DovePrism.js";
 import { EquilateralPrism } from "../glass/EquilateralPrism.js";
@@ -53,6 +60,8 @@ import { Glass } from "../glass/Glass.js";
 import { HalfPlaneGlass } from "../glass/HalfPlaneGlass.js";
 import { IdealLens } from "../glass/IdealLens.js";
 import { ParallelogramPrism } from "../glass/ParallelogramPrism.js";
+import { PlanoConcaveLens } from "../glass/PlanoConcaveLens.js";
+import { PlanoConvexLens } from "../glass/PlanoConvexLens.js";
 import { PorroPrism } from "../glass/PorroPrism.js";
 import { RightAnglePrism } from "../glass/RightAnglePrism.js";
 import { SlabGlass } from "../glass/SlabGlass.js";
@@ -66,6 +75,7 @@ import { ContinuousSpectrumSource } from "../light-sources/ContinuousSpectrumSou
 import { DivergentBeam } from "../light-sources/DivergentBeam.js";
 import { PointSourceElement } from "../light-sources/PointSourceElement.js";
 import { SingleRaySource } from "../light-sources/SingleRaySource.js";
+import { AperturedParabolicMirror } from "../mirrors/AperturedParabolicMirror.js";
 import { ArcMirror } from "../mirrors/ArcMirror.js";
 import { BeamSplitterElement } from "../mirrors/BeamSplitterElement.js";
 import { IdealCurvedMirror } from "../mirrors/IdealCurvedMirror.js";
@@ -116,6 +126,25 @@ function asNumber(v: unknown, field: string, min?: number, max?: number): number
   }
   if (max !== undefined && v > max) {
     throw new Error(`Value at field "${field}" (${v}) exceeds maximum ${max}`);
+  }
+  return v;
+}
+
+/**
+ * Parse a radius-of-curvature field. Flat surfaces are represented as
+ * ±Infinity in the model, which JSON.stringify serializes as null — so
+ * null/undefined and non-finite numbers are all restored as Infinity.
+ * A zero radius is invalid (degenerate surface).
+ */
+function asRadius(v: unknown, field: string): number {
+  if (v === null || v === undefined) {
+    return Infinity;
+  }
+  if (typeof v !== "number" || Number.isNaN(v)) {
+    throw new Error(`Invalid radius at field "${field}": ${JSON.stringify(v)}`);
+  }
+  if (v === 0) {
+    throw new Error(`Radius at field "${field}" must not be zero`);
   }
   return v;
 }
@@ -270,6 +299,16 @@ const DEFS: Record<string, ElementDef> = {
     fields: [p("p1"), p("p2"), n("transRatio", 0, 1)],
     build: (v) => new BeamSplitterElement(v["p1"] as Point, v["p2"] as Point, v["transRatio"] as number),
   },
+  [ELEMENT_TYPE_APERTURED_PARABOLIC_MIRROR]: {
+    fields: [p("p1"), p("p2"), p("p3"), n("apertureHalfWidth", 0)],
+    build: (v) =>
+      new AperturedParabolicMirror(
+        v["p1"] as Point,
+        v["p2"] as Point,
+        v["p3"] as Point,
+        v["apertureHalfWidth"] as number,
+      ),
+  },
 
   // ── Prisms & glass ───────────────────────────────────────────────────────
   [ELEMENT_TYPE_EQUILATERAL_PRISM]: {
@@ -401,17 +440,33 @@ export function deserializeElement(obj: Record<string, unknown>): OpticalElement
       assignElementId(el, obj["id"]);
       return el;
     }
-    case ELEMENT_TYPE_SPHERICAL_LENS: {
-      const r1 = asNumber(obj["r1"], "r1");
-      const r2 = asNumber(obj["r2"], "r2");
+    case ELEMENT_TYPE_SPHERICAL_LENS:
+    case ELEMENT_TYPE_BICONVEX_LENS:
+    case ELEMENT_TYPE_BICONCAVE_LENS:
+    case ELEMENT_TYPE_PLANO_CONVEX_LENS:
+    case ELEMENT_TYPE_PLANO_CONCAVE_LENS: {
+      // Radii are parsed with asRadius because flat surfaces serialize
+      // Infinity → null through JSON.
+      const r1 = asRadius(obj["r1"], "r1");
+      const r2 = asRadius(obj["r2"], "r2");
       const d = asNumber(obj["d"], "d", 0);
-      const lens = new SphericalLens(
-        asPoint(obj["p1"], "p1"),
-        asPoint(obj["p2"], "p2"),
-        r1,
-        r2,
-        asNumber(obj["refIndex"], "refIndex", REF_INDEX_MIN),
-      );
+      const p1 = asPoint(obj["p1"], "p1");
+      const p2 = asPoint(obj["p2"], "p2");
+      const refIndex = asNumber(obj["refIndex"], "refIndex", REF_INDEX_MIN);
+      let lens: SphericalLens;
+      if (type === ELEMENT_TYPE_BICONVEX_LENS) {
+        lens = new BiconvexLens(p1, p2, Math.abs(r1), refIndex);
+      } else if (type === ELEMENT_TYPE_BICONCAVE_LENS) {
+        lens = new BiconcaveLens(p1, p2, Math.abs(r1), refIndex);
+      } else if (type === ELEMENT_TYPE_PLANO_CONVEX_LENS) {
+        lens = new PlanoConvexLens(p1, p2, Math.abs(r2), refIndex);
+      } else if (type === ELEMENT_TYPE_PLANO_CONCAVE_LENS) {
+        lens = new PlanoConcaveLens(p1, p2, Math.abs(r2), refIndex);
+      } else {
+        lens = new SphericalLens(p1, p2, r1, r2, refIndex);
+      }
+      // Rebuild with the serialized thickness; subclass overrides re-enforce
+      // their own r1/r2 constraints, so passing both radii is safe.
       lens.createLensWithDR1R2(d, r1, r2);
       assignElementId(lens, obj["id"]);
       return lens;

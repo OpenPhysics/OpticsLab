@@ -48,12 +48,17 @@ export class BeamSource extends BaseLightSource {
 
     const rays: SimulationRay[] = [];
 
+    let idx = 0;
     for (let i = 0.5; i <= n; i++) {
       const jitterFrac = jitter ? Math.random() - 0.5 : 0;
       const x = this.p1.x + (i + jitterFrac) * stepX;
       const y = this.p1.y + (i + jitterFrac) * stepY;
       const dir = normalize(subtract(point(x + Math.sin(normal), y + Math.cos(normal)), point(x, y)));
-      rays.push(this.makeRay(point(x, y), dir, b, i === 0.5));
+      // sourceId/rayIndex let the tracer group this beam's rays separately from
+      // other sources during image detection (rays without a sourceId all pool
+      // into one shared group, producing spurious cross-source image markers).
+      rays.push(this.makeRay(point(x, y), dir, b, i === 0.5, this.id, idx));
+      idx++;
     }
 
     return rays;

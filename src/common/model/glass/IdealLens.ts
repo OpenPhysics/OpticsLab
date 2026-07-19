@@ -93,10 +93,15 @@ export class IdealLens extends BaseSegmentElement {
     const ipY = intersection.point.y - center.y;
     const h = ipX * parX + ipY * parY;
 
-    // Thin lens deflection: the ray is deflected so that its parallel
-    // slope changes by -h/f while perpendicular component is preserved
+    // Thin lens deflection: the ray is deflected so that its slope with
+    // respect to the propagation direction changes by -h/f while the
+    // perpendicular component is preserved. slopeIn/slopeOut are par/per
+    // ratios with a *signed* per component, so the -h/f kick must flip sign
+    // for rays traveling against the lens normal (rayDirPer < 0) — otherwise
+    // a converging lens acts as a diverging lens for rays incident from the
+    // back side.
     const slopeIn = rayDirPar / rayDirPer;
-    const slopeOut = slopeIn - h / this.focalLength;
+    const slopeOut = slopeIn - (h / this.focalLength) * Math.sign(rayDirPer);
 
     // Reconstruct direction: per component keeps its sign
     const outDirPer = Math.sign(rayDirPer);
