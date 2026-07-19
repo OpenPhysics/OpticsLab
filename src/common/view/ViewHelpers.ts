@@ -21,6 +21,7 @@ import { Shape } from "scenerystack/kite";
 import type { ModelViewTransform2 } from "scenerystack/phetcommon";
 import { Circle, InteractiveHighlighting, type Node, Path, RichDragListener } from "scenerystack/scenery";
 import type { Tandem } from "scenerystack/tandem";
+import { StringManager } from "../../i18n/StringManager.js";
 import OpticsLabColors from "../../OpticsLabColors.js";
 import {
   GRID_SNAP_THRESHOLD_FRACTION,
@@ -116,6 +117,7 @@ export function createHandle(
   modelViewTransform: ModelViewTransform2,
   handlesVisibleProperty: TReadOnlyProperty<boolean>,
 ): Circle {
+  const a11y = StringManager.getInstance().getA11yStrings();
   const handle = new (InteractiveHighlighting(Circle))(HANDLE_RADIUS, {
     x: modelViewTransform.modelToViewX(p.x),
     y: modelViewTransform.modelToViewY(p.y),
@@ -125,8 +127,8 @@ export function createHandle(
     cursor: "pointer",
     tagName: "div",
     focusable: true,
-    accessibleName: "Drag handle",
-    accessibleHelpText: "Press arrow keys to adjust",
+    accessibleName: a11y.dragHandleStringProperty,
+    accessibleHelpText: a11y.dragHandleHelpStringProperty,
   });
   const visibilityListener = (visible: boolean) => {
     handle.visible = visible;
@@ -463,7 +465,7 @@ export function attachTranslationDrag(
   // arrow keys (RichDragListener's built-in keyboard drag) to move the element.
   bodyNode.tagName = "div";
   bodyNode.focusable = true;
-  bodyNode.accessibleHelpText = "Press arrow keys to move";
+  bodyNode.accessibleHelpText = StringManager.getInstance().getA11yStrings().dragBodyHelpStringProperty;
 
   const richDragListener = new RichDragListener({
     tandem: tandem,

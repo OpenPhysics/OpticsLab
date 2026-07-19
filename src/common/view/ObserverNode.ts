@@ -64,7 +64,7 @@ export class ObserverNode extends Node {
     });
     this.centerDot.tagName = "div";
     this.centerDot.focusable = true;
-    this.centerDot.accessibleHelpText = "Press arrow keys to move the observer";
+    this.centerDot.accessibleHelpText = StringManager.getInstance().getA11yStrings().observerHelpStringProperty;
 
     this.labelNode = new Text(StringManager.getInstance().getUIStrings().observerLabelStringProperty, {
       font: FONT_11PX,

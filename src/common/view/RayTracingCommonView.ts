@@ -526,6 +526,7 @@ export class RayTracingCommonView extends ScreenView {
         toolsPanel.reset();
       },
       ...(tandem && { tandem: tandem.createTandem("resetAllButton") }),
+      accessibleName: StringManager.getInstance().getA11yStrings().resetAllStringProperty,
     });
     this.addChild(resetAllButton);
 
