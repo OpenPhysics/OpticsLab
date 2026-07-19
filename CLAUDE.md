@@ -36,6 +36,10 @@ via the `screenSummaryContent` super-option and orders the PDOM through a wrappe
 `StringManager.getA11yStrings()`. Current-details is static (scene elements are a PhetioGroup);
 it can be made live by deriving an element-count Property.
 
+## Compliance carve-outs
+
+- **Hardcoded colors:** wavelength-derived `rgba(...)` / canvas strokes in ray/SVG exporters and light-source views — physically tinted optics rendering, not UI theme tokens.
+
 ## Testing
 
 Fleet-standard Vitest layout:
