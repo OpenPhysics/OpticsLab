@@ -1,164 +1,91 @@
-# Implementation Notes - OpticsLab Simulation
+# Implementation Notes - OpticsLab
 
-Notes for developers maintaining or extending the simulation. For **physics assumptions**, see [`model.md`](model.md). For **setup and scripts**, see the root [`README.md`](../README.md).
+Developer-facing notes on the architecture. The physics is documented for educators in
+[model.md](./model.md). Model-vs-view feature mapping: [model-features-vs-view.md](./model-features-vs-view.md).
 
----
+## Architecture Overview
 
-## Stack and runtime
+OpticsLab is a four-screen SceneryStack geometric-optics sim. Shared ray tracing lives under
+`src/common/`; each screen wires a thin model/view pair and a component carousel list in `main.ts`.
 
-- **TypeScript** (strict), **Vite** (dev/build), **SceneryStack** (`scenerystack` on npm): PhET-style **Sim** + **Screen** lifecycle, **Scenery** scene graph, **dot** math, **axon** properties where used.
-- **Biome** replaces ESLint/Prettier for lint and format.
-- **ES modules** everywhere: source imports use **`.js` extensions** in TypeScript paths (Node/Vite ESM resolution).
+```
+src/common/model/
+  ├─ RayTracingCommonModel.ts    scene handle, preferences hooks
+  ├─ optics/
+  │   ├─ OpticsScene.ts          elements[], settings, invalidate/simulate, JSON, PhET-iO group
+  │   ├─ RayTracer.ts            BFS queue, max depth, brightness cutoff, view modes
+  │   ├─ OpticsTypes.ts          OpticalElement contract, SimulationRay, TraceResult
+  │   ├─ Geometry.ts             intersections, Snell/Fresnel helpers
+  │   ├─ SpatialIndex.ts         accelerate intersection queries
+  │   ├─ elementSerialization.ts / CommandHistory.ts
+  │   └─ BaseElement.ts, OpticalElementPhetioObject.ts
+  ├─ glass/          BaseGlass (Snell + Fresnel + Cauchy), lenses, prisms, slabs, …
+  ├─ mirrors/        flat, arc, parabolic, ideal curved, beam splitter, …
+  ├─ light-sources/  beam, point, arc, continuous spectrum, single ray, …
+  ├─ blockers/       line blocker, aperture
+  ├─ gratings/       transmission/reflection + gratingRayInteraction
+  ├─ detectors/      DetectorElement, acquisition buffers
+  └─ fiber/          FiberOpticElement
 
----
+src/common/view/
+  ├─ RayTracingCommonView.ts     MVT, carousel, edit panel, simulate each frame
+  ├─ RayPropagationView.ts       CanvasNode draws TracedSegment[]
+  ├─ ElementRegistry.ts          ONLY dispatch: guard → createView → buildEditControls
+  ├─ OpticalElementViewFactory.ts / EditControlFactory.ts   thin wrappers
+  ├─ ComponentCarousel.ts        toolbox → new element constructors
+  ├─ BaseOpticalElementView.ts   drag, handles, rebuildEmitter
+  └─ {glass,mirrors,light-sources,…}/   one view node per element family
 
-## Application bootstrap (load order matters)
+src/intro/ IntroModel, IntroScreenView, IntroScreen
+src/lab/   LabModel, LabScreenView, LabScreen
+src/presets/ PresetsModel, PresetScenes, PresetsScreenView, PresetsScreen
+src/diffraction/ DiffractionModel, DiffractionScreenView, DiffractionScreen
 
-1. **`index.html`** loads `src/main.ts` as a module.
-2. **`init.ts`** is pulled in early via the SceneryStack pattern: it configures locale, splash, color profiles, and internal sim name **before** most of the app runs.
-3. **`brand.js`** must load before other app code (see comment in `main.ts`).
-4. **`main.ts`** calls `onReadyToLaunch`, builds **Screen** instances, **`Sim`**, then **`sim.start()`**.
-
-Changing locale list or color profiles: edit **`src/init.ts`**. Screen list and carousel composition: **`src/main.ts`** (`standardComponents` vs `diffractionComponents`).
-
----
-
-## Screen / model / view shape
-
-Most screens follow:
-
-```text
-Screen<Model, View>( modelFactory, viewFactory, options )
+src/OpticsLabConstants.ts / OpticsLabColors.ts / OpticsLabStrings.ts
+src/preferences/ OpticsLabPreferencesModel, opticsLabQueryParameters
 ```
 
-- **Intro / Lab / Presets** use screen-specific **Model** + **View** classes (e.g. `LabScreen` → `LabModel`, `LabScreenView`) but share the same **ray-tracing stack** under `src/common/` where applicable.
-- **Diffraction** is a separate screen with a reduced **carousel** set (see `main.ts`).
-- Shared options include **`OpticsLabPreferencesModel`**, **`createKeyboardHelpNode`**, and **`carouselComponents`**.
+Data flows Model → View through AXON `Property` objects and `OpticsScene` invalidation; the view
+calls `scene.simulate()` when dirty. Model classes must not import from view.
 
-The common ray-tracing UI lives in **`RayTracingCommonView`** (`RayTracingCommonView.ts`) and **`RayTracingCommonModel`** / **`OpticsScene`**: one **`OpticsScene`** owns all **`OpticalElement`** instances and runs **`RayTracer`** when the scene is dirty.
+## Key design decisions
 
----
+- **Single registry.** `ElementRegistry.ts` is the only place mapping model types to view nodes and
+  edit controls; **subclass order matters** (specific prisms before generic `Glass`).
+- **Cached trace.** `OpticsScene.invalidate()` marks stale; `simulate()` runs `RayTracer` and caches
+  `TraceResult`. Detectors clear on each full trace.
+- **OpticalElement contract.** `emitRays`, `checkRayIntersection`, `onRayIncident`, `serialize`,
+  `dispose` — new elements must add a `deserializeElement` branch or JSON load fails.
+- **Polarization channels.** Rays carry separate s and p brightness; Fresnel and beam splitters preserve
+  the bookkeeping convention documented in `BaseGlass.refractRay()`.
+- **Coordinates.** Model y-up; view y-down via inverted `ModelViewTransform2` in `RayTracingCommonView`.
 
-## Model layer (`src/common/model`)
+## Model / view design
 
-### `OpticalElement` contract (`optics/OpticsTypes.ts`)
+- `RayTracingCommonView._setupView` reparents nodes during carousel drag-and-drop; dropped tools return
+  to the carousel.
+- `RayPropagationView` batches canvas strokes; wavelength → RGB is a documented carve-out (physical
+  tinting, not UI theme tokens).
+- Command history (`CommandHistory`, `BatchPropertyCommand`) supports undoable property edits on elements.
+- `OpticsLabNamespace.register()` exposes classes to the browser console for debugging.
 
-Every element implements:
+## Disposal conventions
 
-- **`emitRays(rayDensity, mode)`** — sources produce **`SimulationRay`**[]; others return `[]`.
-- **`checkRayIntersection(ray)`** — nearest hit along the ray, or `null`.
-- **`onRayIncident(ray, intersection)`** — returns absorption, single **`outgoingRay`**, and/or **`newRays`** (e.g. beam splitter, Fresnel split).
-- **`serialize()`** / **`dispose()`** — persistence and listener cleanup.
+`OpticalElement.dispose()` clears element-owned listeners. Scene rebuilds and carousel drops should
+dispose removed elements; `RayTracingCommonView` coordinates teardown when elements leave the scene.
+Expand `tests/memory-leak.test.ts` when adding dynamic element views.
 
-**Categories** (`ElementCategory`) drive UI grouping; they are not used for ray sorting (the tracer scans all elements).
+## Testing
 
-### `OpticsScene` (`optics/OpticsScene.ts`)
+`npm test` (vitest, `--expose-gc`):
 
-- Holds **`elements[]`** and **`SceneSettings`** (mode, ray density, max depth, grid, observer, etc.).
-- **`invalidate()`** marks the cached trace stale; **`simulate()`** clears detector state, builds **`RayTracer`**, runs **`trace()`**, caches **`TraceResult`**.
-- The view typically calls **`invalidate()`** on model changes and **`simulate()`** each frame (see **`RayTracingCommonView`**).
+- `tests/duplicate-element.test.ts` — scene/serialization invariant
+- `tests/memory-leak.test.ts` — fleet WeakRef/GC regression
 
-### `RayTracer` (`optics/RayTracer.ts`)
+Run `npm run lint && npm run check && npm run build` after model or registry changes.
 
-- Breadth-first style queue over **`SimulationRay`** + depth; respects **`maxRayDepth`** and **minimum brightness** cutoffs.
-- **`ViewMode`** (`rays` | `extended` | `images` | `observer`) adds extra segments (extensions, image helpers, observer cone) on top of the core hit logic.
+## Multi-screen simulations
 
-### Geometry and physics helpers (`optics/Geometry.ts`, `optics/OpticsConstants.ts`)
-
-Shared math: intersections, Snell/Fresnel helpers, arc sampling, etc. **Glass-specific** Snell + Fresnel + Cauchy index live in **`glass/BaseGlass.ts`**.
-
-### Serialization
-
-- **`OpticsScene.toJSON()` / `fromJSON()`** — round-trip scene + settings; **`deserializeElement`** in `OpticsScene.ts` must know every **`type`** string from **`serialize()`**.
-- Adding a new element type **requires** a **`deserializeElement` branch** or the type will not load from saved JSON.
-
----
-
-## View layer (`src/common/view`)
-
-### Coordinates
-
-- **Model space**: metres, **y up** (standard optics sketch convention).
-- **View space**: Scenery pixels, **y down**; use **`ModelViewTransform2`** (inverted Y) from the screen view. Comments in **`RayTracingCommonView`** document scale (e.g. pixels per metre).
-
-### Single registry for views + edit panels
-
-**`ElementRegistry.ts`** is the **only** place that should map a model type to:
-
-1. **`guard`** — `instanceof` (or compound) check.
-2. **`createView`** — Scenery node constructor.
-3. **`buildEditControls`** (optional) — sliders/controls for the edit panel.
-
-**`OpticalElementViewFactory.ts`** and **`EditControlFactory.ts`** are thin wrappers that call into the registry—do not duplicate dispatch tables.
-
-**Ordering matters**: more specific classes (e.g. a named prism type) must appear **before** generic bases (e.g. **`Glass`**) so the first matching guard wins.
-
-### Carousel
-
-**`ComponentCarousel.ts`** + **`ComponentKey`** map toolbar buttons to **element constructors** and icons. A new draggable type needs a **key**, **descriptor**, and usually a matching **registry** + **model** class.
-
-### Element views and `BaseOpticalElementView`
-
-Many views extend **`BaseOpticalElementView`**: handles **`modelViewTransform`**, **`rebuildEmitter`** (notify edit panel after drags), and **`bodyDragListener`** for picking/moving the whole element. **`RayTracingCommonView._setupView`** reparents nodes during drag and returns dropped tools to the carousel.
-
-### Rays on canvas
-
-**`RayPropagationView`** is a **CanvasNode**: receives **`TracedSegment[]`** from the model trace; draws in view space. High ray counts use batched alpha drawing.
-
----
-
-## Internationalization
-
-- Copy lives in **`src/i18n/strings_en.json`** and **`strings_fr.json`**; keys must stay **in parity** (TypeScript enforces via `StringManager`).
-- **`StringManager.getNestedStringProperties`** exposes **`ReadOnlyProperty<string>`** trees for UI.
-- Add strings in JSON first, then wire through **`StringManager`** methods if you need typed accessors.
-
----
-
-## Constants
-
-- **`OpticsLabConstants.ts`**: UI layout, slider ranges, default physics numbers, ray-render tuning, grating defaults, etc.
-- **`optics/OpticsConstants.ts`**: small shared physics thresholds (e.g. Fresnel spawn threshold, polarization split).
-
-Prefer **named constants** over magic numbers in new code.
-
----
-
-## Debugging / introspection
-
-**`OpticsLabNamespace`** (`OpticsLabNamespace.ts`): important classes and factories are **`opticsLab.register(...)`** so they can be reached from the browser console during development.
-
----
-
-## Tooling expectations
-
-- **`npm run lint`** — `biome check .` (format + lint + assist).
-- **`npm run check`** — `tsc --noEmit` (currently **`src/`** only per `tsconfig.json`; **`scripts/`** uses **tsx** without project check).
-- **`npm run build`** — `tsc && vite build` (PWA plugin in **`vite.config.ts`**).
-- **Git hooks** (`.githooks/pre-commit`): **`biome check --write`** on staged TS/JS/JSON/HTML.
-
----
-
-## Adding a new optical element (checklist)
-
-1. **Model**: class implementing **`OpticalElement`**; **`serialize()`** `type` string stable and unique.
-2. **`OpticsScene.deserializeElement`**: parse JSON → instance.
-3. **View**: Scenery node (often **`BaseOpticalElementView`** subclass).
-4. **`ElementRegistry`**: `guard`, `createView`, optional `buildEditControls` (correct order vs subclasses).
-5. **Carousel**: **`ComponentKey`** + **`ComponentCarousel`** descriptor + icon if it should appear in the toolbox.
-6. **Strings**: labels for component name and any new controls.
-7. **Manual test**: drag, delete, reset, save/load JSON if the scene is persisted on that screen.
-
----
-
-## Related paths (quick map)
-
-| Area | Path |
-|------|------|
-| Ray trace core | `src/common/model/optics/RayTracer.ts` |
-| Scene + cache + JSON | `src/common/model/optics/OpticsScene.ts` |
-| Types + ray/result shapes | `src/common/model/optics/OpticsTypes.ts` |
-| Registry | `src/common/view/ElementRegistry.ts` |
-| Shared screen UI | `src/common/view/RayTracingCommonView.ts` |
-| Preferences | `src/preferences/` |
-| Screen entry | `src/main.ts` |
+Four screens share `RayTracingCommonModel` / `RayTracingCommonView` with different carousels and
+backgrounds (`main.ts`: `standardComponents` vs `diffractionComponents`). See fleet `doc/multi-screen.md`
+for StringManager screen names and per-screen folders.

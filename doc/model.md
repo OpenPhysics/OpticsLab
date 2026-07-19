@@ -1,75 +1,108 @@
-# Model for OpticsLab
+# Model - OpticsLab
 
-*Summary of the physics and numerics used in the simulation.*
+This document describes the model (the underlying physics, math, and behavior) for the simulation,
+in terms appropriate for an educator. It is the companion to
+[implementation-notes.md](./implementation-notes.md), which targets developers.
 
-OpticsLab is a **geometric optics** simulation: light is represented as **rays** (straight-line segments between interactions). There is **no propagating wave** in the model—no \( \cos(kx - \omega t + \phi) \) phase evolution through space—so interference and diffraction **except at gratings** are not modeled as waves. That keeps the math accessible while still supporting reflection, refraction, lenses, prisms, simple diffraction orders, and qualitative colour.
+## Overview
 
----
+OpticsLab is a **geometric optics** simulation: light is represented as **rays** — straight-line
+segments between interactions. There is **no propagating wave** in the model (no cos(kx − ωt + φ)
+phase evolution through space), so interference and diffraction are **not** modeled as waves except at
+**gratings**. Students drag lenses, mirrors, prisms, beam splitters, blockers, and detectors from a
+carousel, adjust element parameters, and watch rays trace through the scene in real time.
 
-## Refraction and Snell’s law
+Four screens share the same ray-tracing stack under `src/common/`:
 
-At interfaces between air (treated as **\(n = 1\)**, non-dispersive) and glass-like materials, outgoing ray directions use **Snell’s law** in vector form. **Total internal reflection** is applied when no real transmitted direction exists; in that case the ray reflects specularly instead of refracting.
+- **Intro** — guided subset of components.
+- **Lab** — full toolbox for free-form scene building.
+- **Presets** — curated demonstration scenes.
+- **Diffraction** — reduced carousel focused on transmission/reflection gratings.
 
-- [Snell’s law](https://en.wikipedia.org/wiki/Snell%27s_law)
+The key ideas a student should take away:
 
----
+- At smooth interfaces, **Snell's law** relates incident and refracted directions; **total internal
+  reflection** occurs when no real transmitted direction exists.
+- **Mirrors** reflect specularly (angle of incidence equals angle of reflection).
+- An **ideal thin lens** bends rays at a line according to focal length — not by tracing Snell paths
+  through thick glass.
+- **Gratings** split light into orders via the grating equation; other elements do not produce
+  diffraction patterns.
+- Ray brightness tracks **energy bookkeeping** (s and p polarization components); weak rays are
+  dropped so the tree stays tractable.
 
-## Fresnel reflection (optional partial reflect)
+## Quantities and units
 
-When **partial reflection** is enabled on a refracting element, reflected and transmitted **power** at an interface are split using the standard **Fresnel equations** for **s- and p-polarized** light. The simulation carries separate **s** and **p** brightness components; **unpolarized** light is represented by splitting energy equally between them. Very weak reflected rays (below a small brightness threshold) are dropped so the ray tree stays tractable.
+Model space uses **metres**, **y up**. Air is treated as n = 1 (non-dispersive).
 
-- [Fresnel equations](https://en.wikipedia.org/wiki/Fresnel_equations)
+| Quantity | Symbol | Units | Notes |
+|---|---|---|---|
+| Position | (x, y) | m | Scene coordinates |
+| Ray direction | d̂ | — | Unit vector along propagation |
+| Wavelength | λ | nm | Optional per-ray; drives dispersion and display colour |
+| Refractive index | n | — | Base index + Cauchy dispersion term |
+| Cauchy B coefficient | B | — | 0 disables dispersion for that element |
+| Focal length | f | m | Ideal thin lens |
+| Grating period | d | m | Groove spacing |
+| Diffraction order | m | — | Integer order in grating equation |
+| Brightness (s / p) | B_s, B_p | — | Separate polarization channels; unpolarized ⇒ equal split |
+| Ray depth | — | — | Interaction count limit (default ~200) |
+| Observer radius | r | m | Collection disc in observer view mode |
 
-When partial reflection is off, refraction still follows Snell’s law but without splitting off a reflected ray at that surface (a simplifying teaching mode).
+## Governing equations
 
----
+**Snell's law (refraction).** At an interface with normal n̂ and indices n₁, n₂:
 
-## Dispersion (wavelength-dependent index)
+```
+n₁ sin θ₁ = n₂ sin θ₂
+```
 
-For rays that carry a **wavelength** (in nanometres), the refractive index of glass uses a **Cauchy-type** one-term dispersion: base index plus a term proportional to \(1/\lambda^2\) (with \(\lambda\) in the model’s length units). 
+Implemented in vector form in `BaseGlass.refractRay()`. **Total internal reflection** returns a
+specular reflected ray when transmission is impossible.
 
-- [Cauchy’s equation (dispersion)](https://en.wikipedia.org/wiki/Cauchy%27s_equation)
+**Fresnel reflection (optional).** When *partial reflect* is enabled, reflected and transmitted
+**power** split using Fresnel equations for s- and p-polarization; unpolarized light divides equally.
+Very weak reflected rays (below a brightness threshold) are dropped.
 
-Setting the Cauchy **B** coefficient to **0** turns off dispersion for that element (index is then independent of wavelength).
+**Dispersion.** For rays carrying wavelength λ:
 
----
+```
+n(λ) = n₀ + B / (λ² · k_c)
+```
 
-## Mirrors and beam splitters
+(Cauchy-type; k_c is a model constant in `OpticsLabConstants.ts`). B = 0 gives constant n.
 
-**Specular mirrors** reflect rays so that the angle of incidence equals the angle of reflection with respect to the local surface normal. Curved mirrors (arc, parabolic, ideal curved) sample or constrain geometry so intersections and normals are consistent with the chosen representation.
+**Mirrors and beam splitters.** Mirrors apply law of reflection. Beam splitters reflect one portion
+and transmit the remainder along the incident direction according to a fixed transmission ratio (schematic,
+not a thin-film stack).
 
-**Beam splitters** divide energy between a **reflected** ray (law of reflection) and a **transmitted** ray (same direction as incidence) according to a fixed **transmission ratio** \(0\ldots1\). This is a schematic model, not a thin-film stack.
+**Ideal thin lens.** Rays are bent at the lens line to satisfy thin-lens imaging (specified focal length);
+not Snell tracing through volumetric glass.
 
----
+**Grating equation** (transmission and reflection gratings):
 
-## Ideal thin lens
+```
+d (sin θ_m − sin θ_i) = m λ
+```
 
-The **ideal lens** does **not** trace rays through glass with Snell’s law. Instead it applies a **thin-lens** mapping: rays are bent at the lens line so that behaviour is consistent with a specified **focal length** (sign convention follows the sim’s lens setup). Rays striking the lens exactly along the optical axis in a degenerate way may pass through with no deflection.
+Several orders m are emitted; relative strengths use a **sinc²** factor from duty cycle; intensities
+renormalize across emitted orders. Orders requiring |sin θ| > 1 are skipped.
 
-- [Thin lens](https://en.wikipedia.org/wiki/Thin_lens)
+**Ray tracing termination.** Tracing stops when depth exceeds `maxRayDepth`, combined s+p brightness
+falls below a minimum, or the ray is **absorbed** (detector, line blocker, opaque aperture). No
+exponential absorption in bulk air/glass.
 
----
+## Simplifications and assumptions
 
-## Diffraction gratings
+- **Geometric optics only** — no Huygens wavefronts, no interference except grating orders.
+- **Monochromatic or per-ray wavelength** — colour on screen maps λ → RGB for display.
+- **Extended / image / observer modes** add **construction** segments (virtual rays, image markers,
+  observer cone) for pedagogy; they do not add unphysical power.
+- Elements are **2D schematic** cross-sections; 3D tilt and vignetting are not modeled.
+- Detectors integrate incident ray power; they do not simulate exposure time or sensor noise.
 
-**Transmission** and **reflection** gratings use the usual **grating equation** relating groove spacing, wavelength, and diffraction order. Several orders (positive and negative) can be produced; each order’s **relative** strength uses a **sinc²**-type factor tied to the grating **duty cycle** (slit width vs period). Intensities are **renormalized** across the emitted orders so the total does not exceed the incident ray brightness. Orders that would require \(|\sin\theta| > 1\) are skipped.
+## References
 
-- [Diffraction grating](https://en.wikipedia.org/wiki/Diffraction_grating)
-
----
-
-## Ray tracing limits and energy bookkeeping
-
-Tracing stops when:
-
-- A ray undergoes **too many interactions** (default **maximum depth** on the order of **200** segments in the recursion tree—configurable in code), or  
-- Its combined **s + p brightness** falls below a **minimum threshold**, or  
-- It hits an **absorbing** object (e.g. **line blocker**, **detector**, or aperture treated as opaque in the model).
-
-There is **no exponential absorption** along paths in air or inside uniform glass; **detectors** and **blockers** remove rays from the scene and record or discard that power. At refracting surfaces with Fresnel splitting, reflected and transmitted components **share** the incident energy according to the Fresnel reflectances; the model does not add extra unexplained loss at those surfaces beyond what those equations imply (and threshold-based ray dropping for performance).
-
----
-
-## Sources, colour, and display
-
-Light sources emit discrete rays (or dense bundles) with assigned **wavelength** and **brightness**. For drawing, wavelength is mapped to an **RGB colour** for the ray display; brightness affects **opacity** (and stacking of many rays can look brighter or “whiter”). **Extended** (dashed) rays can be shown for teaching **virtual images** and ray-construction modes—these are **construction** rays, not additional physical power in the model.
+- E. Hecht, *Optics* — Snell's law, Fresnel coefficients, thin lenses, gratings.
+- [Snell's law](https://en.wikipedia.org/wiki/Snell%27s_law), [Fresnel equations](https://en.wikipedia.org/wiki/Fresnel_equations), [Diffraction grating](https://en.wikipedia.org/wiki/Diffraction_grating), [Thin lens](https://en.wikipedia.org/wiki/Thin_lens).
+- PhET-style geometric ray tracing pedagogy (comparative UI patterns).

@@ -4,28 +4,43 @@ Sim-specific context for AI assistants. General SceneryStack guidance: [OpenPhys
 
 ## Project
 
-Geometric optics simulation: ray tracing through lenses, mirrors, beam splitters, gratings, and detectors. Users build scenes from a component carousel and edit element parameters.
+Geometric optics simulation: ray tracing through lenses, mirrors, beam splitters, gratings, and detectors. Users build scenes from a component carousel and edit element parameters. Four screens share the ray-tracing stack under `src/common/`:
 
-**Ignore `optics-template/`** when exploring the codebase — it is reference material, not part of the shipped sim.
+- **Intro** — guided subset of components
+- **Lab** — full toolbox
+- **Presets** — curated demonstration scenes
+- **Diffraction** — gratings-focused carousel
+
+**Ignore `optics-template/`** — reference material, not part of the shipped sim.
+
+Physics for educators: `doc/model.md`. Architecture: `doc/implementation-notes.md`.
 
 ## Key files
 
 | Area | Location |
 |---|---|
-| Scene model | `src/common/model/RayTracingCommonModel.ts`, `OpticsScene.ts`, `RayTracer.ts` |
+| Shared screen | `src/common/RayTracingCommonScreen.ts` |
+| Scene model | `src/common/model/RayTracingCommonModel.ts`, `optics/OpticsScene.ts`, `RayTracer.ts` |
 | Elements | `src/common/model/{glass,mirrors,light-sources,blockers,gratings,detectors}/` |
-| Views | `src/common/view/`, `OpticalElementViewFactory.ts`, `RayPropagationView.ts` |
+| Views | `src/common/view/RayTracingCommonView.ts`, `OpticalElementViewFactory.ts`, `RayPropagationView.ts`, `OpticsLabScreenSummaryContent.ts` |
+| Screens | `src/intro/`, `src/lab/`, `src/presets/`, `src/diffraction/` |
 | Presets | `src/presets/PresetScenes.ts`, `PresetsScreenView.ts` |
-| Colors / constants | `OpticsLabColors.ts`, `OpticsLabConstants.ts` |
-| Preferences | `src/preferences/OpticsLabPreferencesModel.ts` |
 | Serialization | `src/common/model/optics/elementSerialization.ts`, `CommandHistory.ts` |
+| Colors / constants | `OpticsLabColors.ts`, `OpticsLabConstants.ts`, `src/i18n/StringManager.ts` |
 
-## Conventions (this sim)
+## Model
 
-- Model classes must not import from view
-- Boolean properties use verb prefixes (`is`, `has`, `show`)
-- Access modifiers required on class members
-- JSDoc on public methods and classes
+`RayTracingCommonModel` owns an `OpticsScene` containing all optical elements. Light is **geometric rays** (straight segments between interactions) — no propagating wave phase except at **gratings**.
+
+| Concept | Meaning |
+|---|---|
+| `OpticsScene` | container for lenses, mirrors, prisms, splitters, blockers, gratings, detectors |
+| Ray mode | `"rays"` or `"extended"` (query param) |
+| `rayDensity` / `maxRayDepth` | tracing cost controls |
+| Snell / mirror / thin-lens / grating rules | per-element interaction models |
+| `DetectorElement.stepAcquisition(dt)` | only per-frame model work in `step(dt)` |
+
+Ray brightness tracks s/p polarization energy; weak rays are dropped to keep the tree tractable.
 
 ## Accessibility
 
@@ -46,34 +61,27 @@ Fleet-standard Vitest layout:
 
 | Path | Purpose |
 |---|---|
-| `vitest.config.ts` | Test environment + `setupFiles` when present; `execArgv: ["--expose-gc"]` with memory-leak suite |
-| `tests/setup.ts` | Canvas / AudioContext mocks + `init({ name: "…" })` before SceneryStack imports (when required) |
-| `tests/**/*.test.ts` | Model/physics unit tests — mirror `src/` under `tests/` |
-| `tests/memory-leak.test.ts` | WeakRef + `forceGC` dispose regression (fleet pattern) |
+| `vitest.config.ts` | `happy-dom` environment, `setupFiles`, `execArgv: ["--expose-gc"]` |
+| `tests/setup.ts` | Canvas 2D mock + `init({ name: "…" })` before SceneryStack imports |
+| `tests/**/*.test.ts` | Model/physics unit tests |
+| `tests/memory-leak.test.ts` | WeakRef + `forceGC` dispose regression — expanded for dynamic element add/remove |
 
-- Put unit tests only under root `tests/` (never co-locate or use `__tests__/`).
-- Run `npm test`. CI runs the suite when a `test` script is present.
-- Expand `memory-leak.test.ts` for components that add/remove nodes or link Properties at runtime (see OpticsLab).
+Actual specs:
 
-## Documentation
+- `tests/duplicate-element.test.ts`
+- `tests/memory-leak.test.ts`
 
-| File | Contents |
-|---|---|
-| `doc/model.md` | Optics model overview |
-| `doc/implementation-notes.md` | Architecture notes |
-| `doc/model-features-vs-view.md` | Model vs view feature mapping |
+Run `npm test`. CI runs the suite when a `test` script is present.
 
-## Sim-specific commands
+## Commands
 
 ```bash
-npm test                  # Vitest unit tests
-npm run generate-svg-icon # Regenerate icon SVG before icons
+npm run lint && npm run check && npm run build
+npm test
+npm run generate-svg-icon   # regenerate icon SVG before icons
 ```
-
-After changes, run `npm run lint && npm run check && npm run build`.
 
 ## Development notes
 
-- **Pure client-side** — no backend, database, or external services
-- **ES2024 target** — `tsconfig.json` and Vite `build.target` use ES2024 (Vite 8+). If build fails on unknown target, run `npm ci`
-- **Tests** — Vitest with `happy-dom` and Canvas 2D mock (`tests/setup.ts`); no browser required
+- Model classes must not import from view. Boolean properties use verb prefixes (`is`, `has`, `show`).
+- **ES2024 target** — `tsconfig.json` and Vite `build.target` use ES2024 (Vite 8+). If build fails on unknown target, run `npm ci`.
