@@ -143,7 +143,7 @@ export class DetectorChartPanel extends Panel {
       children: [chartRectangle, liveBars, acquiredBars, chartTicksPath, yAxisLabel],
     });
 
-    const recordDot = new Circle(8, { fill: "red" });
+    const recordDot = new Circle(8, { fill: OpticsLabColors.detectorRecordDotFillProperty });
     const acquireButton = new RoundPushButton({
       content: recordDot,
       listener: options.onAcquire,

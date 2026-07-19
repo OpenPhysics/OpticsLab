@@ -12,6 +12,7 @@
  * to clear when switching away from that mode.
  */
 
+import { Multilink } from "scenerystack/axon";
 import { toFixed } from "scenerystack/dot";
 import type { ModelViewTransform2 } from "scenerystack/phetcommon";
 import { Circle, Node, Text } from "scenerystack/scenery";
@@ -31,6 +32,29 @@ export class ImageOverlayNode extends Node {
   public constructor(modelViewTransform: ModelViewTransform2) {
     super({ pickable: false });
     this.modelViewTransform = modelViewTransform;
+
+    // Marker fills/strokes are sampled from ProfileColorProperty.value when
+    // rebuilding. Invalidate the cache on profile change so a static scene
+    // still repaints when Projector Mode toggles.
+    const colorMultilink = Multilink.multilink(
+      [
+        OpticsLabColors.imageRealFillBaseColorProperty,
+        OpticsLabColors.imageRealStrokeBaseColorProperty,
+        OpticsLabColors.imageRealLabelFillProperty,
+        OpticsLabColors.imageVirtualObjectStrokeBaseColorProperty,
+        OpticsLabColors.imageVirtualObjectLabelFillProperty,
+        OpticsLabColors.imageVirtualStrokeBaseColorProperty,
+        OpticsLabColors.imageVirtualLabelFillProperty,
+      ],
+      () => {
+        if (this.lastImages !== null) {
+          const images = this.lastImages;
+          this.lastImages = null;
+          this.setImages(images);
+        }
+      },
+    );
+    this.disposeEmitter.addListener(() => colorMultilink.dispose());
   }
 
   public setImages(images: readonly DetectedImage[]): void {

@@ -73,11 +73,13 @@ const OpticsLabColors = {
 
   // ── Drag handles ───────────────────────────────────────────────────────────
   handleFillProperty: profileColor("handleFill", "rgba(255, 255, 255, 0.88)", "rgba(0, 0, 0, 0.65)"),
-  handleStrokeProperty: profileColor("handleStroke", "#333", "#333"),
+  // Stroke contrasts with fill: dark on near-white (default), light on near-black (projector).
+  handleStrokeProperty: profileColor("handleStroke", "#333", "#ccc"),
 
   // ── Mirror rendering ───────────────────────────────────────────────────────
   mirrorBackStrokeProperty: profileColor("mirrorBackStroke", "#666", "#444"),
-  mirrorFrontStrokeProperty: profileColor("mirrorFrontStroke", "#d8d8d8", "#d8d8d8"),
+  // Front edge must stay visible on both black (default) and white (projector) backgrounds.
+  mirrorFrontStrokeProperty: profileColor("mirrorFrontStroke", "#d8d8d8", "#555"),
   beamSplitterBackStrokeProperty: profileColor(
     "beamSplitterBackStroke",
     "rgba(100, 90, 0, 0.5)",
@@ -92,11 +94,14 @@ const OpticsLabColors = {
 
   // ── Blocker rendering ──────────────────────────────────────────────────────
   blockerBackStrokeProperty: profileColor("blockerBackStroke", "#555", "#333"),
-  blockerFrontStrokeProperty: profileColor("blockerFrontStroke", "#222", "#111"),
+  // Front stroke is brighter than back so the silhouette reads on the black default background.
+  blockerFrontStrokeProperty: profileColor("blockerFrontStroke", "#aaa", "#111"),
 
   // ── Detector rendering ────────────────────────────────────────────────────
   detectorBackStrokeProperty: profileColor("detectorBackStroke", "#00696B", "#004D4F"),
   detectorFrontStrokeProperty: profileColor("detectorFrontStroke", "#00BCD4", "#008C9E"),
+  /** Red record-dot fill inside the detector Acquire RoundPushButton. */
+  detectorRecordDotFillProperty: profileColor("detectorRecordDotFill", "#ff0000", "#cc0000"),
   detectorChartBackgroundProperty: profileColor(
     "detectorChartBackground",
     "rgba(0,30,40,0.85)",
