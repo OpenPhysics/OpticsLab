@@ -216,6 +216,11 @@
       "interactionHint": "Add optical elements from the carousel and arrange them on the bench to trace light rays through your setup."
     },
     "currentDetails": "Arrange optical elements on the bench and observe how light rays trace through them.",
-    "acquireDetector": "Acquire detector reading"
+    "acquireDetector": "Acquire detector reading",
+    "resetAll": "Reset All",
+    "dragHandle": "Drag handle",
+    "dragHandleHelp": "Press arrow keys to adjust.",
+    "dragBodyHelp": "Press arrow keys to move.",
+    "observerHelp": "Press arrow keys to move the observer."
   }
 }

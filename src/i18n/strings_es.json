@@ -216,6 +216,11 @@
       "interactionHint": "Agrega elementos ópticos desde el carrusel y colócalos en el banco para trazar los rayos de luz a través de tu montaje."
     },
     "currentDetails": "Coloca elementos ópticos en el banco y observa cómo los rayos de luz los atraviesan.",
-    "acquireDetector": "Adquirir lectura del detector"
+    "acquireDetector": "Adquirir lectura del detector",
+    "resetAll": "Restablecer todo",
+    "dragHandle": "Controlador de arrastre",
+    "dragHandleHelp": "Usa las flechas del teclado para ajustar.",
+    "dragBodyHelp": "Usa las flechas del teclado para mover.",
+    "observerHelp": "Usa las flechas del teclado para mover al observador."
   }
 }

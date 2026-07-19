@@ -216,6 +216,11 @@
       "interactionHint": "Ajoutez des éléments optiques depuis le carrousel et disposez-les sur le banc pour tracer les rayons lumineux à travers votre montage."
     },
     "currentDetails": "Disposez des éléments optiques sur le banc et observez comment les rayons lumineux les traversent.",
-    "acquireDetector": "Acquérir la mesure du détecteur"
+    "acquireDetector": "Acquérir la mesure du détecteur",
+    "resetAll": "Tout réinitialiser",
+    "dragHandle": "Poignée de glissement",
+    "dragHandleHelp": "Utilisez les flèches du clavier pour ajuster.",
+    "dragBodyHelp": "Utilisez les flèches du clavier pour déplacer.",
+    "observerHelp": "Utilisez les flèches du clavier pour déplacer l’observateur."
   }
 }
