@@ -17,18 +17,18 @@ import "./brand.js";
 
 import { onReadyToLaunch, PreferencesModel, Sim } from "scenerystack/sim";
 import { Tandem } from "scenerystack/tandem";
+import {
+  createDiffractionIcon,
+  createIntroIcon,
+  createLabIcon,
+  createPresetsIcon,
+} from "./common/OpticsLabScreenIcons.js";
 import type { ComponentKey } from "./common/view/ComponentCarousel.js";
 import { DiffractionScreen } from "./diffraction/DiffractionScreen.js";
 import { StringManager } from "./i18n/StringManager.js";
 import { IntroScreen } from "./intro/IntroScreen.js";
 import { LabScreen } from "./lab/LabScreen.js";
 import OpticsLabColors from "./OpticsLabColors.js";
-import {
-  createDiffractionScreenIcon,
-  createIntroScreenIcon,
-  createLabScreenIcon,
-  createPresetsScreenIcon,
-} from "./OpticsLabScreenIcons.js";
 import {
   TANDEM_DIFFRACTION_SCREEN,
   TANDEM_INTRO_SCREEN,
@@ -105,28 +105,28 @@ onReadyToLaunch(() => {
       name: screenNames.introStringProperty,
       tandem: Tandem.ROOT.createTandem(TANDEM_INTRO_SCREEN),
       carouselComponents: standardComponents,
-      homeScreenIcon: createIntroScreenIcon(),
+      homeScreenIcon: createIntroIcon(),
       ...commonScreenOptions,
     }),
     new LabScreen({
       name: screenNames.labStringProperty,
       tandem: Tandem.ROOT.createTandem(TANDEM_LAB_SCREEN),
       carouselComponents: standardComponents,
-      homeScreenIcon: createLabScreenIcon(),
+      homeScreenIcon: createLabIcon(),
       ...commonScreenOptions,
     }),
     new PresetsScreen({
       name: screenNames.presetsStringProperty,
       tandem: Tandem.ROOT.createTandem(TANDEM_PRESETS_SCREEN),
       carouselComponents: standardComponents,
-      homeScreenIcon: createPresetsScreenIcon(),
+      homeScreenIcon: createPresetsIcon(),
       ...commonScreenOptions,
     }),
     new DiffractionScreen({
       name: screenNames.diffractionStringProperty,
       tandem: Tandem.ROOT.createTandem(TANDEM_DIFFRACTION_SCREEN),
       carouselComponents: diffractionComponents,
-      homeScreenIcon: createDiffractionScreenIcon(),
+      homeScreenIcon: createDiffractionIcon(),
       ...commonScreenOptions,
     }),
   ];

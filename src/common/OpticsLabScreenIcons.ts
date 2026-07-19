@@ -18,7 +18,7 @@ import { Shape } from "scenerystack/kite";
 import { Line, Node, Path } from "scenerystack/scenery";
 import { VisibleColor } from "scenerystack/scenery-phet";
 import { ScreenIcon } from "scenerystack/sim";
-import OpticsLabColors from "./OpticsLabColors.js";
+import OpticsLabColors from "../OpticsLabColors.js";
 
 // ── Shared icon palette ────────────────────────────────────────────────────────
 const RAY = "#55ee77";
@@ -339,7 +339,7 @@ function wrapDiffractionIcon(): Node {
   return root;
 }
 
-export function createIntroScreenIcon(): ScreenIcon {
+export function createIntroIcon(): ScreenIcon {
   return new ScreenIcon(wrapIntroIcon(), {
     fill: iconBackgroundFill(),
     maxIconWidthProportion: 0.9,
@@ -347,7 +347,7 @@ export function createIntroScreenIcon(): ScreenIcon {
   });
 }
 
-export function createLabScreenIcon(): ScreenIcon {
+export function createLabIcon(): ScreenIcon {
   return new ScreenIcon(wrapLabIcon(), {
     fill: iconBackgroundFill(),
     maxIconWidthProportion: 0.9,
@@ -355,7 +355,7 @@ export function createLabScreenIcon(): ScreenIcon {
   });
 }
 
-export function createPresetsScreenIcon(): ScreenIcon {
+export function createPresetsIcon(): ScreenIcon {
   return new ScreenIcon(wrapPresetsIcon(), {
     fill: iconBackgroundFill(),
     maxIconWidthProportion: 0.88,
@@ -363,7 +363,7 @@ export function createPresetsScreenIcon(): ScreenIcon {
   });
 }
 
-export function createDiffractionScreenIcon(): ScreenIcon {
+export function createDiffractionIcon(): ScreenIcon {
   return new ScreenIcon(wrapDiffractionIcon(), {
     fill: iconBackgroundFill(),
     maxIconWidthProportion: 0.9,
