@@ -28,7 +28,7 @@
 import { BooleanProperty, Property, type ReadOnlyProperty } from "scenerystack/axon";
 import { type Bounds2, Dimension2, Range, Vector2 } from "scenerystack/dot";
 import type { ModelViewTransform2 } from "scenerystack/phetcommon";
-import { DragListener, Node, Text, VBox } from "scenerystack/scenery";
+import { Node, RichDragListener, Text, VBox } from "scenerystack/scenery";
 import { MeasuringTapeNode, NumberControl, ProtractorNode } from "scenerystack/scenery-phet";
 import { AccordionBox, Checkbox } from "scenerystack/sun";
 import { Tandem } from "scenerystack/tandem";
@@ -151,7 +151,7 @@ export class ToolsPanel extends Node {
     protractorVisibleProperty.linkAttribute(protractorNode, "visible");
     protractorNode.visible = false;
     protractorNode.addInputListener(
-      new DragListener({
+      new RichDragListener({
         translateNode: true,
         tandem: tandem?.createTandem("protractorDragListener") ?? Tandem.OPTIONAL,
       }),

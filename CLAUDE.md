@@ -36,6 +36,21 @@ via the `screenSummaryContent` super-option and orders the PDOM through a wrappe
 `StringManager.getA11yStrings()`. Current-details is static (scene elements are a PhetioGroup);
 it can be made live by deriving an element-count Property.
 
+## Testing
+
+Fleet-standard Vitest layout:
+
+| Path | Purpose |
+|---|---|
+| `vitest.config.ts` | Test environment + `setupFiles` when present; `execArgv: ["--expose-gc"]` with memory-leak suite |
+| `tests/setup.ts` | Canvas / AudioContext mocks + `init({ name: "…" })` before SceneryStack imports (when required) |
+| `tests/**/*.test.ts` | Model/physics unit tests — mirror `src/` under `tests/` |
+| `tests/memory-leak.test.ts` | WeakRef + `forceGC` dispose regression (fleet pattern) |
+
+- Put unit tests only under root `tests/` (never co-locate or use `__tests__/`).
+- Run `npm test`. CI runs the suite when a `test` script is present.
+- Expand `memory-leak.test.ts` for components that add/remove nodes or link Properties at runtime (see OpticsLab).
+
 ## Documentation
 
 | File | Contents |
