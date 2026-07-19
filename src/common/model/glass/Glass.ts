@@ -16,6 +16,7 @@
 
 import { ELEMENT_TYPE_GLASS } from "../../../OpticsLabStrings.js";
 import {
+  arcBounds,
   type Bounds,
   circle,
   distance,
@@ -82,7 +83,25 @@ export class Glass extends BaseGlass {
   // ── Bounding box ─────────────────────────────────────────────────────────
 
   public getBounds(): Bounds {
-    return pointsBounds(this.path);
+    const bounds = pointsBounds(this.path);
+    // Extend for arc edges: an arc bulges beyond the box of its three defining
+    // points, and an underestimated box would let the spatial index cull rays
+    // that actually hit the surface.
+    let { minX, minY, maxX, maxY } = bounds;
+    const n = this.path.length;
+    for (let i = 0; i < n; i++) {
+      const current = this.path[i % n] as GlassPathPoint;
+      const next = this.path[(i + 1) % n] as GlassPathPoint;
+      if (next.arc && !current.arc) {
+        const after = this.path[(i + 2) % n] as GlassPathPoint;
+        const ab = arcBounds(point(current.x, current.y), point(after.x, after.y), point(next.x, next.y));
+        minX = Math.min(minX, ab.minX);
+        minY = Math.min(minY, ab.minY);
+        maxX = Math.max(maxX, ab.maxX);
+        maxY = Math.max(maxY, ab.maxY);
+      }
+    }
+    return { minX, minY, maxX, maxY };
   }
 
   // ── Ray intersection ─────────────────────────────────────────────────────

@@ -68,27 +68,39 @@ export class DivergentBeam extends BaseLightSource {
 
     const rays: SimulationRay[] = [];
 
+    // sourceId/rayIndex let the tracer group this beam's rays separately from
+    // other sources during image detection (rays without a sourceId all pool
+    // into one shared group, producing spurious cross-source image markers).
+    let idx = 0;
     for (let i = 0.5; i <= n; i++) {
       const jitterFrac = jitter ? Math.random() - 0.5 : 0;
       const x = this.p1.x + (i + jitterFrac) * stepX;
       const y = this.p1.y + (i + jitterFrac) * stepY;
 
-      rays.push(this.createRay(x, y, normal, 0, i === 0.5, b));
+      rays.push(this.createRay(x, y, normal, 0, i === 0.5, b, idx++));
 
       for (let angle = angularStep; angle < halfAngle; angle += angularStep) {
-        rays.push(this.createRay(x, y, normal, angle, false, b));
-        rays.push(this.createRay(x, y, normal, -angle, false, b));
+        rays.push(this.createRay(x, y, normal, angle, false, b, idx++));
+        rays.push(this.createRay(x, y, normal, -angle, false, b, idx++));
       }
     }
 
     return rays;
   }
 
-  private createRay(x: number, y: number, normalAngle: number, angle: number, gap: boolean, b: number): SimulationRay {
+  private createRay(
+    x: number,
+    y: number,
+    normalAngle: number,
+    angle: number,
+    gap: boolean,
+    b: number,
+    rayIndex: number,
+  ): SimulationRay {
     const dir = normalize(
       subtract(point(x + Math.sin(normalAngle + angle), y + Math.cos(normalAngle + angle)), point(x, y)),
     );
-    return this.makeRay(point(x, y), dir, b, gap);
+    return this.makeRay(point(x, y), dir, b, gap, this.id, rayIndex);
   }
 
   public serialize(): Record<string, unknown> {

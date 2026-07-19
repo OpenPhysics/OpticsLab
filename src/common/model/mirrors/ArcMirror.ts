@@ -10,6 +10,7 @@
 import { ELEMENT_CATEGORY_MIRROR, ELEMENT_TYPE_ARC_MIRROR } from "../../../OpticsLabStrings.js";
 import { BaseElement } from "../optics/BaseElement.js";
 import {
+  arcBounds,
   type Bounds,
   circle,
   circumcenter,
@@ -19,7 +20,6 @@ import {
   normalize,
   type Point,
   point,
-  pointsBounds,
   rayCircleIntersections,
   subtract,
 } from "../optics/Geometry.js";
@@ -87,7 +87,10 @@ export class ArcMirror extends BaseElement {
   }
 
   public getBounds(): Bounds {
-    return pointsBounds([this.p1, this.p2, this.p3]);
+    // Arc-aware bounds: the arc bulges beyond the box of p1/p2/p3 (dramatically
+    // for arcs spanning more than 180°), and an underestimated box would let
+    // the spatial index cull rays that actually hit the mirror.
+    return arcBounds(this.p1, this.p2, this.p3);
   }
 
   private getArcGeometry(): { center: Point; radius: number } | null {

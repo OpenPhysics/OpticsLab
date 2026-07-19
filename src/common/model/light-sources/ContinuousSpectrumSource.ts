@@ -85,6 +85,7 @@ export class ContinuousSpectrumSource extends BaseLightSource {
 
     const rays: SimulationRay[] = [];
     let first = true;
+    let idx = 0;
     for (const wavelength of wavelengths) {
       rays.push({
         origin: point(this.p1.x, this.p1.y),
@@ -95,8 +96,11 @@ export class ContinuousSpectrumSource extends BaseLightSource {
         isNew: true,
         wavelength,
         spectrumAdditiveBlend: true,
+        sourceId: this.id,
+        rayIndex: idx,
       });
       first = false;
+      idx++;
     }
 
     return rays;
