@@ -33,7 +33,7 @@ import {
 import OpticsLabNamespace from "../../../OpticsLabNamespace.js";
 import type { GlassPathPoint } from "../../model/glass/Glass.js";
 import type { SphericalLens } from "../../model/glass/SphericalLens.js";
-import { buildDiamondShape, createHandle } from "../ViewHelpers.js";
+import { buildDiamondShape, createDragHistoryHooks, createHandle } from "../ViewHelpers.js";
 import type { ViewOptionsModel } from "../ViewOptionsModel.js";
 import { GlassView } from "./GlassView.js";
 
@@ -208,6 +208,40 @@ export class SphericalLensView extends GlassView {
   // Drag wiring
   // ═══════════════════════════════════════════════════════════════════════════
 
+  /** Flatten the lens geometry (6 path points + p1/p2) into a snapshot for undo. */
+  private captureLensState(): number[] {
+    const values: number[] = [];
+    for (const p of this.lens.path) {
+      values.push(p.x, p.y);
+    }
+    values.push(this.lens.p1.x, this.lens.p1.y, this.lens.p2.x, this.lens.p2.y);
+    return values;
+  }
+
+  /** Restore a snapshot produced by captureLensState() and refresh the view. */
+  private restoreLensState(values: number[]): void {
+    const path = this.lens.path;
+    for (let i = 0; i < path.length; i++) {
+      const p = path[i];
+      const x = values[2 * i];
+      const y = values[2 * i + 1];
+      if (p && x !== undefined && y !== undefined) {
+        p.x = x;
+        p.y = y;
+      }
+    }
+    const o = path.length * 2;
+    const p1x = values[o];
+    const p1y = values[o + 1];
+    const p2x = values[o + 2];
+    const p2y = values[o + 3];
+    if (p1x !== undefined && p1y !== undefined && p2x !== undefined && p2y !== undefined) {
+      this.lens.p1 = { x: p1x, y: p1y };
+      this.lens.p2 = { x: p2x, y: p2y };
+    }
+    this.rebuild();
+  }
+
   /**
    * Attach a 2-axis drag to a corner handle:
    *   • Aperture-axis component → resizes height (p1↔p2 distance), keeping the
@@ -220,9 +254,16 @@ export class SphericalLensView extends GlassView {
    *             determines sign of the d change for horizontal drag).
    */
   private attachHeightDrag(handle: Circle, side: "p1" | "p2", optSide: "left" | "right"): void {
+    const historyHooks = createDragHistoryHooks(
+      "Resize lens",
+      () => this.captureLensState(),
+      (values) => this.restoreLensState(values),
+    );
     const drag = new RichDragListener({
       tandem: this.glassTandem.createTandem(`heightDragListener${side}${optSide}`),
       transform: this.modelViewTransform,
+      start: historyHooks.start,
+      end: historyHooks.end,
       drag: (_event, listener) => {
         const { x: dx, y: dy } = listener.modelDelta;
         const p1 = this.lens.p1;
@@ -281,9 +322,16 @@ export class SphericalLensView extends GlassView {
 
   /** Attach rotation drag to the rotation handle. */
   private attachRotationDrag(): void {
+    const historyHooks = createDragHistoryHooks(
+      "Rotate lens",
+      () => this.captureLensState(),
+      (values) => this.restoreLensState(values),
+    );
     const drag = new RichDragListener({
       tandem: this.glassTandem.createTandem("rotationDragListener"),
       transform: this.modelViewTransform,
+      start: historyHooks.start,
+      end: historyHooks.end,
       drag: (_event, listener) => {
         const { x: dx, y: dy } = listener.modelDelta;
         if (Math.abs(dx) < 1e-12 && Math.abs(dy) < 1e-12) {
@@ -338,9 +386,16 @@ export class SphericalLensView extends GlassView {
    * `surface` selects which control point to move: "r1" (left, path[5]) or "r2" (right, path[2]).
    */
   private attachCurvatureDrag(handle: Circle, surface: "r1" | "r2"): void {
+    const historyHooks = createDragHistoryHooks(
+      "Adjust lens curvature",
+      () => this.captureLensState(),
+      (values) => this.restoreLensState(values),
+    );
     const drag = new RichDragListener({
       tandem: this.glassTandem.createTandem(`curvatureDragListener${surface}`),
       transform: this.modelViewTransform,
+      start: historyHooks.start,
+      end: historyHooks.end,
       drag: (_event, listener) => {
         const { x: dx, y: dy } = listener.modelDelta;
 

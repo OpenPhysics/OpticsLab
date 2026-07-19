@@ -225,6 +225,50 @@ export function attachEndpointDrag(
 }
 
 /**
+ * Creates start/end callbacks that record a custom geometry drag as a single
+ * undoable command, for RichDragListeners whose drag logic is too specialized
+ * for attachEndpointDrag/attachTranslationDrag (e.g. lens curvature, prism
+ * scale/rotation).
+ *
+ * `capture` flattens the mutated state into a number array; `restore` applies
+ * such a snapshot back to the model and refreshes the view. The command is
+ * push()ed (not execute()d) because the drag has already applied the final
+ * state when `end` fires.
+ *
+ * Usage:
+ *   const hooks = createDragHistoryHooks("Resize prism", capture, restore);
+ *   new RichDragListener({ start: hooks.start, drag: ..., end: hooks.end });
+ */
+export function createDragHistoryHooks(
+  description: string,
+  capture: () => number[],
+  restore: (values: number[]) => void,
+): { start: () => void; end: () => void } {
+  let before: number[] = [];
+  return {
+    start: () => {
+      before = capture();
+    },
+    end: () => {
+      const history = sceneHistoryRegistry.history;
+      if (!history) {
+        return;
+      }
+      const after = capture();
+      if (before.length === after.length && before.every((v, i) => v === after[i])) {
+        return;
+      }
+      const b = before;
+      history.push({
+        description,
+        execute: () => restore(after),
+        undo: () => restore(b),
+      });
+    },
+  };
+}
+
+/**
  * Creates a filled rectangular Shape centred on the line segment from
  * (vx1,vy1) to (vx2,vy2) in view (pixel) coordinates.  Because it is a
  * closed, filled polygon, Scenery's containsPoint() works correctly for
