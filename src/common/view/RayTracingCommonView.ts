@@ -16,6 +16,7 @@ import opticsLabQueryParameters from "../../preferences/opticsLabQueryParameters
 import { DetectorElement } from "../model/detectors/DetectorElement.js";
 import type { OpticalElement } from "../model/optics/OpticsTypes.js";
 import type { RayTracingCommonModel } from "../model/RayTracingCommonModel.js";
+import { FLAT_RESET_ALL_BUTTON_OPTIONS } from "../OpticsLabButtonOptions.js";
 import { BaseOpticalElementView } from "./BaseOpticalElementView.js";
 import { CarouselPanel } from "./CarouselPanel.js";
 import type { ComponentKey } from "./ComponentCarousel.js";
@@ -516,6 +517,7 @@ export class RayTracingCommonView extends ScreenView {
 
     // ── Reset Button ────────────────────────────────────────────────────────
     const resetAllButton = new ResetAllButton({
+      ...FLAT_RESET_ALL_BUTTON_OPTIONS,
       listener: () => {
         model.reset();
         _opticsLabPreferences.snapToGridProperty.reset();
