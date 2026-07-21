@@ -166,7 +166,7 @@ export class DetectorChartPanel extends Panel {
       fill: OpticsLabColors.detectorFrontStrokeProperty,
       pickable: false,
     });
-    const powerLabel = new Text("∫I =", {
+    const powerLabel = new Text(StringManager.getInstance().getUIStrings().detectorIntegratedIntensityStringProperty, {
       font: FONT_9PX,
       fill: OpticsLabColors.detectorFrontStrokeProperty,
       pickable: false,

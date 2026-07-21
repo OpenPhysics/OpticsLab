@@ -46,7 +46,8 @@
     "observerMode": "Observateur",
     "observerLabel": "observateur",
     "detectorIntensityAxis": "Intensité (u.a.)",
-    "detectorHits": "Impacts :"
+    "detectorHits": "Impacts :",
+    "detectorIntegratedIntensity": "∫I ="
   },
   "controls": {
     "brightness": "Luminosité",

@@ -777,7 +777,10 @@ export class RayTracingCommonView extends ScreenView {
     });
 
     // Give each element an accessible name so screen readers can identify it.
-    view.accessibleName = ElementTypeToAccessibleName(element.type);
+    // Prefer the localized component name (a Property, so it tracks the locale);
+    // fall back to a generated name for internal types with no component label.
+    view.accessibleName =
+      StringManager.getInstance().getElementTypeNameProperty(element.type) ?? ElementTypeToAccessibleName(element.type);
 
     const SelectThis = (): void => {
       this.selectedElementProperty.value = element;

@@ -17,12 +17,12 @@ clean** (no view imports anywhere under `src/common/model/**`) and **disposal di
 that was deliberately optimized for static scenes). The gaps are concentrated in **internationalization
 of accessibility strings** and a couple of **frame-rate-coupling** rough edges.
 
-| # | Pillar | Severity | One-line |
-|---|--------|----------|----------|
-| 1 | i18n / a11y | MEDIUM | Optical-element accessible names are English-only, bypassing `StringManager` |
-| 2 | i18n | LOW–MED | Hardcoded `"∫I ="` detector label sits next to a properly localized sibling |
-| 3 | Numerics | LOW–MED | No `dt` cap; acquisition sample count is frame-rate-dependent |
-| 4 | Architecture | LOW | Element geometry is plain objects, not Axon Properties → manual `invalidate()` |
+| # | Pillar | Severity | One-line | Status |
+|---|--------|----------|----------|--------|
+| 1 | i18n / a11y | MEDIUM | Optical-element accessible names are English-only, bypassing `StringManager` | **Fixed** |
+| 2 | i18n | LOW–MED | Hardcoded `"∫I ="` detector label sits next to a properly localized sibling | **Fixed** |
+| 3 | Numerics | LOW–MED | No `dt` cap; acquisition sample count is frame-rate-dependent | Open |
+| 4 | Architecture | LOW | Element geometry is plain objects, not Axon Properties → manual `invalidate()` | Open |
 
 ---
 
@@ -57,10 +57,12 @@ string (`"IdealLens"` → `"Ideal Lens"`). Every *other* accessible name in the 
 This is the single clearest i18n Fail in the view layer: the PDOM, which is precisely the surface a11y
 users depend on, is the one place still hardcoded to English.
 
-### Fix
+### Fix — applied
 
-Map `element.type` → a localized `StringProperty` from `StringManager` (a per-type key, or a lookup keyed
-by type), and assign that Property to `accessibleName` so it both localizes and stays reactive.
+Added `StringManager.getElementTypeNameProperty(type)`, which maps each `ELEMENT_TYPE_*` constant to its
+localized component `StringProperty`. `RayTracingCommonView` now assigns that Property to `accessibleName`,
+falling back to the generated `ElementTypeToAccessibleName` only for internal types with no component label
+(e.g. `FiberCoreGlass`). Names now localize and stay reactive to locale changes.
 
 ---
 
@@ -83,10 +85,11 @@ The two readout labels are built side by side, but only one is localized. `"∫I
 literal, so translators can't reach it and it can't adapt (the `=` sign, spacing, and any locale-specific
 notation are fixed). The neighbouring `hitCountLabel` shows the intended pattern.
 
-### Fix
+### Fix — applied
 
-Add a string key (e.g. `integratedIntensityStringProperty`) and pass the Property to the `Text` node, as
-`hitCountLabel` already does.
+Added a `detectorIntegratedIntensity` key to all three locale files and exposed it via
+`StringManager.getUIStrings()`; `DetectorChartPanel` now passes that Property to the `Text` node, as
+`hitCountLabel` already did.
 
 ---
 
