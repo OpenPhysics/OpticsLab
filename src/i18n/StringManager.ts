@@ -7,6 +7,42 @@
 
 import type { ReadOnlyProperty } from "scenerystack/axon";
 import { LocalizedString } from "scenerystack/chipper";
+import {
+  ELEMENT_TYPE_APERTURE,
+  ELEMENT_TYPE_APERTURED_PARABOLIC_MIRROR,
+  ELEMENT_TYPE_ARC_MIRROR,
+  ELEMENT_TYPE_ARC_SOURCE,
+  ELEMENT_TYPE_BEAM,
+  ELEMENT_TYPE_BEAM_SPLITTER,
+  ELEMENT_TYPE_BICONCAVE_LENS,
+  ELEMENT_TYPE_BICONVEX_LENS,
+  ELEMENT_TYPE_CIRCLE_GLASS,
+  ELEMENT_TYPE_CONTINUOUS_SPECTRUM_SOURCE,
+  ELEMENT_TYPE_DETECTOR,
+  ELEMENT_TYPE_DIVERGENT_BEAM,
+  ELEMENT_TYPE_DOVE_PRISM,
+  ELEMENT_TYPE_EQUILATERAL_PRISM,
+  ELEMENT_TYPE_FIBER_OPTIC,
+  ELEMENT_TYPE_GLASS,
+  ELEMENT_TYPE_IDEAL_LENS,
+  ELEMENT_TYPE_IDEAL_MIRROR,
+  ELEMENT_TYPE_LINE_BLOCKER,
+  ELEMENT_TYPE_PARABOLIC_MIRROR,
+  ELEMENT_TYPE_PARALLELOGRAM_PRISM,
+  ELEMENT_TYPE_PLANE_GLASS,
+  ELEMENT_TYPE_PLANO_CONCAVE_LENS,
+  ELEMENT_TYPE_PLANO_CONVEX_LENS,
+  ELEMENT_TYPE_POINT_SOURCE,
+  ELEMENT_TYPE_PORRO_PRISM,
+  ELEMENT_TYPE_REFLECTION_GRATING,
+  ELEMENT_TYPE_RIGHT_ANGLE_PRISM,
+  ELEMENT_TYPE_SEGMENT_MIRROR,
+  ELEMENT_TYPE_SINGLE_RAY,
+  ELEMENT_TYPE_SLAB_GLASS,
+  ELEMENT_TYPE_SPHERICAL_LENS,
+  ELEMENT_TYPE_TRACK,
+  ELEMENT_TYPE_TRANSMISSION_GRATING,
+} from "../OpticsLabStrings.js";
 import stringsEn from "./strings_en.json";
 import stringsEs from "./strings_es.json";
 import stringsFr from "./strings_fr.json";
@@ -27,6 +63,9 @@ const stringProperties = LocalizedString.getNestedStringProperties({
 
 export class StringManager {
   private static instance: StringManager | null = null;
+
+  /** Lazily built map: element `type` string → localized component-name Property. */
+  private elementTypeNameProperties: Map<string, ReadOnlyProperty<string>> | null = null;
 
   private constructor() {
     // Private — obtain via getInstance()
@@ -87,6 +126,7 @@ export class StringManager {
     observerLabelStringProperty: ReadOnlyProperty<string>;
     detectorIntensityAxisStringProperty: ReadOnlyProperty<string>;
     detectorHitsStringProperty: ReadOnlyProperty<string>;
+    detectorIntegratedIntensityStringProperty: ReadOnlyProperty<string>;
   } {
     return {
       gridStringProperty: stringProperties.ui.gridStringProperty,
@@ -107,6 +147,7 @@ export class StringManager {
       observerLabelStringProperty: stringProperties.ui.observerLabelStringProperty,
       detectorIntensityAxisStringProperty: stringProperties.ui.detectorIntensityAxisStringProperty,
       detectorHitsStringProperty: stringProperties.ui.detectorHitsStringProperty,
+      detectorIntegratedIntensityStringProperty: stringProperties.ui.detectorIntegratedIntensityStringProperty,
     };
   }
 
@@ -252,6 +293,58 @@ export class StringManager {
       trackStringProperty: c.trackStringProperty,
       fiberOpticStringProperty: c.fiberOpticStringProperty,
     };
+  }
+
+  /**
+   * Localized accessible name for a placed optical element, keyed by its model
+   * `type` string (the ELEMENT_TYPE_* constants). Returns a reactive
+   * ReadOnlyProperty so screen-reader names update with the locale, or `null`
+   * for types with no user-facing component label (e.g. the internal
+   * FiberCoreGlass), letting callers fall back to a generated name.
+   */
+  public getElementTypeNameProperty(type: string): ReadOnlyProperty<string> | null {
+    if (this.elementTypeNameProperties === null) {
+      const c = stringProperties.components;
+      // Keyed by element `type`, which is not always the carousel ComponentKey
+      // (e.g. type "Mirror" ↔ key "flatMirror", type "Glass" ↔ key "prism").
+      this.elementTypeNameProperties = new Map<string, ReadOnlyProperty<string>>([
+        [ELEMENT_TYPE_POINT_SOURCE, c.pointSourceStringProperty],
+        [ELEMENT_TYPE_BEAM, c.beamStringProperty],
+        [ELEMENT_TYPE_DIVERGENT_BEAM, c.divergentBeamStringProperty],
+        [ELEMENT_TYPE_SINGLE_RAY, c.singleRayStringProperty],
+        [ELEMENT_TYPE_ARC_SOURCE, c.arcSourceStringProperty],
+        [ELEMENT_TYPE_CONTINUOUS_SPECTRUM_SOURCE, c.continuousSpectrumStringProperty],
+        [ELEMENT_TYPE_SEGMENT_MIRROR, c.flatMirrorStringProperty],
+        [ELEMENT_TYPE_ARC_MIRROR, c.arcMirrorStringProperty],
+        [ELEMENT_TYPE_PARABOLIC_MIRROR, c.parabolicMirrorStringProperty],
+        [ELEMENT_TYPE_APERTURED_PARABOLIC_MIRROR, c.aperturedMirrorStringProperty],
+        [ELEMENT_TYPE_IDEAL_MIRROR, c.idealMirrorStringProperty],
+        [ELEMENT_TYPE_BEAM_SPLITTER, c.beamSplitterStringProperty],
+        [ELEMENT_TYPE_GLASS, c.prismStringProperty],
+        [ELEMENT_TYPE_EQUILATERAL_PRISM, c.equilateralPrismStringProperty],
+        [ELEMENT_TYPE_RIGHT_ANGLE_PRISM, c.rightAnglePrismStringProperty],
+        [ELEMENT_TYPE_PORRO_PRISM, c.porroPrismStringProperty],
+        [ELEMENT_TYPE_SLAB_GLASS, c.slabGlassStringProperty],
+        [ELEMENT_TYPE_PARALLELOGRAM_PRISM, c.parallelogramPrismStringProperty],
+        [ELEMENT_TYPE_DOVE_PRISM, c.dovePrismStringProperty],
+        [ELEMENT_TYPE_SPHERICAL_LENS, c.sphericalLensStringProperty],
+        [ELEMENT_TYPE_CIRCLE_GLASS, c.circleGlassStringProperty],
+        [ELEMENT_TYPE_PLANE_GLASS, c.halfPlaneGlassStringProperty],
+        [ELEMENT_TYPE_IDEAL_LENS, c.idealLensStringProperty],
+        [ELEMENT_TYPE_BICONVEX_LENS, c.biconvexLensStringProperty],
+        [ELEMENT_TYPE_BICONCAVE_LENS, c.biconcaveLensStringProperty],
+        [ELEMENT_TYPE_PLANO_CONVEX_LENS, c.planoConvexLensStringProperty],
+        [ELEMENT_TYPE_PLANO_CONCAVE_LENS, c.planoConcaveLensStringProperty],
+        [ELEMENT_TYPE_APERTURE, c.apertureStringProperty],
+        [ELEMENT_TYPE_LINE_BLOCKER, c.lineBlockerStringProperty],
+        [ELEMENT_TYPE_DETECTOR, c.detectorStringProperty],
+        [ELEMENT_TYPE_REFLECTION_GRATING, c.reflectionGratingStringProperty],
+        [ELEMENT_TYPE_TRANSMISSION_GRATING, c.transmissionGratingStringProperty],
+        [ELEMENT_TYPE_TRACK, c.trackStringProperty],
+        [ELEMENT_TYPE_FIBER_OPTIC, c.fiberOpticStringProperty],
+      ]);
+    }
+    return this.elementTypeNameProperties.get(type) ?? null;
   }
 
   public getPreferences(): {
