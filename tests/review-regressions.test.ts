@@ -37,7 +37,7 @@ import { ArcMirror } from "../src/common/model/mirrors/ArcMirror.js";
 import { deserializeElement } from "../src/common/model/optics/elementSerialization.js";
 import { arcBounds, point } from "../src/common/model/optics/Geometry.js";
 import { OpticsScene } from "../src/common/model/optics/OpticsScene.js";
-import type { SimulationRay } from "../src/common/model/optics/OpticsTypes.js";
+import type { OpticalElement, SimulationRay } from "../src/common/model/optics/OpticsTypes.js";
 import { RayTracer } from "../src/common/model/optics/RayTracer.js";
 
 // ── Helpers ──────────────────────────────────────────────────────────────────
@@ -274,5 +274,77 @@ describe("beam-type sources tag emitted rays for per-source grouping", () => {
     const rays = src.emitRays(10, "images");
     expect(rays).toHaveLength(1);
     expect(rays[0]?.sourceId).toBe(src.id);
+  });
+});
+
+// ── 5. Tracer culls unphysical rays at the boundary ─────────────────────────
+//
+// The brightness cutoff at the top of processRayEntry uses `!(b >= min)` rather
+// than `b < min` so that a non-finite (NaN) brightness — which a degenerate
+// element could produce — is culled too; `NaN < min` is false in IEEE-754, so a
+// bare `<` would let a NaN ray propagate uncapped to maxRayDepth. A ray with a
+// zero-length or non-finite direction (normalize() returns the zero vector for a
+// zero input) is likewise dropped before it can emit a zero-length or NaN segment.
+
+/**
+ * Minimal light source that emits exactly the rays it is handed. Used to inject a
+ * single crafted ray into the tracer without going through a real source's fan.
+ */
+class StubSource implements OpticalElement {
+  public readonly id = "stub-source";
+  public readonly type = "stubSource";
+  public readonly category = "lightSource" as const;
+  private readonly rays: SimulationRay[];
+  public constructor(rays: SimulationRay[]) {
+    this.rays = rays;
+  }
+  public emitRays(): SimulationRay[] {
+    return this.rays.map((r) => ({ ...r }));
+  }
+  public checkRayIntersection(): null {
+    return null;
+  }
+  public onRayIncident(): { isAbsorbed: boolean } {
+    return { isAbsorbed: true };
+  }
+  public serialize(): Record<string, unknown> {
+    return { type: this.type, id: this.id };
+  }
+  public getBounds(): { minX: number; minY: number; maxX: number; maxY: number } {
+    return { minX: 0, minY: 0, maxX: 0, maxY: 0 };
+  }
+  public dispose(): void {
+    // no-op
+  }
+}
+
+describe("tracer culls unphysical rays at the boundary", () => {
+  it("drops a ray with non-finite (NaN) brightness instead of propagating it", () => {
+    const nanRay = makeRay({ x: 0, y: 0 }, { x: 1, y: 0 });
+    nanRay.brightnessS = Number.NaN;
+    const result = new RayTracer([new StubSource([nanRay])]).trace();
+    // Culled before any segment is emitted; the truncation total stays finite.
+    expect(result.segments).toHaveLength(0);
+    expect(Number.isFinite(result.truncationError)).toBe(true);
+  });
+
+  it("drops a ray whose direction is the zero vector", () => {
+    const degenerateRay = makeRay({ x: 0, y: 0 }, { x: 0, y: 0 });
+    const result = new RayTracer([new StubSource([degenerateRay])]).trace();
+    expect(result.segments).toHaveLength(0);
+  });
+
+  it("still traces a normal ray from the same stub source", () => {
+    const goodRay = makeRay({ x: 0, y: 0 }, { x: 1, y: 0 });
+    const result = new RayTracer([new StubSource([goodRay])]).trace();
+    // A normal ray with nothing to hit escapes and records exactly one segment,
+    // with finite endpoints.
+    expect(result.segments).toHaveLength(1);
+    const seg = result.segments[0];
+    expect(seg).toBeDefined();
+    if (!seg) {
+      return;
+    }
+    expect(Number.isFinite(seg.p2.x) && Number.isFinite(seg.p2.y)).toBe(true);
   });
 });

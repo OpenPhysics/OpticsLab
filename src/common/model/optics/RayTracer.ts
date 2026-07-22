@@ -197,7 +197,21 @@ export class RayTracer {
     }
 
     const totalBrightness = ray.brightnessS + ray.brightnessP;
-    if (totalBrightness < this.config.minBrightness) {
+    // Cull dim rays. The negated `>=` form also catches a non-finite brightness
+    // (a NaN produced by a degenerate element): `NaN < minBrightness` is false in
+    // IEEE-754, so a bare `<` check would let an unphysical ray propagate uncapped
+    // to maxRayDepth. Non-finite brightness contributes 0 to the truncation total
+    // so it cannot poison the accumulator.
+    if (!(totalBrightness >= this.config.minBrightness)) {
+      return Number.isFinite(totalBrightness) ? totalBrightness : 0;
+    }
+
+    // Cull rays with a degenerate direction. `normalize()` returns the zero vector
+    // for a zero input, so a degenerate element (e.g. a SegmentMirror with p1 === p2)
+    // can feed a zero-length or non-finite direction into the tracer. Such a ray has
+    // no meaningful propagation and would otherwise emit a zero-length or NaN segment.
+    const dir = ray.direction;
+    if (!(Number.isFinite(dir.x) && Number.isFinite(dir.y)) || (dir.x === 0 && dir.y === 0)) {
       return totalBrightness;
     }
 
