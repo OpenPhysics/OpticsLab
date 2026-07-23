@@ -670,4 +670,50 @@ describe("Memory leak regression", () => {
       );
     }
   });
+
+  // ── Preset switching does not retain superseded elements ──────────────────
+  //
+  // PresetsModel reloads a single long-lived scene on every preset change:
+  //   scene.clearElements(); scene.history.clear(); scene.addElement(el, false);
+  //
+  // clearElements() removes elements from the group, but any undo command that
+  // captured them would keep them reachable.  This test mirrors the preset-load
+  // flow: elements from an earlier "preset" must be collectible once a later
+  // preset has replaced them, even though the scene itself lives on.
+  //
+  // Regression guard: loading a preset with recordHistory=true (or without
+  // clearing history) would leave the previous preset's elements pinned in the
+  // undo stack, so the round-1 WeakRefs below would still deref().
+  it("preset switching releases the previous preset's elements", async () => {
+    const round1Refs: Array<{ key: string; ref: WeakRef<object> }> = [];
+    // The scene is intentionally kept alive for the whole test — it models the
+    // single scene owned by PresetsModel across many preset switches.
+    const scene = new OpticsScene(Tandem.OPT_OUT);
+    const presetKeys = ALL_KEYS.slice(0, 8);
+
+    // Load "preset 1", tracking its elements.
+    const loadPreset = (refs: Array<{ key: string; ref: WeakRef<object> }> | null): void => {
+      scene.clearElements();
+      scene.history.clear();
+      for (const key of presetKeys) {
+        const el = createDefaultElement(key, 0, 0);
+        if (refs) {
+          refs.push({ key, ref: new WeakRef<object>(el) });
+        }
+        scene.addElement(el, false);
+      }
+    };
+
+    loadPreset(round1Refs);
+    // Switch to "preset 2" — round-1 elements are now superseded.
+    loadPreset(null);
+
+    await forceGC();
+
+    const leaked = round1Refs.filter((e) => e.ref.deref() !== undefined);
+    scene.dispose();
+    if (leaked.length > 0) {
+      expect.fail(`Preset-1 elements retained after switching presets: ${leaked.map((e) => e.key).join(", ")}`);
+    }
+  });
 });

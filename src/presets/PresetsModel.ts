@@ -22,11 +22,19 @@ export class PresetsModel extends RayTracingCommonModel {
     // Load elements whenever the selected preset changes.
     this.selectedPresetProperty.link((presetId) => {
       this.scene.clearElements();
+      // Loading a preset is a programmatic scene replacement, not a user edit,
+      // so it must not record undo history: (1) undoing a preset load
+      // element-by-element is nonsensical UX, and (2) the "Add" command closures
+      // would otherwise keep every superseded preset element reachable (up to the
+      // MAX_HISTORY_SIZE cap) long after clearElements() removed it from the scene.
+      // Clear any prior history too, since undo across a preset boundary is
+      // meaningless and would reference elements clearElements() just disposed.
+      this.scene.history.clear();
       const descriptors = getPresetDescriptors();
       const preset = descriptors.find((d) => d.id === presetId);
       if (preset) {
         for (const element of preset.createElements()) {
-          this.scene.addElement(element);
+          this.scene.addElement(element, false);
         }
       }
     });
