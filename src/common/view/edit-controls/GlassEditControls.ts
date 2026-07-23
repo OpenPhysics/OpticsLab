@@ -16,8 +16,19 @@ import {
   CONSTRAINED_CURVATURE_MAX,
   CONSTRAINED_CURVATURE_MIN,
   CONSTRAINED_LENS_RADIUS_MIN,
+  DIMENSIONAL_GLASS_HEIGHT_MAX_M,
+  DIMENSIONAL_GLASS_HEIGHT_MIN_M,
+  DIMENSIONAL_GLASS_SIZE_DELTA,
+  DIMENSIONAL_GLASS_WIDTH_MAX_M,
+  DIMENSIONAL_GLASS_WIDTH_MIN_M,
+  ELEMENT_ANGLE_MAX_DEG,
+  ELEMENT_ANGLE_MIN_DEG,
   FOCAL_LENGTH_MAX_M,
   FOCAL_LENGTH_MIN_M,
+  PRISM_SIZE_DELTA,
+  PRISM_SIZE_MAX_M,
+  PRISM_SIZE_MIN_M,
+  REFRACTIVE_INDEX_DELTA,
   REFRACTIVE_INDEX_MAX,
   REFRACTIVE_INDEX_MIN,
   SEGMENT_LENGTH_MAX,
@@ -108,7 +119,7 @@ function buildSphericalLensAngleControl(
   triggerRebuild: () => void,
 ): { control: NumberControl; refresh: () => void } {
   const controlStrings = StringManager.getInstance().getControlStrings();
-  const A_RANGE = new Range(0, 360);
+  const A_RANGE = new Range(ELEMENT_ANGLE_MIN_DEG, ELEMENT_ANGLE_MAX_DEG);
   let prevAngleDeg = segmentAngleDeg(element.p1, element.p2);
   const angleProp = new NumberProperty(prevAngleDeg, { range: A_RANGE, tandem: Tandem.OPTIONAL });
   let angleDriving = false;
@@ -149,7 +160,7 @@ function buildGlassPrismAngleControl(
   triggerRebuild: () => void,
 ): { control: NumberControl; refresh: () => void } {
   const controlStrings = StringManager.getInstance().getControlStrings();
-  const A_RANGE = new Range(0, 360);
+  const A_RANGE = new Range(ELEMENT_ANGLE_MIN_DEG, ELEMENT_ANGLE_MAX_DEG);
   let prevAngleDeg = prismPathAngleDeg(path);
   const angleProp = new NumberProperty(prevAngleDeg, { range: A_RANGE, tandem: Tandem.OPTIONAL });
   let angleDriving = false;
@@ -187,7 +198,7 @@ function buildDimensionalGlassAngleControl(
   triggerRebuild: () => void,
 ): { control: NumberControl; refresh: () => void } {
   const controlStrings = StringManager.getInstance().getControlStrings();
-  const A_RANGE = new Range(0, 360);
+  const A_RANGE = new Range(ELEMENT_ANGLE_MIN_DEG, ELEMENT_ANGLE_MAX_DEG);
   const initDeg = (((element.rotation * (180 / Math.PI)) % 360) + 360) % 360;
   const angleProp = new NumberProperty(initDeg, { range: A_RANGE, tandem: Tandem.OPTIONAL });
   let angleDriving = false;
@@ -412,7 +423,7 @@ export function buildSphericalLensControls(
         controlStrings.refractiveIndexStringProperty,
         element.refIndex,
         new Range(REFRACTIVE_INDEX_MIN, REFRACTIVE_INDEX_MAX),
-        0.05,
+        REFRACTIVE_INDEX_DELTA,
         (v) => {
           element.refIndex = v;
         },
@@ -578,7 +589,7 @@ export function buildSymmetricLensControls(
         controlStrings.refractiveIndexStringProperty,
         element.refIndex,
         new Range(REFRACTIVE_INDEX_MIN, REFRACTIVE_INDEX_MAX),
-        0.05,
+        REFRACTIVE_INDEX_DELTA,
         (v) => {
           element.refIndex = v;
         },
@@ -744,7 +755,7 @@ export function buildPlanoLensControls(
         controlStrings.refractiveIndexStringProperty,
         element.refIndex,
         new Range(REFRACTIVE_INDEX_MIN, REFRACTIVE_INDEX_MAX),
-        0.05,
+        REFRACTIVE_INDEX_DELTA,
         (v) => {
           element.refIndex = v;
         },
@@ -814,7 +825,7 @@ export function buildHalfPlaneGlassControls(element: HalfPlaneGlass, triggerRebu
         controlStrings.refractiveIndexStringProperty,
         element.refIndex,
         new Range(REFRACTIVE_INDEX_MIN, REFRACTIVE_INDEX_MAX),
-        0.05,
+        REFRACTIVE_INDEX_DELTA,
         (v) => {
           element.refIndex = v;
         },
@@ -840,7 +851,7 @@ export function buildRefractiveIndexControls(element: BaseGlass, triggerRebuild:
         controlStrings.refractiveIndexStringProperty,
         element.refIndex,
         new Range(REFRACTIVE_INDEX_MIN, REFRACTIVE_INDEX_MAX),
-        0.05,
+        REFRACTIVE_INDEX_DELTA,
         (v) => {
           element.refIndex = v;
         },
@@ -863,8 +874,8 @@ export function buildEquilateralPrismControls(
       makeControl(
         controlStrings.sizeStringProperty,
         element.size,
-        new Range(0.1, 2.0),
-        0.05,
+        new Range(PRISM_SIZE_MIN_M, PRISM_SIZE_MAX_M),
+        PRISM_SIZE_DELTA,
         (v) => {
           element.setSize(v);
         },
@@ -876,7 +887,7 @@ export function buildEquilateralPrismControls(
         controlStrings.refractiveIndexStringProperty,
         element.refIndex,
         new Range(REFRACTIVE_INDEX_MIN, REFRACTIVE_INDEX_MAX),
-        0.05,
+        REFRACTIVE_INDEX_DELTA,
         (v) => {
           element.refIndex = v;
         },
@@ -896,8 +907,8 @@ export function buildRightAnglePrismControls(element: RightAnglePrism, triggerRe
       makeControl(
         controlStrings.legLengthStringProperty,
         element.legLength,
-        new Range(0.1, 2.0),
-        0.05,
+        new Range(PRISM_SIZE_MIN_M, PRISM_SIZE_MAX_M),
+        PRISM_SIZE_DELTA,
         (v) => {
           element.setLegLength(v);
         },
@@ -909,7 +920,7 @@ export function buildRightAnglePrismControls(element: RightAnglePrism, triggerRe
         controlStrings.refractiveIndexStringProperty,
         element.refIndex,
         new Range(REFRACTIVE_INDEX_MIN, REFRACTIVE_INDEX_MAX),
-        0.05,
+        REFRACTIVE_INDEX_DELTA,
         (v) => {
           element.refIndex = v;
         },
@@ -929,8 +940,8 @@ export function buildPorroPrismControls(element: PorroPrism, triggerRebuild: () 
       makeControl(
         controlStrings.legLengthStringProperty,
         element.legLength,
-        new Range(0.1, 2.0),
-        0.05,
+        new Range(PRISM_SIZE_MIN_M, PRISM_SIZE_MAX_M),
+        PRISM_SIZE_DELTA,
         (v) => {
           element.setLegLength(v);
         },
@@ -942,7 +953,7 @@ export function buildPorroPrismControls(element: PorroPrism, triggerRebuild: () 
         controlStrings.refractiveIndexStringProperty,
         element.refIndex,
         new Range(REFRACTIVE_INDEX_MIN, REFRACTIVE_INDEX_MAX),
-        0.05,
+        REFRACTIVE_INDEX_DELTA,
         (v) => {
           element.refIndex = v;
         },
@@ -962,8 +973,8 @@ export function buildSlabGlassControls(element: SlabGlass, triggerRebuild: () =>
       makeControl(
         controlStrings.widthStringProperty,
         element.width,
-        new Range(0.1, 3.0),
-        0.05,
+        new Range(DIMENSIONAL_GLASS_WIDTH_MIN_M, DIMENSIONAL_GLASS_WIDTH_MAX_M),
+        DIMENSIONAL_GLASS_SIZE_DELTA,
         (v) => {
           element.setWidth(v);
         },
@@ -973,8 +984,8 @@ export function buildSlabGlassControls(element: SlabGlass, triggerRebuild: () =>
       makeControl(
         controlStrings.heightStringProperty,
         element.height,
-        new Range(0.1, 2.0),
-        0.05,
+        new Range(DIMENSIONAL_GLASS_HEIGHT_MIN_M, DIMENSIONAL_GLASS_HEIGHT_MAX_M),
+        DIMENSIONAL_GLASS_SIZE_DELTA,
         (v) => {
           element.setHeight(v);
         },
@@ -986,7 +997,7 @@ export function buildSlabGlassControls(element: SlabGlass, triggerRebuild: () =>
         controlStrings.refractiveIndexStringProperty,
         element.refIndex,
         new Range(REFRACTIVE_INDEX_MIN, REFRACTIVE_INDEX_MAX),
-        0.05,
+        REFRACTIVE_INDEX_DELTA,
         (v) => {
           element.refIndex = v;
         },
@@ -1009,8 +1020,8 @@ export function buildParallelogramPrismControls(
       makeControl(
         controlStrings.widthStringProperty,
         element.width,
-        new Range(0.1, 3.0),
-        0.05,
+        new Range(DIMENSIONAL_GLASS_WIDTH_MIN_M, DIMENSIONAL_GLASS_WIDTH_MAX_M),
+        DIMENSIONAL_GLASS_SIZE_DELTA,
         (v) => {
           element.setWidth(v);
         },
@@ -1020,8 +1031,8 @@ export function buildParallelogramPrismControls(
       makeControl(
         controlStrings.heightStringProperty,
         element.height,
-        new Range(0.1, 2.0),
-        0.05,
+        new Range(DIMENSIONAL_GLASS_HEIGHT_MIN_M, DIMENSIONAL_GLASS_HEIGHT_MAX_M),
+        DIMENSIONAL_GLASS_SIZE_DELTA,
         (v) => {
           element.setHeight(v);
         },
@@ -1033,7 +1044,7 @@ export function buildParallelogramPrismControls(
         controlStrings.refractiveIndexStringProperty,
         element.refIndex,
         new Range(REFRACTIVE_INDEX_MIN, REFRACTIVE_INDEX_MAX),
-        0.05,
+        REFRACTIVE_INDEX_DELTA,
         (v) => {
           element.refIndex = v;
         },
@@ -1053,8 +1064,8 @@ export function buildDovePrismControls(element: DovePrism, triggerRebuild: () =>
       makeControl(
         controlStrings.widthStringProperty,
         element.width,
-        new Range(0.1, 3.0),
-        0.05,
+        new Range(DIMENSIONAL_GLASS_WIDTH_MIN_M, DIMENSIONAL_GLASS_WIDTH_MAX_M),
+        DIMENSIONAL_GLASS_SIZE_DELTA,
         (v) => {
           element.setWidth(v);
         },
@@ -1064,8 +1075,8 @@ export function buildDovePrismControls(element: DovePrism, triggerRebuild: () =>
       makeControl(
         controlStrings.heightStringProperty,
         element.height,
-        new Range(0.1, 2.0),
-        0.05,
+        new Range(DIMENSIONAL_GLASS_HEIGHT_MIN_M, DIMENSIONAL_GLASS_HEIGHT_MAX_M),
+        DIMENSIONAL_GLASS_SIZE_DELTA,
         (v) => {
           element.setHeight(v);
         },
@@ -1077,7 +1088,7 @@ export function buildDovePrismControls(element: DovePrism, triggerRebuild: () =>
         controlStrings.refractiveIndexStringProperty,
         element.refIndex,
         new Range(REFRACTIVE_INDEX_MIN, REFRACTIVE_INDEX_MAX),
-        0.05,
+        REFRACTIVE_INDEX_DELTA,
         (v) => {
           element.refIndex = v;
         },

@@ -14,6 +14,9 @@ import type { Tandem } from "scenerystack/tandem";
 import { StringManager } from "../../../i18n/StringManager.js";
 import OpticsLabColors from "../../../OpticsLabColors.js";
 import {
+  ELEMENT_ANGLE_MAX_DEG,
+  ELEMENT_ANGLE_MIN_DEG,
+  FONT_11PX,
   SEGMENT_LENGTH_MAX,
   SEGMENT_LENGTH_MIN,
   SLIDER_THUMB_HEIGHT,
@@ -31,7 +34,7 @@ export type { EditControlsResult } from "./EditControlsResult.js";
 
 export const SLIDER_TRACK_SIZE = new Dimension2(SLIDER_TRACK_WIDTH, SLIDER_TRACK_HEIGHT);
 export const SLIDER_THUMB_SIZE = new Dimension2(SLIDER_THUMB_WIDTH, SLIDER_THUMB_HEIGHT);
-export const LABEL_FONT = "11px sans-serif";
+export const LABEL_FONT = FONT_11PX;
 
 // ── Private widget helpers ────────────────────────────────────────────────────
 
@@ -282,7 +285,7 @@ export function buildSegmentAngleControl(
   triggerRebuild: () => void,
   tandem: Tandem,
 ): { control: Node; refresh: () => void } {
-  const A_RANGE = new Range(0, 360);
+  const A_RANGE = new Range(ELEMENT_ANGLE_MIN_DEG, ELEMENT_ANGLE_MAX_DEG);
   const angleProp = new NumberProperty(segmentAngleDeg(element.p1, element.p2), {
     range: A_RANGE,
     tandem: tandem.createTandem("numberProperty"),
@@ -342,7 +345,7 @@ export function buildDirectionAngleAboutP1Control(
   triggerRebuild: () => void,
   tandem: Tandem,
 ): { control: Node; refresh: () => void } {
-  const A_RANGE = new Range(0, 360);
+  const A_RANGE = new Range(ELEMENT_ANGLE_MIN_DEG, ELEMENT_ANGLE_MAX_DEG);
   const angleProp = new NumberProperty(segmentAngleDeg(element.p1, element.p2), {
     range: A_RANGE,
     tandem: tandem.createTandem("numberProperty"),
@@ -411,7 +414,7 @@ export function buildDirectionAngleControl(
   triggerRebuild: () => void,
   tandem: Tandem,
 ): { control: Node; refresh: () => void } {
-  const A_RANGE = new Range(0, 360);
+  const A_RANGE = new Range(ELEMENT_ANGLE_MIN_DEG, ELEMENT_ANGLE_MAX_DEG);
   const angleProp = new NumberProperty(radiansToDisplayDeg(getDirectionRadians()), {
     range: A_RANGE,
     tandem: tandem.createTandem("numberProperty"),

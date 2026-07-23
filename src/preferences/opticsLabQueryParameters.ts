@@ -6,12 +6,17 @@ import { logGlobal } from "scenerystack/phet-core";
 import { QueryStringMachine } from "scenerystack/query-string-machine";
 import {
   DEFAULT_RAY_DENSITY,
+  GRID_SPACING_M,
   GRID_SPACING_MAX_M,
   GRID_SPACING_MIN_M,
   MAX_RAY_DEPTH_PROPERTY_MAX,
   MAX_RAY_DEPTH_PROPERTY_MIN,
+  QUERY_DEFAULT_MAX_RAY_DEPTH,
   RAY_DENSITY_MAX,
   RAY_DENSITY_MIN,
+  RAY_STUB_LENGTH_DEFAULT_PX,
+  RAY_STUB_LENGTH_MAX_PX,
+  RAY_STUB_LENGTH_MIN_PX,
 } from "../OpticsLabConstants.js";
 import OpticsLabNamespace from "../OpticsLabNamespace.js";
 
@@ -31,7 +36,7 @@ const opticsLabQueryParameters = QueryStringMachine.getAll({
    */
   maximumLightRayDepth: {
     type: "number" as const,
-    defaultValue: 50,
+    defaultValue: QUERY_DEFAULT_MAX_RAY_DEPTH,
     public: true,
     isValidValue: (value: number) =>
       Number.isInteger(value) && value >= MAX_RAY_DEPTH_PROPERTY_MIN && value <= MAX_RAY_DEPTH_PROPERTY_MAX,
@@ -47,7 +52,7 @@ const opticsLabQueryParameters = QueryStringMachine.getAll({
   // Spacing between major grid lines, in model metres (same range as preferences / scene grid size).
   gridSpacing: {
     type: "number" as const,
-    defaultValue: 1,
+    defaultValue: GRID_SPACING_M,
     public: true,
     isValidValue: (value: number) => value >= GRID_SPACING_MIN_M && value <= GRID_SPACING_MAX_M,
   },
@@ -106,9 +111,9 @@ const opticsLabQueryParameters = QueryStringMachine.getAll({
   /** Length of ray stubs in view pixels when ray-stubs mode is active. */
   rayStubLength: {
     type: "number" as const,
-    defaultValue: 50,
+    defaultValue: RAY_STUB_LENGTH_DEFAULT_PX,
     public: true,
-    isValidValue: (value: number) => value >= 10 && value <= 200,
+    isValidValue: (value: number) => value >= RAY_STUB_LENGTH_MIN_PX && value <= RAY_STUB_LENGTH_MAX_PX,
   },
 
   /** Show the background grid at startup. */

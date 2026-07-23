@@ -9,7 +9,7 @@
  * Acquisition / histogram logic is delegated to DetectorAcquisition.
  */
 
-import { DETECTOR_NUM_BINS } from "../../../OpticsLabConstants.js";
+import { DETECTOR_MAX_HITS, DETECTOR_NUM_BINS } from "../../../OpticsLabConstants.js";
 import { ELEMENT_CATEGORY_BLOCKER, ELEMENT_TYPE_DETECTOR } from "../../../OpticsLabStrings.js";
 import { BaseSegmentElement } from "../optics/BaseSegmentElement.js";
 import {
@@ -35,9 +35,6 @@ import type {
   SimulationRay,
 } from "../optics/OpticsTypes.js";
 import { DetectorAcquisition } from "./DetectorAcquisition.js";
-
-/** Maximum number of hits stored; older hits are replaced via reservoir sampling. */
-export const DETECTOR_MAX_HITS = 2000;
 
 export type DetectorHit = { t: number; brightness: number };
 

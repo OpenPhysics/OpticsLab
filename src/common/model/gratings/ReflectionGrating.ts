@@ -11,7 +11,7 @@
  *  - dutyCycle:    slit-width to line-spacing ratio (0–1), controls order intensities
  */
 
-import { GRATING_DEFAULT_LINES_DENSITY } from "../../../OpticsLabConstants.js";
+import { GRATING_DEFAULT_DUTY_CYCLE, GRATING_DEFAULT_LINES_DENSITY } from "../../../OpticsLabConstants.js";
 import { ELEMENT_CATEGORY_MIRROR, ELEMENT_TYPE_REFLECTION_GRATING } from "../../../OpticsLabStrings.js";
 import { BaseSegmentElement } from "../optics/BaseSegmentElement.js";
 import type { Point } from "../optics/Geometry.js";
@@ -32,7 +32,12 @@ export class ReflectionGrating extends BaseSegmentElement {
   /** Slit-width / line-spacing ratio (0–1). */
   public dutyCycle: number;
 
-  public constructor(p1: Point, p2: Point, linesDensity = GRATING_DEFAULT_LINES_DENSITY, dutyCycle = 0.5) {
+  public constructor(
+    p1: Point,
+    p2: Point,
+    linesDensity = GRATING_DEFAULT_LINES_DENSITY,
+    dutyCycle = GRATING_DEFAULT_DUTY_CYCLE,
+  ) {
     super(p1, p2);
     this.linesDensity = linesDensity;
     this.dutyCycle = dutyCycle;

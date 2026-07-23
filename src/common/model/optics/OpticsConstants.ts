@@ -6,6 +6,8 @@
  * that file instead.
  */
 
+import { BRIGHTNESS_MAX, DEFAULT_RAY_DENSITY, PIXELS_PER_METER } from "../../../OpticsLabConstants.js";
+
 // ── Intersection tolerance ────────────────────────────────────────────────────
 
 /**
@@ -44,7 +46,7 @@ export const RAY_DENSITY_SCALE = 500;
  * rayDensity was calibrated for pixel coordinates, so this factor (equal to
  * pixels-per-metre) restores the intended ray count.
  */
-export const BEAM_RAY_DENSITY_SCALE = 100;
+export const BEAM_RAY_DENSITY_SCALE = PIXELS_PER_METER;
 
 /**
  * Brightness value at which a source transitions from discrete-ray mode
@@ -59,13 +61,13 @@ export const BRIGHTNESS_CONTINUOUS_THRESHOLD = 1.0;
  * Normalization divisor that maps the brightness property to a [0, 1] per-ray
  * intensity value in continuous-beam mode. Equals the maximum allowed brightness.
  */
-export const BRIGHTNESS_NORMALIZE = 2.0;
+export const BRIGHTNESS_NORMALIZE = BRIGHTNESS_MAX;
 
 /**
  * Reference ray density used to calibrate per-ray brightness.
  * At this density each ray has its "full" brightness.
  * Above this density, per-ray brightness scales inversely with density so that
  * total luminosity is conserved: 2× rays → each at ½ brightness.
- * Should equal DEFAULT_RAY_DENSITY in OpticsLabConstants.
+ * Equals DEFAULT_RAY_DENSITY in OpticsLabConstants.
  */
-export const RAY_DENSITY_REFERENCE = 0.5;
+export const RAY_DENSITY_REFERENCE = DEFAULT_RAY_DENSITY;

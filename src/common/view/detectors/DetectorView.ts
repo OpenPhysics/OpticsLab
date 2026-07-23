@@ -29,7 +29,9 @@ import OpticsLabColors from "../../../OpticsLabColors.js";
 import {
   ARC_MIRROR_SAMPLE_COUNT,
   DETECTOR_INITIAL_CHART_OFFSET_X,
+  DETECTOR_INITIAL_CHART_OFFSET_Y,
   DETECTOR_WIRE_NORMAL_MAGNITUDE,
+  HANDLE_LINE_WIDTH,
   LINE_HIT_HALF_WIDTH_PX,
   MIRROR_BACK_WIDTH,
   MIRROR_FRONT_WIDTH,
@@ -50,8 +52,6 @@ import {
 import type { ViewOptionsModel } from "../ViewOptionsModel.js";
 import { DetectorChartPanel } from "./DetectorChartPanel.js";
 
-const INITIAL_CHART_OFFSET_Y = 10;
-
 export class DetectorView extends BaseOpticalElementView {
   public readonly bodyDragListener: RichDragListenerType;
   private readonly backPath: Path;
@@ -64,7 +64,7 @@ export class DetectorView extends BaseOpticalElementView {
   private readonly chartPanel: DetectorChartPanel;
 
   /** View-space offset of the chart center from the detector midpoint. */
-  private chartOffset = new Vector2(DETECTOR_INITIAL_CHART_OFFSET_X, INITIAL_CHART_OFFSET_Y);
+  private chartOffset = new Vector2(DETECTOR_INITIAL_CHART_OFFSET_X, DETECTOR_INITIAL_CHART_OFFSET_Y);
 
   // Properties driving the WireNode (updated imperatively in rebuild / chart drag).
   // Initialized with separated positions to avoid zero-length cubic bezier crash.
@@ -101,7 +101,7 @@ export class DetectorView extends BaseOpticalElementView {
     });
     this.ticksPath = new Path(null, {
       stroke: OpticsLabColors.detectorTickStrokeProperty,
-      lineWidth: 1.5,
+      lineWidth: HANDLE_LINE_WIDTH,
       lineCap: "round",
       pickable: false,
     });

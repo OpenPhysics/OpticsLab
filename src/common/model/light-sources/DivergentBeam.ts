@@ -6,6 +6,7 @@
  * segment within a finite divergence half-angle.
  */
 
+import { DEFAULT_BEAM_BRIGHTNESS, DIVERGENT_BEAM_DEFAULT_EMIS_ANGLE_DEG } from "../../../OpticsLabConstants.js";
 import { ELEMENT_TYPE_DIVERGENT_BEAM } from "../../../OpticsLabStrings.js";
 import type { Bounds, Point } from "../optics/Geometry.js";
 import { distance, normalize, point, pointsBounds, subtract } from "../optics/Geometry.js";
@@ -17,9 +18,6 @@ import {
 import type { SimulationRay, ViewMode } from "../optics/OpticsTypes.js";
 import { BaseLightSource } from "./BaseLightSource.js";
 import { GREEN_WAVELENGTH } from "./LightSourceConstants.js";
-
-/** Default divergence half-angle in degrees. */
-export const DIVERGENT_BEAM_DEFAULT_EMIS_ANGLE = 10;
 
 export class DivergentBeam extends BaseLightSource {
   public readonly type = ELEMENT_TYPE_DIVERGENT_BEAM;
@@ -34,9 +32,9 @@ export class DivergentBeam extends BaseLightSource {
   public constructor(
     p1: Point,
     p2: Point,
-    brightness = 0.5,
+    brightness = DEFAULT_BEAM_BRIGHTNESS,
     wavelength = GREEN_WAVELENGTH,
-    emisAngle = DIVERGENT_BEAM_DEFAULT_EMIS_ANGLE,
+    emisAngle = DIVERGENT_BEAM_DEFAULT_EMIS_ANGLE_DEG,
   ) {
     super(brightness, wavelength);
     this.p1 = p1;

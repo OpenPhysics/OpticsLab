@@ -13,14 +13,15 @@
 
 import type { ModelViewTransform2 } from "scenerystack/phetcommon";
 import { Tandem } from "scenerystack/tandem";
+import { LENS_APEX_MIN_OFFSET_M } from "../../../OpticsLabConstants.js";
 import OpticsLabNamespace from "../../../OpticsLabNamespace.js";
+
 import type { GlassPathPoint } from "../../model/glass/Glass.js";
 import type { SphericalLens } from "../../model/glass/SphericalLens.js";
 import type { ViewOptionsModel } from "../ViewOptionsModel.js";
 import { SphericalLensView } from "./SphericalLensView.js";
 
 /** Minimum distance (model units) the apex must sit past the corner midpoint. */
-const APEX_MIN_OFFSET = 0.02;
 
 export class PlanoLensView extends SphericalLensView {
   /**
@@ -28,7 +29,7 @@ export class PlanoLensView extends SphericalLensView {
    * along the optical axis:
    *   −1 for PlanoConvexLens  (r2 < 0, apex on +dp side → relProj > 0, reqSign = −r2Sign = +1)
    *   +1 for PlanoConcaveLens (r2 > 0, apex on −dp side → relProj < 0, reqSign = −r2Sign = −1)
-   * Stored as −r2Sign so the clamp condition is simply relProj * apexReqSign >= APEX_MIN_OFFSET.
+   * Stored as −r2Sign so the clamp condition is simply relProj * apexReqSign >= LENS_APEX_MIN_OFFSET_M.
    */
   private readonly apexReqSign: 1 | -1;
 
@@ -86,10 +87,10 @@ export class PlanoLensView extends SphericalLensView {
     const midY = (v1.y + v3.y) / 2;
     const relProj = (v2.x - midX) * dpx + (v2.y - midY) * dpy;
 
-    if (relProj * this.apexReqSign < APEX_MIN_OFFSET) {
+    if (relProj * this.apexReqSign < LENS_APEX_MIN_OFFSET_M) {
       // Apex has crossed to the wrong side (or is too close to flat) — snap back.
-      v2.x = midX + APEX_MIN_OFFSET * this.apexReqSign * dpx;
-      v2.y = midY + APEX_MIN_OFFSET * this.apexReqSign * dpy;
+      v2.x = midX + LENS_APEX_MIN_OFFSET_M * this.apexReqSign * dpx;
+      v2.y = midY + LENS_APEX_MIN_OFFSET_M * this.apexReqSign * dpy;
     }
 
     this.rebuild();

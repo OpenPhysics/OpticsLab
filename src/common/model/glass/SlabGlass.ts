@@ -1,4 +1,9 @@
-import { SLAB_GLASS_DEFAULT_HEIGHT_M, SLAB_GLASS_DEFAULT_WIDTH_M } from "../../../OpticsLabConstants.js";
+import {
+  DEFAULT_CAUCHY_B,
+  DEFAULT_REFRACTIVE_INDEX,
+  SLAB_GLASS_DEFAULT_HEIGHT_M,
+  SLAB_GLASS_DEFAULT_WIDTH_M,
+} from "../../../OpticsLabConstants.js";
 import { ELEMENT_TYPE_SLAB_GLASS } from "../../../OpticsLabStrings.js";
 import type { Point } from "../optics/Geometry.js";
 import { DimensionalGlass } from "./DimensionalGlass.js";
@@ -22,8 +27,8 @@ export class SlabGlass extends DimensionalGlass {
     center: Point,
     width = SLAB_GLASS_DEFAULT_WIDTH_M,
     height = SLAB_GLASS_DEFAULT_HEIGHT_M,
-    refIndex = 1.5,
-    cauchyB = 0.004,
+    refIndex = DEFAULT_REFRACTIVE_INDEX,
+    cauchyB = DEFAULT_CAUCHY_B,
     partialReflect = true,
   ) {
     super(makeVertices(center.x, center.y, width, height), width, height, refIndex, cauchyB, partialReflect);

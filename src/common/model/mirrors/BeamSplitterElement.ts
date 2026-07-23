@@ -7,7 +7,9 @@
  * in the original direction.
  */
 
+import { DEFAULT_BEAM_SPLITTER_TRANSMIT } from "../../../OpticsLabConstants.js";
 import { ELEMENT_CATEGORY_MIRROR, ELEMENT_TYPE_BEAM_SPLITTER } from "../../../OpticsLabStrings.js";
+
 import { BaseSegmentElement } from "../optics/BaseSegmentElement.js";
 import { dot, normalize, type Point, point } from "../optics/Geometry.js";
 import type {
@@ -24,7 +26,7 @@ export class BeamSplitterElement extends BaseSegmentElement {
   /** Fraction of brightness transmitted (0..1). The rest is reflected. */
   public transRatio: number;
 
-  public constructor(p1: Point, p2: Point, transRatio = 0.5) {
+  public constructor(p1: Point, p2: Point, transRatio = DEFAULT_BEAM_SPLITTER_TRANSMIT) {
     super(p1, p2);
     this.transRatio = transRatio;
   }

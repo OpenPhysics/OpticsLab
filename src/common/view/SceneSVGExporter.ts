@@ -15,6 +15,7 @@ import {
   EXT_LINE_DASH,
   EXT_LINE_WIDTH,
   EXT_R,
+  FALLBACK_RAY_WAVELENGTH_NM,
   PIXELS_PER_METER,
   PROTRACTOR_SCALE,
   RAY_ALPHA_BUCKETS,
@@ -158,7 +159,7 @@ function addRayPathNodes(
       const shape = getOrCreateExtensionShape(extensionShapes, alphaBucket);
       shape.moveTo(x1, y1).lineTo(x2, y2);
     } else {
-      const wavelength = seg.wavelength ?? 550;
+      const wavelength = seg.wavelength ?? FALLBACK_RAY_WAVELENGTH_NM;
       const wavelengthColor = getCachedWavelengthColor(wavelengthColorCache, wavelength);
       const bucket = getOrCreateForwardBucket(forwardBuckets, wavelengthColor, alphaBucket);
       bucket.shape.moveTo(x1, y1).lineTo(x2, y2);

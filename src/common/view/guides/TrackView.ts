@@ -11,6 +11,8 @@ import type { ModelViewTransform2 } from "scenerystack/phetcommon";
 import { Path, type RichDragListener } from "scenerystack/scenery";
 import type { Tandem } from "scenerystack/tandem";
 import OpticsLabColors from "../../../OpticsLabColors.js";
+import { TRACK_LINE_DASH, TRACK_LINE_WIDTH } from "../../../OpticsLabConstants.js";
+
 import OpticsLabNamespace from "../../../OpticsLabNamespace.js";
 import type { TrackElement } from "../../model/guides/TrackElement.js";
 import { BaseOpticalElementView } from "../BaseOpticalElementView.js";
@@ -23,9 +25,6 @@ import {
   makeEndpointHandle,
 } from "../ViewHelpers.js";
 import type { ViewOptionsModel } from "../ViewOptionsModel.js";
-
-const TRACK_LINE_WIDTH = 2;
-const TRACK_LINE_DASH = [8, 4];
 
 export class TrackView extends BaseOpticalElementView {
   public readonly bodyDragListener: RichDragListener;
