@@ -18,8 +18,10 @@
  *  8. Mirror & blocker rendering
  *  9. Glass / lens rendering
  * 10. Light-source rendering
+ * 11+. Grid, gratings, detectors, fiber, carousel, fonts, …
  */
 
+import { GREEN_WAVELENGTH } from "./common/model/light-sources/LightSourceConstants.js";
 import OpticsLabNamespace from "./OpticsLabNamespace.js";
 
 // ── 1. App chrome ─────────────────────────────────────────────────────────────
@@ -79,9 +81,24 @@ export const DEFAULT_FOCAL_LENGTH = 1.0;
 
 export const DEFAULT_MAX_RAY_DEPTH = 200;
 
+/**
+ * Startup default for the `maximumLightRayDepth` query parameter.
+ * Distinct from `DEFAULT_MAX_RAY_DEPTH` (scene / tracer default when unset).
+ */
+export const QUERY_DEFAULT_MAX_RAY_DEPTH = 50;
+
 /** Allowed range for `OpticsScene.maxRayDepthProperty` and `maximumLightRayDepth` query parameter (integer). */
 export const MAX_RAY_DEPTH_PROPERTY_MIN = 1;
 export const MAX_RAY_DEPTH_PROPERTY_MAX = 500;
+
+/**
+ * Length / distance below which a segment or vector is treated as degenerate
+ * (model metres). Used for near-zero guards across model and view code.
+ */
+export const LENGTH_DEGENERATE_M = 1e-10;
+
+/** Maximum number of undo history entries retained by CommandHistory. */
+export const MAX_HISTORY_SIZE = 100;
 
 export const DEFAULT_MIN_BRIGHTNESS = 0.01;
 export const DEFAULT_RAY_DENSITY = 0.5;
@@ -145,6 +162,8 @@ export const PANEL_CONTENT_SPACING = 8;
 
 export const BRIGHTNESS_MIN = 0.05;
 export const BRIGHTNESS_MAX = 2;
+/** Step size for brightness NumberControls. */
+export const BRIGHTNESS_CONTROL_DELTA = 0.05;
 
 export const WAVELENGTH_MIN_NM = 380;
 export const WAVELENGTH_MAX_NM = 780;
@@ -155,6 +174,13 @@ export const EMISSION_ANGLE_MAX_DEG = 360;
 export const DIVERGENCE_MIN_DEG = 0;
 export const DIVERGENCE_MAX_DEG = 90;
 
+/** Default divergence half-angle (degrees) for newly created divergent beams. */
+export const DIVERGENT_BEAM_DEFAULT_EMIS_ANGLE_DEG = 10;
+
+/** Element rotation / angle NumberControl bounds (degrees). */
+export const ELEMENT_ANGLE_MIN_DEG = 0;
+export const ELEMENT_ANGLE_MAX_DEG = 360;
+
 export const SPHERICAL_RADIUS_MIN = -20;
 export const SPHERICAL_RADIUS_MAX = 20;
 export const SPHERICAL_R1_FALLBACK = 5;
@@ -164,6 +190,23 @@ export const CONSTRAINED_LENS_RADIUS_MIN = 0.5;
 
 export const REFRACTIVE_INDEX_MIN = 1;
 export const REFRACTIVE_INDEX_MAX = 3;
+/** Step size for refractive-index NumberControls. */
+export const REFRACTIVE_INDEX_DELTA = 0.05;
+
+/** Prism size / leg-length NumberControl bounds (model metres). */
+export const PRISM_SIZE_MIN_M = 0.1;
+export const PRISM_SIZE_MAX_M = 2.0;
+/** Step size for prism size / leg-length NumberControls. */
+export const PRISM_SIZE_DELTA = 0.05;
+
+/** Dimensional glass (slab / parallelogram / Dove) width bounds (model metres). */
+export const DIMENSIONAL_GLASS_WIDTH_MIN_M = 0.1;
+export const DIMENSIONAL_GLASS_WIDTH_MAX_M = 3.0;
+/** Dimensional glass height bounds (model metres). */
+export const DIMENSIONAL_GLASS_HEIGHT_MIN_M = 0.1;
+export const DIMENSIONAL_GLASS_HEIGHT_MAX_M = 2.0;
+/** Step size for dimensional-glass width/height NumberControls. */
+export const DIMENSIONAL_GLASS_SIZE_DELTA = 0.05;
 
 export const ARC_MIRROR_RADIUS_MIN = 0.1;
 export const ARC_MIRROR_RADIUS_MAX = 20;
@@ -192,6 +235,16 @@ export const HANDLE_RADIUS = 6; // px – fixed visual size
 export const HANDLE_LINE_WIDTH = 1.5;
 /** Half-width (px) of the invisible filled rectangle used as the drag target for line-segment elements. */
 export const LINE_HIT_HALF_WIDTH_PX = 10;
+
+/** Padding (px) around content bounds for the selection rectangle. */
+export const SELECTION_PAD_PX = 8;
+
+/** Radius (px) of real/virtual image markers in images mode. */
+export const IMAGE_MARKER_RADIUS_PX = HANDLE_RADIUS;
+/** Gap (px) between image marker edge and its label. */
+export const IMAGE_LABEL_GAP_PX = 3;
+/** Horizontal offset (px) from image marker centre to label. */
+export const IMAGE_LABEL_OFFSET_X_PX = IMAGE_MARKER_RADIUS_PX + IMAGE_LABEL_GAP_PX;
 
 // ── 8. Mirror & blocker rendering ────────────────────────────────────────────
 
@@ -279,9 +332,15 @@ export const PRISM_MIN_VERTEX_DIST_M = 0.05;
 /** Minimum top-face width of a Dove prism (width − height, model metres). */
 export const DOVE_MIN_TOP_FACE_M = 0.05;
 /** Distance threshold below which a vertex position is considered degenerate (model metres). */
-export const PRISM_DEGENERATE_DIST = 1e-10;
+export const PRISM_DEGENERATE_DIST = LENGTH_DEGENERATE_M;
 /** Drag-delta magnitude below which a rotation drag move is ignored (model metres). */
 export const ROTATION_DRAG_DELTA_MIN = 1e-12;
+
+/**
+ * Minimum optical-axis offset (m) of a plano/symmetric lens apex from the
+ * mid-plane. Prevents the apex from crossing flat during curvature drags.
+ */
+export const LENS_APEX_MIN_OFFSET_M = 0.02;
 
 // ── 10. Light-source rendering ────────────────────────────────────────────────
 
@@ -358,9 +417,18 @@ export const REFLECTION_GRATING_GROOVE_LENGTH_PX = 6;
 /** Default groove density for new gratings (lines / mm). */
 export const GRATING_DEFAULT_LINES_DENSITY = 600;
 /** Default wavelength (nm) used when a grating ray carries no wavelength. */
-export const GRATING_DEFAULT_WAVELENGTH_NM = 532;
+export const GRATING_DEFAULT_WAVELENGTH_NM = GREEN_WAVELENGTH;
 /** Maximum diffraction order to compute. */
 export const GRATING_MAX_DIFFRACTION_ORDER = 10;
+/** Default slit-width / line-spacing ratio for new gratings. */
+export const GRATING_DEFAULT_DUTY_CYCLE = 0.5;
+/** Groove-density NumberControl bounds (lines / mm). */
+export const GRATING_LINES_DENSITY_MIN = 1;
+export const GRATING_LINES_DENSITY_MAX = 2500;
+/** Duty-cycle NumberControl bounds and step. */
+export const GRATING_DUTY_CYCLE_MIN = 0.01;
+export const GRATING_DUTY_CYCLE_MAX = 0.99;
+export const GRATING_DUTY_CYCLE_DELTA = 0.01;
 
 // ── 13. Apertured Parabolic Mirror ───────────────────────────────────────────
 
@@ -393,8 +461,17 @@ export const ACQUISITION_DURATION_S = 2.0;
 export const ACQUISITION_PASSES_PER_FRAME = 100;
 /** Initial horizontal offset (px) of the floating chart from the detector midpoint. */
 export const DETECTOR_INITIAL_CHART_OFFSET_X = 200;
+/** Initial vertical offset (px) of the floating chart from the detector midpoint. */
+export const DETECTOR_INITIAL_CHART_OFFSET_Y = 10;
 /** Controls the Bézier bulge of the wire connecting detector to chart. */
 export const DETECTOR_WIRE_NORMAL_MAGNITUDE = 40;
+/**
+ * Maximum hit samples retained by a detector (reservoir sampling).
+ * Caps memory while keeping a uniform random sample of irradiance hits.
+ */
+export const DETECTOR_MAX_HITS = 2000;
+/** Headroom factor applied above the max bin value when autoscaling the chart Y axis. */
+export const DETECTOR_CHART_Y_HEADROOM = 1.25;
 
 // ── 14. Glass model defaults ─────────────────────────────────────────────────
 
@@ -414,7 +491,7 @@ export const PARALLELOGRAM_PRISM_DEFAULT_HEIGHT_M = 0.42;
 
 // ── 15. ContinuousSpectrumSource defaults ────────────────────────────────────
 
-export const CONT_SPECTRUM_DEFAULT_WL_MIN_NM = 380;
+export const CONT_SPECTRUM_DEFAULT_WL_MIN_NM = WAVELENGTH_MIN_NM;
 export const CONT_SPECTRUM_DEFAULT_WL_STEP_NM = 10;
 export const CONT_SPECTRUM_DEFAULT_WL_MAX_NM = 700;
 export const CONT_SPECTRUM_DEFAULT_BRIGHTNESS = 0.5;
@@ -437,6 +514,14 @@ export const FIBER_OPTIC_OUTER_RADIUS_MAX_M = 0.25;
  * coreRadius = outerRadius × this value.
  */
 export const FIBER_CORE_RADIUS_FRACTION_DEFAULT = 0.45;
+/** Core-radius-fraction NumberControl bounds and step. */
+export const FIBER_CORE_FRACTION_MIN = 0.05;
+export const FIBER_CORE_FRACTION_MAX = 0.95;
+export const FIBER_CORE_FRACTION_DELTA = 0.05;
+/** Catmull–Rom tension used when sampling the fiber centreline spline. */
+export const FIBER_SPLINE_TENSION = 0.5;
+/** Sample intervals per Catmull–Rom segment when building the fiber ribbon. */
+export const FIBER_SAMPLES_PER_SEGMENT = 8;
 
 // ── 17. Carousel ─────────────────────────────────────────────────────────────
 
@@ -511,7 +596,12 @@ export const DEFAULT_BEAM_BRIGHTNESS = 0.5;
  * Default wavelength (nm) for newly created beam, divergent-beam, and
  * single-ray sources.  532 nm corresponds to a standard green (Nd:YAG) laser.
  */
-export const DEFAULT_BEAM_WAVELENGTH_NM = 532;
+export const DEFAULT_BEAM_WAVELENGTH_NM = GREEN_WAVELENGTH;
+/** Beam-splitter transmission NumberControl bounds. */
+export const BEAM_SPLITTER_TRANSMIT_MIN = 0;
+export const BEAM_SPLITTER_TRANSMIT_MAX = 1;
+/** Step size for beam-splitter transmission NumberControls. */
+export const BEAM_SPLITTER_TRANSMIT_DELTA = 0.05;
 /** Default brightness for newly created single-ray sources. */
 export const DEFAULT_SINGLE_RAY_BRIGHTNESS = 1;
 /** Default opening half-angle (rad) for newly created arc light sources. */
@@ -565,11 +655,44 @@ export const FACTORY_FIBER_OPTIC_LENGTH_SCALE = 1.5;
 // ── 22. Element archetype defaults ────────────────────────────────────────────
 
 /**
- * Wavelength (nm) used in the PhET-iO group archetype element state.
- * This placeholder value does not represent any particular preset; it is only
- * used to satisfy the phetioType schema for the archetype element.
+ * Wavelength (nm) used when a ray segment has no wavelength (canvas/SVG
+ * rendering fallback) and in the PhET-iO group archetype element state.
  */
-export const ARCHETYPE_DEFAULT_WAVELENGTH_NM = 550;
+export const FALLBACK_RAY_WAVELENGTH_NM = 550;
+/**
+ * Wavelength (nm) used in the PhET-iO group archetype element state.
+ * Alias of {@link FALLBACK_RAY_WAVELENGTH_NM}.
+ */
+export const ARCHETYPE_DEFAULT_WAVELENGTH_NM = FALLBACK_RAY_WAVELENGTH_NM;
+
+// ── 22b. Observer defaults ───────────────────────────────────────────────────
+
+/** Default observer position X (model metres). */
+export const DEFAULT_OBSERVER_X_M = 0.3;
+/** Default observer position Y (model metres). */
+export const DEFAULT_OBSERVER_Y_M = 0;
+/** Default observer collection radius (model metres). */
+export const DEFAULT_OBSERVER_RADIUS_M = 0.12;
+/** Minimum observer collection radius (model metres). */
+export const OBSERVER_RADIUS_MIN_M = 0.02;
+/** Centre-dot radius (px) for the observer node. */
+export const OBSERVER_CENTER_DOT_RADIUS_PX = 7;
+/** Rim-handle radius (px) for resizing the observer collection radius. */
+export const OBSERVER_RIM_HANDLE_RADIUS_PX = 5;
+
+// ── 22c. Track / spatial-index ───────────────────────────────────────────────
+
+/** Stroke width for track guide lines. */
+export const TRACK_LINE_WIDTH = 2;
+/** Dash pattern [dash, gap] for track guide lines. */
+export const TRACK_LINE_DASH = [8, 4];
+/** Default spatial-hash cell size (model metres). */
+export const SPATIAL_INDEX_CELL_SIZE_M = 2.0;
+/**
+ * Maximum cells traversed along a ray before SpatialIndex falls back to
+ * testing every element.
+ */
+export const SPATIAL_INDEX_MAX_TRAVERSAL_STEPS = 200;
 
 // ── 23. Fiber optic physics parameters ───────────────────────────────────────
 

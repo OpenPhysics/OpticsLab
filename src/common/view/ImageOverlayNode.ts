@@ -17,12 +17,15 @@ import { toFixed } from "scenerystack/dot";
 import type { ModelViewTransform2 } from "scenerystack/phetcommon";
 import { Circle, Node, Text } from "scenerystack/scenery";
 import OpticsLabColors from "../../OpticsLabColors.js";
-import { FONT_BOLD_9PX } from "../../OpticsLabConstants.js";
+import {
+  FONT_BOLD_9PX,
+  HANDLE_LINE_WIDTH,
+  IMAGE_LABEL_OFFSET_X_PX,
+  IMAGE_MARKER_RADIUS_PX,
+} from "../../OpticsLabConstants.js";
 import OpticsLabNamespace from "../../OpticsLabNamespace.js";
 import type { DetectedImage } from "../model/optics/OpticsTypes.js";
 
-const MARKER_RADIUS = 6; // px
-const LABEL_OFFSET_X = MARKER_RADIUS + 3;
 const LABEL_FONT = FONT_BOLD_9PX;
 
 export class ImageOverlayNode extends Node {
@@ -84,10 +87,10 @@ export class ImageOverlayNode extends Node {
       if (img.imageType === "real") {
         const fillBase = OpticsLabColors.imageRealFillBaseColorProperty.value;
         const strokeBase = OpticsLabColors.imageRealStrokeBaseColorProperty.value;
-        marker = new Circle(MARKER_RADIUS, {
+        marker = new Circle(IMAGE_MARKER_RADIUS_PX, {
           fill: `rgba(${fillBase.r},${fillBase.g},${fillBase.b},${toFixed(alpha * 0.85, 3)})`,
           stroke: `rgba(${strokeBase.r},${strokeBase.g},${strokeBase.b},${toFixed(alpha, 3)})`,
-          lineWidth: 1.5,
+          lineWidth: HANDLE_LINE_WIDTH,
           x: vx,
           y: vy,
         });
@@ -95,10 +98,10 @@ export class ImageOverlayNode extends Node {
         labelFill = OpticsLabColors.imageRealLabelFillProperty.value.toCSS();
       } else if (img.imageType === "virtualObject") {
         const strokeBase = OpticsLabColors.imageVirtualObjectStrokeBaseColorProperty.value;
-        marker = new Circle(MARKER_RADIUS, {
+        marker = new Circle(IMAGE_MARKER_RADIUS_PX, {
           fill: null,
           stroke: `rgba(${strokeBase.r},${strokeBase.g},${strokeBase.b},${toFixed(alpha, 3)})`,
-          lineWidth: 1.5,
+          lineWidth: HANDLE_LINE_WIDTH,
           lineDash: [3, 2],
           x: vx,
           y: vy,
@@ -107,10 +110,10 @@ export class ImageOverlayNode extends Node {
         labelFill = OpticsLabColors.imageVirtualObjectLabelFillProperty.value.toCSS();
       } else {
         const strokeBase = OpticsLabColors.imageVirtualStrokeBaseColorProperty.value;
-        marker = new Circle(MARKER_RADIUS, {
+        marker = new Circle(IMAGE_MARKER_RADIUS_PX, {
           fill: null,
           stroke: `rgba(${strokeBase.r},${strokeBase.g},${strokeBase.b},${toFixed(alpha, 3)})`,
-          lineWidth: 1.5,
+          lineWidth: HANDLE_LINE_WIDTH,
           lineDash: [3, 2],
           x: vx,
           y: vy,
@@ -122,7 +125,7 @@ export class ImageOverlayNode extends Node {
       const label = new Text(labelText, {
         font: LABEL_FONT,
         fill: labelFill,
-        x: vx + LABEL_OFFSET_X,
+        x: vx + IMAGE_LABEL_OFFSET_X_PX,
         y: vy + 3,
       });
 

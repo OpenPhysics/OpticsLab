@@ -15,6 +15,8 @@ import type { ModelViewTransform2 } from "scenerystack/phetcommon";
 import { Node, Path, Rectangle, Text } from "scenerystack/scenery";
 import { PhetFont } from "scenerystack/scenery-phet";
 import OpticsLabColors from "../../OpticsLabColors.js";
+import { HANDLE_LINE_WIDTH } from "../../OpticsLabConstants.js";
+
 import OpticsLabNamespace from "../../OpticsLabNamespace.js";
 
 // ── Visual constants (view pixels) ────────────────────────────────────────────
@@ -45,7 +47,7 @@ export class GridScaleIndicatorNode extends Node {
     // overlayValueFillProperty is #eee on dark backgrounds, #111 on light ones.
     this._arrowPath = new Path(null, {
       stroke: OpticsLabColors.overlayValueFillProperty,
-      lineWidth: 1.5,
+      lineWidth: HANDLE_LINE_WIDTH,
       lineCap: "round",
       lineJoin: "round",
     });

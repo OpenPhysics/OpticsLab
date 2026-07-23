@@ -20,6 +20,7 @@ import {
   DEFAULT_RAY_DENSITY,
   FAR_DISTANCE,
   MAX_TOTAL_SEGMENTS,
+  PIXELS_PER_METER,
   RAY_CONVERGENCE_THRESHOLD,
 } from "../../../OpticsLabConstants.js";
 import { ELEMENT_CATEGORY_LIGHT_SOURCE, VIEW_MODE_RAYS } from "../../../OpticsLabStrings.js";
@@ -407,7 +408,7 @@ export class RayTracer {
    */
   private processObserverImages(allSegments: TracedSegment[], allImages: DetectedImage[]): void {
     const bySource = this.groupObservedSegmentsBySource(allSegments);
-    const thresholdSq = (RAY_CONVERGENCE_THRESHOLD / 100) ** 2;
+    const thresholdSq = (RAY_CONVERGENCE_THRESHOLD / PIXELS_PER_METER) ** 2;
 
     for (const segs of bySource.values()) {
       segs.sort((a, b) => (a.rayIndex ?? 0) - (b.rayIndex ?? 0));
@@ -555,7 +556,7 @@ export class RayTracer {
   private findImagesInSequence(segs: TracedSegment[], images: DetectedImage[]): void {
     // Convergence threshold in model metres (RAY_CONVERGENCE_THRESHOLD is in pixels,
     // 100 px = 1 m).
-    const thresholdSq = (RAY_CONVERGENCE_THRESHOLD / 100) ** 2;
+    const thresholdSq = (RAY_CONVERGENCE_THRESHOLD / PIXELS_PER_METER) ** 2;
 
     const candidates: DetectedImage[] = [];
 
@@ -595,7 +596,7 @@ export class RayTracer {
     }
 
     // Deduplicate candidates that landed in the same threshold cell.
-    const thresholdM = RAY_CONVERGENCE_THRESHOLD / 100;
+    const thresholdM = RAY_CONVERGENCE_THRESHOLD / PIXELS_PER_METER;
     const seen = new Set<string>();
     for (const c of candidates) {
       const key = `${Math.round(c.position.x / thresholdM)},${Math.round(c.position.y / thresholdM)}`;

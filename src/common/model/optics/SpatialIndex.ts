@@ -11,18 +11,9 @@
  * separate "unbounded" list and always included in every query.
  */
 
+import { SPATIAL_INDEX_CELL_SIZE_M, SPATIAL_INDEX_MAX_TRAVERSAL_STEPS } from "../../../OpticsLabConstants.js";
 import type { Point } from "./Geometry.js";
 import type { OpticalElement } from "./OpticsTypes.js";
-
-/** Default cell size in model units (metres). */
-const DEFAULT_CELL_SIZE = 2.0;
-
-/**
- * Maximum number of cells to traverse along a ray before falling back to
- * the full element list. Prevents degenerate rays from traversing the
- * entire grid.
- */
-const MAX_TRAVERSAL_STEPS = 200;
 
 export class SpatialIndex {
   private readonly cellSize: number;
@@ -38,7 +29,7 @@ export class SpatialIndex {
   private gridMaxCX = 0;
   private gridMaxCY = 0;
 
-  public constructor(elements: OpticalElement[], cellSize = DEFAULT_CELL_SIZE) {
+  public constructor(elements: OpticalElement[], cellSize = SPATIAL_INDEX_CELL_SIZE_M) {
     this.cellSize = cellSize;
     this.invCellSize = 1 / cellSize;
     this.build(elements);
@@ -191,7 +182,7 @@ export class SpatialIndex {
     let tMaxX = xAxis.tMax;
     let tMaxY = yAxis.tMax;
 
-    for (let step = 0; step < MAX_TRAVERSAL_STEPS; step++) {
+    for (let step = 0; step < SPATIAL_INDEX_MAX_TRAVERSAL_STEPS; step++) {
       if (this.isInGrid(cx, cy)) {
         this.collectCell(cx, cy, seen, result);
       } else if (this.isOutOfGrid(cx, cy, xAxis.step, yAxis.step)) {

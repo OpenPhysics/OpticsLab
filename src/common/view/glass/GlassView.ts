@@ -19,6 +19,7 @@ import { Tandem } from "scenerystack/tandem";
 import OpticsLabColors, { glassFill } from "../../../OpticsLabColors.js";
 import {
   GLASS_STROKE_WIDTH,
+  HANDLE_LINE_WIDTH,
   HANDLE_RADIUS,
   PRISM_EDGE_ADD_RADIUS,
   PRISM_VERTEX_REMOVE_RADIUS,
@@ -204,9 +205,9 @@ export class GlassView extends BaseOpticalElementView {
         new Circle(PRISM_EDGE_ADD_RADIUS, {
           fill: OpticsLabColors.prismAddFillProperty,
           stroke: OpticsLabColors.prismAddStrokeProperty,
-          lineWidth: 1.5,
+          lineWidth: HANDLE_LINE_WIDTH,
         }),
-        new Path(plusShape, { stroke: OpticsLabColors.prismAddStrokeProperty, lineWidth: 1.5 }),
+        new Path(plusShape, { stroke: OpticsLabColors.prismAddStrokeProperty, lineWidth: HANDLE_LINE_WIDTH }),
       ],
     });
 
@@ -266,9 +267,9 @@ export class GlassView extends BaseOpticalElementView {
         new Circle(PRISM_VERTEX_REMOVE_RADIUS, {
           fill: OpticsLabColors.prismRemoveFillProperty,
           stroke: OpticsLabColors.prismRemoveStrokeProperty,
-          lineWidth: 1.5,
+          lineWidth: HANDLE_LINE_WIDTH,
         }),
-        new Path(xShape, { stroke: OpticsLabColors.prismRemoveStrokeProperty, lineWidth: 1.5 }),
+        new Path(xShape, { stroke: OpticsLabColors.prismRemoveStrokeProperty, lineWidth: HANDLE_LINE_WIDTH }),
       ],
     });
 

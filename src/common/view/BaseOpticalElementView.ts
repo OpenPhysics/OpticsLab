@@ -22,10 +22,10 @@ import { Emitter, type TReadOnlyProperty } from "scenerystack/axon";
 import { Bounds2 } from "scenerystack/dot";
 import { Node, Rectangle, type RichDragListener } from "scenerystack/scenery";
 import OpticsLabColors from "../../OpticsLabColors.js";
+import { SELECTION_PAD_PX } from "../../OpticsLabConstants.js";
+
 import OpticsLabNamespace from "../../OpticsLabNamespace.js";
 import { unlinkHandleVisibility } from "./ViewHelpers.js";
-
-const SELECTION_PAD = 8; // px of padding around content bounds
 
 export abstract class BaseOpticalElementView extends Node {
   /** Drag listener used to translate the element as a whole. */
@@ -102,10 +102,10 @@ export abstract class BaseOpticalElementView extends Node {
       return;
     }
     this._selectionFrame.setRect(
-      b.minX - SELECTION_PAD,
-      b.minY - SELECTION_PAD,
-      b.width + 2 * SELECTION_PAD,
-      b.height + 2 * SELECTION_PAD,
+      b.minX - SELECTION_PAD_PX,
+      b.minY - SELECTION_PAD_PX,
+      b.width + 2 * SELECTION_PAD_PX,
+      b.height + 2 * SELECTION_PAD_PX,
     );
   }
 

@@ -27,6 +27,7 @@ import {
   EXT_LINE_DASH,
   EXT_LINE_WIDTH,
   EXT_R,
+  FALLBACK_RAY_WAVELENGTH_NM,
   RAY_ALPHA_BUCKETS,
   RAY_ALPHA_SCALE,
   RAY_ALPHA_SKIP,
@@ -302,7 +303,7 @@ export class RayPropagationView extends CanvasNode {
         return;
       }
 
-      const c = VisibleColor.wavelengthToColor(seg.wavelength ?? 550);
+      const c = VisibleColor.wavelengthToColor(seg.wavelength ?? FALLBACK_RAY_WAVELENGTH_NM);
       let obsAlpha = seg.isObserved ? Math.min(1, alpha * 1.4) : alpha;
       if (additive) {
         obsAlpha = Math.min(1, obsAlpha * CONT_SPECTRUM_RAY_ALPHA_MULTIPLIER);
@@ -365,7 +366,7 @@ export class RayPropagationView extends CanvasNode {
         continue;
       }
 
-      const c = VisibleColor.wavelengthToColor(seg.wavelength ?? 550);
+      const c = VisibleColor.wavelengthToColor(seg.wavelength ?? FALLBACK_RAY_WAVELENGTH_NM);
       context.strokeStyle = `rgba(${c.r},${c.g},${c.b},${toFixed(alpha, 3)})`;
       context.beginPath();
       context.moveTo(clipped[0], clipped[1]);
@@ -440,7 +441,7 @@ export class RayPropagationView extends CanvasNode {
       const baseX = mx - ux * (ARROW_LENGTH * 0.5);
       const baseY = my - uy * (ARROW_LENGTH * 0.5);
 
-      const c = VisibleColor.wavelengthToColor(seg.wavelength ?? 550);
+      const c = VisibleColor.wavelengthToColor(seg.wavelength ?? FALLBACK_RAY_WAVELENGTH_NM);
       context.fillStyle = `rgba(${c.r},${c.g},${c.b},${toFixed(alpha, 3)})`;
       context.beginPath();
       context.moveTo(tipX, tipY);

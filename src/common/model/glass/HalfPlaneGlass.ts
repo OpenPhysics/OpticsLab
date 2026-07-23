@@ -7,6 +7,7 @@
  * looking from p1 toward p2.
  */
 
+import { DEFAULT_REFRACTIVE_INDEX } from "../../../OpticsLabConstants.js";
 import { ELEMENT_TYPE_PLANE_GLASS } from "../../../OpticsLabStrings.js";
 import { type Bounds, type Point, point, rayLineIntersection, segment, segmentNormal } from "../optics/Geometry.js";
 import type { IntersectionResult, RayCallConfig, RayInteractionResult, SimulationRay } from "../optics/OpticsTypes.js";
@@ -18,7 +19,7 @@ export class HalfPlaneGlass extends BaseGlass {
   public p1: Point;
   public p2: Point;
 
-  public constructor(p1: Point, p2: Point, refIndex = 1.5) {
+  public constructor(p1: Point, p2: Point, refIndex = DEFAULT_REFRACTIVE_INDEX) {
     // cauchyB=0 preserves current behaviour (no dispersion); partialReflect=true
     super(refIndex, 0, true);
     this.p1 = p1;

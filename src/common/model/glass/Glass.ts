@@ -14,6 +14,7 @@
  *     from the previous vertex through the control point to the next vertex.
  */
 
+import { DEFAULT_CAUCHY_B, DEFAULT_REFRACTIVE_INDEX } from "../../../OpticsLabConstants.js";
 import { ELEMENT_TYPE_GLASS } from "../../../OpticsLabStrings.js";
 import {
   arcBounds,
@@ -75,7 +76,12 @@ export class Glass extends BaseGlass {
 
   public path: GlassPathPoint[];
 
-  public constructor(path: GlassPathPoint[], refIndex = 1.5, cauchyB = 0.004, partialReflect = true) {
+  public constructor(
+    path: GlassPathPoint[],
+    refIndex = DEFAULT_REFRACTIVE_INDEX,
+    cauchyB = DEFAULT_CAUCHY_B,
+    partialReflect = true,
+  ) {
     super(refIndex, cauchyB, partialReflect);
     this.path = path;
   }

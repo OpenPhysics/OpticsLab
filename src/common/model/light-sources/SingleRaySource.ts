@@ -5,7 +5,9 @@
  * a second point that indicates direction. Emits exactly one ray.
  */
 
+import { DEFAULT_SINGLE_RAY_BRIGHTNESS } from "../../../OpticsLabConstants.js";
 import { ELEMENT_TYPE_SINGLE_RAY } from "../../../OpticsLabStrings.js";
+
 import type { Bounds, Point } from "../optics/Geometry.js";
 import { normalize, point, pointsBounds, subtract } from "../optics/Geometry.js";
 import type { SimulationRay, ViewMode } from "../optics/OpticsTypes.js";
@@ -18,7 +20,7 @@ export class SingleRaySource extends BaseLightSource {
   public p1: Point;
   public p2: Point;
 
-  public constructor(p1: Point, p2: Point, brightness = 1, wavelength = GREEN_WAVELENGTH) {
+  public constructor(p1: Point, p2: Point, brightness = DEFAULT_SINGLE_RAY_BRIGHTNESS, wavelength = GREEN_WAVELENGTH) {
     super(brightness, wavelength);
     this.p1 = p1;
     this.p2 = p2;

@@ -1,3 +1,5 @@
+import { MAX_HISTORY_SIZE } from "../../../OpticsLabConstants.js";
+
 /**
  * CommandHistory.ts
  *
@@ -14,8 +16,6 @@
  *
  * The history is capped at MAX_HISTORY_SIZE to bound memory use.
  */
-
-export const MAX_HISTORY_SIZE = 100;
 
 /** A discrete, reversible operation. */
 export interface SceneCommand {

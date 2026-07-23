@@ -17,13 +17,27 @@ import {
   ARC_MIRROR_CURVATURE_MIN,
   ARC_MIRROR_RADIUS_MAX,
   ARC_MIRROR_RADIUS_MIN,
+  BEAM_SPLITTER_TRANSMIT_DELTA,
+  BEAM_SPLITTER_TRANSMIT_MAX,
+  BEAM_SPLITTER_TRANSMIT_MIN,
   DETECTOR_BINS_MAX,
   DETECTOR_BINS_MIN,
+  ELEMENT_ANGLE_MAX_DEG,
+  ELEMENT_ANGLE_MIN_DEG,
+  FIBER_CORE_FRACTION_DELTA,
+  FIBER_CORE_FRACTION_MAX,
+  FIBER_CORE_FRACTION_MIN,
   FIBER_OPTIC_OUTER_RADIUS_MAX_M,
   FIBER_OPTIC_OUTER_RADIUS_MIN_M,
   FOCAL_LENGTH_MAX_M,
   FOCAL_LENGTH_MIN_M,
+  GRATING_DUTY_CYCLE_DELTA,
+  GRATING_DUTY_CYCLE_MAX,
+  GRATING_DUTY_CYCLE_MIN,
+  GRATING_LINES_DENSITY_MAX,
+  GRATING_LINES_DENSITY_MIN,
   LINES_DENSITY_CONTROL_DELTA,
+  REFRACTIVE_INDEX_DELTA,
   REFRACTIVE_INDEX_MAX,
   REFRACTIVE_INDEX_MIN,
 } from "../../../OpticsLabConstants.js";
@@ -321,7 +335,7 @@ export function buildSegmentControls(
 
 export function buildApertureControls(element: ApertureElement, triggerRebuild: () => void): EditControlsResult {
   const controlStrings = StringManager.getInstance().getControlStrings();
-  const A_RANGE = new Range(0, 360);
+  const A_RANGE = new Range(ELEMENT_ANGLE_MIN_DEG, ELEMENT_ANGLE_MAX_DEG);
 
   // Build an angle control that rotates the aperture (p1/p2) while preserving
   // the fractional positions of the gap endpoints (p3/p4) along the line.
@@ -383,7 +397,7 @@ export function buildGratingControls(
       makeControl(
         controlStrings.linesDensityStringProperty,
         element.linesDensity,
-        new Range(1, 2500),
+        new Range(GRATING_LINES_DENSITY_MIN, GRATING_LINES_DENSITY_MAX),
         LINES_DENSITY_CONTROL_DELTA,
         (v) => {
           element.linesDensity = v;
@@ -394,8 +408,8 @@ export function buildGratingControls(
       makeControl(
         controlStrings.dutyCycleStringProperty,
         element.dutyCycle,
-        new Range(0.01, 0.99),
-        0.01,
+        new Range(GRATING_DUTY_CYCLE_MIN, GRATING_DUTY_CYCLE_MAX),
+        GRATING_DUTY_CYCLE_DELTA,
         (v) => {
           element.dutyCycle = v;
         },
@@ -418,8 +432,8 @@ export function buildBeamSplitterControls(
       makeControl(
         controlStrings.transmissionRatioStringProperty,
         element.transRatio,
-        new Range(0, 1),
-        0.05,
+        new Range(BEAM_SPLITTER_TRANSMIT_MIN, BEAM_SPLITTER_TRANSMIT_MAX),
+        BEAM_SPLITTER_TRANSMIT_DELTA,
         (v) => {
           element.transRatio = v;
         },
@@ -449,7 +463,7 @@ export function buildFiberOpticControls(element: FiberOpticElement, triggerRebui
     controlStrings.claddingRefractiveIndexStringProperty,
     element.refIndex,
     new Range(REFRACTIVE_INDEX_MIN, REFRACTIVE_INDEX_MAX),
-    0.05,
+    REFRACTIVE_INDEX_DELTA,
     (v) => {
       element.refIndex = v;
     },
@@ -460,7 +474,7 @@ export function buildFiberOpticControls(element: FiberOpticElement, triggerRebui
     controlStrings.coreRefractiveIndexStringProperty,
     element.coreRefIndex,
     new Range(REFRACTIVE_INDEX_MIN, REFRACTIVE_INDEX_MAX),
-    0.05,
+    REFRACTIVE_INDEX_DELTA,
     (v) => {
       element.coreRefIndex = v;
     },
@@ -470,8 +484,8 @@ export function buildFiberOpticControls(element: FiberOpticElement, triggerRebui
   const coreFractionControl = makeControl(
     controlStrings.coreFractionStringProperty,
     element.coreRadiusFraction,
-    new Range(0.05, 0.95),
-    0.05,
+    new Range(FIBER_CORE_FRACTION_MIN, FIBER_CORE_FRACTION_MAX),
+    FIBER_CORE_FRACTION_DELTA,
     (v) => {
       element.coreRadiusFraction = v;
     },

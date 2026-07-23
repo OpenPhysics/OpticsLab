@@ -82,7 +82,7 @@ export function extendedRaysIcon(): Node {
   const spreadY = 4;
   return new Node({
     children: [
-      new Line(startX, cy, endX, cy, { stroke: c, lineWidth: 1.5, lineDash: dash }),
+      new Line(startX, cy, endX, cy, { stroke: c, lineWidth: HANDLE_LINE_WIDTH, lineDash: dash }),
       new Line(midX, cy, endX, cy - spreadY, { stroke: c, lineWidth: 1, lineDash: dash }),
       new Line(midX, cy, endX, cy + spreadY, { stroke: c, lineWidth: 1, lineDash: dash }),
     ],
@@ -130,7 +130,10 @@ export function rayArrowsIcon(): Node {
     .lineTo(tipX - headH, cy + headW)
     .close();
   return new Node({
-    children: [new Line(left, cy, right, cy, { stroke: c, lineWidth: 1.5 }), new Path(headShape, { fill: c })],
+    children: [
+      new Line(left, cy, right, cy, { stroke: c, lineWidth: HANDLE_LINE_WIDTH }),
+      new Path(headShape, { fill: c }),
+    ],
   });
 }
 
@@ -143,8 +146,8 @@ export function rayStubsIcon(): Node {
   const gap = 2;
   return new Node({
     children: [
-      new Line(cx - gap / 2 - stubLen, cy, cx - gap / 2, cy, { stroke: c, lineWidth: 1.5 }),
-      new Line(cx + gap / 2, cy, cx + gap / 2 + stubLen, cy, { stroke: c, lineWidth: 1.5 }),
+      new Line(cx - gap / 2 - stubLen, cy, cx - gap / 2, cy, { stroke: c, lineWidth: HANDLE_LINE_WIDTH }),
+      new Line(cx + gap / 2, cy, cx + gap / 2 + stubLen, cy, { stroke: c, lineWidth: HANDLE_LINE_WIDTH }),
     ],
   });
 }

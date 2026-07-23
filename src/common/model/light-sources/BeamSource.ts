@@ -6,7 +6,9 @@
  * the segment.
  */
 
+import { DEFAULT_BEAM_BRIGHTNESS } from "../../../OpticsLabConstants.js";
 import { ELEMENT_TYPE_BEAM } from "../../../OpticsLabStrings.js";
+
 import type { Bounds, Point } from "../optics/Geometry.js";
 import { distance, normalize, point, pointsBounds, subtract } from "../optics/Geometry.js";
 import { BEAM_RAY_DENSITY_SCALE, BRIGHTNESS_CONTINUOUS_THRESHOLD } from "../optics/OpticsConstants.js";
@@ -22,7 +24,7 @@ export class BeamSource extends BaseLightSource {
   /** Second endpoint of the segment perpendicular to beam direction. */
   public p2: Point;
 
-  public constructor(p1: Point, p2: Point, brightness = 0.5, wavelength = GREEN_WAVELENGTH) {
+  public constructor(p1: Point, p2: Point, brightness = DEFAULT_BEAM_BRIGHTNESS, wavelength = GREEN_WAVELENGTH) {
     super(brightness, wavelength);
     this.p1 = p1;
     this.p2 = p2;

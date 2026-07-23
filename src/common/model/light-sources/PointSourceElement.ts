@@ -5,7 +5,9 @@
  * directions. The angular spacing of rays depends on rayDensity.
  */
 
+import { DEFAULT_POINT_SOURCE_BRIGHTNESS } from "../../../OpticsLabConstants.js";
 import { ELEMENT_TYPE_POINT_SOURCE } from "../../../OpticsLabStrings.js";
+
 import type { Bounds, Point } from "../optics/Geometry.js";
 import { point } from "../optics/Geometry.js";
 import { BRIGHTNESS_CONTINUOUS_THRESHOLD, RAY_DENSITY_SCALE } from "../optics/OpticsConstants.js";
@@ -18,7 +20,7 @@ export class PointSourceElement extends BaseLightSource {
 
   public position: Point;
 
-  public constructor(position: Point, brightness = 0.5, wavelength = GREEN_WAVELENGTH) {
+  public constructor(position: Point, brightness = DEFAULT_POINT_SOURCE_BRIGHTNESS, wavelength = GREEN_WAVELENGTH) {
     super(brightness, wavelength);
     this.position = position;
   }

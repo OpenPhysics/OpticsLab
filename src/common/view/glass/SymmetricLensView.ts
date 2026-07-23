@@ -19,14 +19,15 @@
 
 import type { ModelViewTransform2 } from "scenerystack/phetcommon";
 import { Tandem } from "scenerystack/tandem";
+import { LENS_APEX_MIN_OFFSET_M } from "../../../OpticsLabConstants.js";
 import OpticsLabNamespace from "../../../OpticsLabNamespace.js";
+
 import type { GlassPathPoint } from "../../model/glass/Glass.js";
 import type { SphericalLens } from "../../model/glass/SphericalLens.js";
 import type { ViewOptionsModel } from "../ViewOptionsModel.js";
 import { SphericalLensView } from "./SphericalLensView.js";
 
 /** Minimum distance (model units) the apex must sit past the corner midpoint. */
-const APEX_MIN_OFFSET = 0.02;
 
 export class SymmetricLensView extends SphericalLensView {
   /** +1 for BiconvexLens (r1 > 0), −1 for BiconcaveLens (r1 < 0). */
@@ -78,9 +79,9 @@ export class SymmetricLensView extends SphericalLensView {
       const midY = (v0.y + v4.y) / 2;
       const relProj = (v5.x - midX) * dpx + (v5.y - midY) * dpy;
       const reqSign = (this.rSign === 1 ? -1 : 1) as 1 | -1; // −rSign
-      if (relProj * reqSign < APEX_MIN_OFFSET) {
-        v5.x = midX + APEX_MIN_OFFSET * reqSign * dpx;
-        v5.y = midY + APEX_MIN_OFFSET * reqSign * dpy;
+      if (relProj * reqSign < LENS_APEX_MIN_OFFSET_M) {
+        v5.x = midX + LENS_APEX_MIN_OFFSET_M * reqSign * dpx;
+        v5.y = midY + LENS_APEX_MIN_OFFSET_M * reqSign * dpy;
       }
       // Re-derive r1 from the (now-clamped) apex and mirror to r2.
       const { r1 } = this.lens.getDR1R2();
@@ -100,9 +101,9 @@ export class SymmetricLensView extends SphericalLensView {
       const midY = (v1.y + v3.y) / 2;
       const relProj = (v2.x - midX) * dpx + (v2.y - midY) * dpy;
       const reqSign = this.rSign; // +rSign
-      if (relProj * reqSign < APEX_MIN_OFFSET) {
-        v2.x = midX + APEX_MIN_OFFSET * reqSign * dpx;
-        v2.y = midY + APEX_MIN_OFFSET * reqSign * dpy;
+      if (relProj * reqSign < LENS_APEX_MIN_OFFSET_M) {
+        v2.x = midX + LENS_APEX_MIN_OFFSET_M * reqSign * dpx;
+        v2.y = midY + LENS_APEX_MIN_OFFSET_M * reqSign * dpy;
       }
       // Re-derive r2 from the (now-clamped) apex and mirror to r1.
       const { r2 } = this.lens.getDR1R2();

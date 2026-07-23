@@ -28,9 +28,11 @@ import OpticsLabColors from "../../../OpticsLabColors.js";
 import {
   DETECTOR_CHART_HEIGHT,
   DETECTOR_CHART_WIDTH,
+  DETECTOR_CHART_Y_HEADROOM,
   DETECTOR_NUM_BINS,
   FONT_9PX,
   FONT_BOLD_9PX,
+  HANDLE_LINE_WIDTH,
   PANEL_CORNER_RADIUS,
   PANEL_X_MARGIN,
   PANEL_Y_MARGIN,
@@ -123,7 +125,7 @@ export class DetectorChartPanel extends Panel {
     // Reference tick marks crossing the bottom border of the chart
     const chartTicksPath = new Path(buildChartTicksShape(chartTransform), {
       stroke: OpticsLabColors.detectorTickStrokeProperty,
-      lineWidth: 1.5,
+      lineWidth: HANDLE_LINE_WIDTH,
       lineCap: "round",
       pickable: false,
     });
@@ -267,7 +269,7 @@ export class DetectorChartPanel extends Panel {
         }
       }
     }
-    this.chartTransform.modelYRange = new Range(0, maxVal * 1.25);
+    this.chartTransform.modelYRange = new Range(0, maxVal * DETECTOR_CHART_Y_HEADROOM);
 
     // Update live bars
     const liveData = liveBins.map((v, i) => new Vector2((i + 0.5) / numBins, v));

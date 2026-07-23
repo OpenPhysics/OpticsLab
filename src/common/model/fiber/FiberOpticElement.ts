@@ -30,6 +30,8 @@ import {
   FIBER_OPTIC_CRITICAL_BEND_RADIUS,
   FIBER_OPTIC_DEFAULT_BEND_LOSS_COEFF,
   FIBER_OPTIC_DEFAULT_OUTER_RADIUS_M,
+  FIBER_SAMPLES_PER_SEGMENT,
+  FIBER_SPLINE_TENSION,
 } from "../../../OpticsLabConstants.js";
 import { ELEMENT_TYPE_FIBER_CORE_GLASS, ELEMENT_TYPE_FIBER_OPTIC } from "../../../OpticsLabStrings.js";
 import { Glass, type GlassPathPoint } from "../glass/Glass.js";
@@ -178,8 +180,6 @@ export class FiberCoreGlass extends Glass {
 
 // ── Catmull–Rom maths ─────────────────────────────────────────────────────────
 
-const TENSION = 0.5;
-
 /**
  * Position on the Catmull–Rom segment from p1 to p2, with context points
  * p0 (before) and p3 (after), evaluated at parameter t ∈ [0, 1].
@@ -187,7 +187,7 @@ const TENSION = 0.5;
 function crPoint(p0: Point, p1: Point, p2: Point, p3: Point, t: number): Point {
   const t2 = t * t;
   const t3 = t2 * t;
-  const tension = TENSION;
+  const tension = FIBER_SPLINE_TENSION;
   const c0 = tension * (-t3 + 2 * t2 - t);
   const c1 = (2 - tension) * t3 + (tension - 3) * t2 + 1;
   const c2 = (tension - 2) * t3 + (3 - 2 * tension) * t2 + tension * t;
@@ -203,7 +203,7 @@ function crPoint(p0: Point, p1: Point, p2: Point, p3: Point, t: number): Point {
  * The tangent at t=0 is τ*(p2−p0) and at t=1 is τ*(p3−p1).
  */
 function crTangent(p0: Point, p1: Point, p2: Point, p3: Point, t: number): Point {
-  const tension = TENSION;
+  const tension = FIBER_SPLINE_TENSION;
   const d0 = tension * (-3 * t * t + 4 * t - 1);
   const d1 = 3 * (2 - tension) * t * t + 2 * (tension - 3) * t;
   const d2 = 3 * (tension - 2) * t * t + 2 * (3 - 2 * tension) * t + tension;
@@ -219,7 +219,7 @@ function crTangent(p0: Point, p1: Point, p2: Point, p3: Point, t: number): Point
  * Used for computing local curvature: κ = |x'y'' − y'x''| / (x'² + y'²)^(3/2).
  */
 function crSecondDerivative(p0: Point, p1: Point, p2: Point, p3: Point, t: number): Point {
-  const tension = TENSION;
+  const tension = FIBER_SPLINE_TENSION;
   const dd0 = tension * (-6 * t + 4);
   const dd1 = 6 * (2 - tension) * t + 2 * (tension - 3);
   const dd2 = 6 * (tension - 2) * t + 2 * (3 - 2 * tension);
@@ -229,11 +229,6 @@ function crSecondDerivative(p0: Point, p1: Point, p2: Point, p3: Point, t: numbe
     y: dd0 * p0.y + dd1 * p1.y + dd2 * p2.y + dd3 * p3.y,
   };
 }
-
-// ── Number of samples used to approximate the spline ─────────────────────────
-
-/** Intervals per Catmull–Rom segment. Total samples = 4 × N + 1. */
-const N_PER_SEG = 8;
 
 // ── Ribbon path builder ───────────────────────────────────────────────────────
 
@@ -333,7 +328,7 @@ export class FiberOpticElement extends Glass implements ICompound {
   }
 
   /**
-   * Sample the Catmull–Rom spline at N_PER_SEG × 4 + 1 evenly-spaced
+   * Sample the Catmull–Rom spline at FIBER_SAMPLES_PER_SEGMENT × 4 + 1 evenly-spaced
    * parameter values.  Returns { point, tangent, curvature } triples in model space.
    *
    * Phantom end-points are mirrored so the curve interpolates p1 and p2
@@ -362,9 +357,9 @@ export class FiberOpticElement extends Glass implements ICompound {
         continue;
       }
       const [a, b, c, d] = seg;
-      const kMax = s < segs.length - 1 ? N_PER_SEG : N_PER_SEG + 1;
+      const kMax = s < segs.length - 1 ? FIBER_SAMPLES_PER_SEGMENT : FIBER_SAMPLES_PER_SEGMENT + 1;
       for (let k = 0; k < kMax; k++) {
-        const t = k / N_PER_SEG;
+        const t = k / FIBER_SAMPLES_PER_SEGMENT;
         const tangent = crTangent(a, b, c, d, t);
         const dd = crSecondDerivative(a, b, c, d, t);
         const speedSq = tangent.x * tangent.x + tangent.y * tangent.y;

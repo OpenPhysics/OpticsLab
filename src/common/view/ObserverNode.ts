@@ -18,17 +18,23 @@ import { Circle, Node, RichDragListener, Text } from "scenerystack/scenery";
 import { Tandem } from "scenerystack/tandem";
 import { StringManager } from "../../i18n/StringManager.js";
 import OpticsLabColors from "../../OpticsLabColors.js";
-import { FONT_11PX } from "../../OpticsLabConstants.js";
+import {
+  DEFAULT_OBSERVER_RADIUS_M,
+  DEFAULT_OBSERVER_X_M,
+  DEFAULT_OBSERVER_Y_M,
+  FONT_11PX,
+  HANDLE_LINE_WIDTH,
+  OBSERVER_CENTER_DOT_RADIUS_PX,
+  OBSERVER_RADIUS_MIN_M,
+  OBSERVER_RIM_HANDLE_RADIUS_PX,
+} from "../../OpticsLabConstants.js";
 import OpticsLabNamespace from "../../OpticsLabNamespace.js";
 import type { Observer } from "../model/optics/OpticsTypes.js";
 
 export const DEFAULT_OBSERVER: Observer = {
-  position: { x: 0.3, y: 0 },
-  radius: 0.12,
+  position: { x: DEFAULT_OBSERVER_X_M, y: DEFAULT_OBSERVER_Y_M },
+  radius: DEFAULT_OBSERVER_RADIUS_M,
 };
-
-const CENTER_DOT_RADIUS = 7; // px
-const RIM_HANDLE_RADIUS = 5; // px
 
 export class ObserverNode extends Node {
   private readonly modelViewTransform: ModelViewTransform2;
@@ -50,16 +56,16 @@ export class ObserverNode extends Node {
 
     this.radiusCircle = new Circle(0, {
       stroke: OpticsLabColors.observerCircleStrokeProperty,
-      lineWidth: 1.5,
+      lineWidth: HANDLE_LINE_WIDTH,
       lineDash: [5, 3],
       fill: OpticsLabColors.observerCircleFillProperty,
       pickable: false,
     });
 
-    this.centerDot = new Circle(CENTER_DOT_RADIUS, {
+    this.centerDot = new Circle(OBSERVER_CENTER_DOT_RADIUS_PX, {
       fill: OpticsLabColors.observerDotFillProperty,
       stroke: OpticsLabColors.observerDotStrokeProperty,
-      lineWidth: 1.5,
+      lineWidth: HANDLE_LINE_WIDTH,
       cursor: "move",
     });
     this.centerDot.tagName = "div";
@@ -71,7 +77,7 @@ export class ObserverNode extends Node {
       fill: OpticsLabColors.observerLabelFillProperty,
     });
 
-    this.rimHandle = new Circle(RIM_HANDLE_RADIUS, {
+    this.rimHandle = new Circle(OBSERVER_RIM_HANDLE_RADIUS_PX, {
       fill: OpticsLabColors.observerRimFillProperty,
       stroke: OpticsLabColors.observerRimStrokeProperty,
       lineWidth: 1,
@@ -127,7 +133,7 @@ export class ObserverNode extends Node {
         const current = observerProperty.value ?? DEFAULT_OBSERVER;
         observerProperty.value = {
           position: current.position,
-          radius: Math.max(0.02, startRadius + accR),
+          radius: Math.max(OBSERVER_RADIUS_MIN_M, startRadius + accR),
         };
       },
     });
@@ -156,7 +162,7 @@ export class ObserverNode extends Node {
     this.centerDot.y = cy;
 
     this.labelNode.centerX = cx;
-    this.labelNode.bottom = cy - (CENTER_DOT_RADIUS + 3);
+    this.labelNode.bottom = cy - (OBSERVER_CENTER_DOT_RADIUS_PX + 3);
 
     this.radiusCircle.x = cx;
     this.radiusCircle.y = cy;

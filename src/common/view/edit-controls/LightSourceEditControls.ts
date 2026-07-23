@@ -9,6 +9,7 @@ import { Range } from "scenerystack/dot";
 import { Tandem } from "scenerystack/tandem";
 import { StringManager } from "../../../i18n/StringManager.js";
 import {
+  BRIGHTNESS_CONTROL_DELTA,
   BRIGHTNESS_MAX,
   BRIGHTNESS_MIN,
   DIVERGENCE_MAX_DEG,
@@ -51,7 +52,7 @@ export function buildArcLightSourceControls(element: ArcLightSource, triggerRebu
         controlStrings.brightnessStringProperty,
         element.brightness,
         new Range(BRIGHTNESS_MIN, BRIGHTNESS_MAX),
-        0.05,
+        BRIGHTNESS_CONTROL_DELTA,
         (v) => {
           element.brightness = v;
         },
@@ -92,7 +93,7 @@ export function buildPointSourceControls(element: PointSourceElement, triggerReb
         controlStrings.brightnessStringProperty,
         element.brightness,
         new Range(BRIGHTNESS_MIN, BRIGHTNESS_MAX),
-        0.05,
+        BRIGHTNESS_CONTROL_DELTA,
         (v) => {
           element.brightness = v;
         },
@@ -137,7 +138,7 @@ export function buildBeamSourceControls(element: BeamSource, triggerRebuild: () 
         controlStrings.brightnessStringProperty,
         element.brightness,
         new Range(BRIGHTNESS_MIN, BRIGHTNESS_MAX),
-        0.05,
+        BRIGHTNESS_CONTROL_DELTA,
         (v) => {
           element.brightness = v;
         },
@@ -184,7 +185,7 @@ export function buildDivergentBeamControls(element: DivergentBeam, triggerRebuil
         controlStrings.brightnessStringProperty,
         element.brightness,
         new Range(BRIGHTNESS_MIN, BRIGHTNESS_MAX),
-        0.05,
+        BRIGHTNESS_CONTROL_DELTA,
         (v) => {
           element.brightness = v;
         },
@@ -232,7 +233,7 @@ export function buildSingleRaySourceControls(element: SingleRaySource, triggerRe
         controlStrings.brightnessStringProperty,
         element.brightness,
         new Range(BRIGHTNESS_MIN, BRIGHTNESS_MAX),
-        0.05,
+        BRIGHTNESS_CONTROL_DELTA,
         (v) => {
           element.brightness = v;
         },
@@ -271,7 +272,7 @@ export function buildContinuousSpectrumSourceControls(
         controlStrings.brightnessStringProperty,
         element.brightness,
         new Range(BRIGHTNESS_MIN, BRIGHTNESS_MAX),
-        0.05,
+        BRIGHTNESS_CONTROL_DELTA,
         (v) => {
           element.brightness = v;
         },

@@ -14,6 +14,7 @@ import { type Circle, Path, type RichDragListener } from "scenerystack/scenery";
 import type { Tandem } from "scenerystack/tandem";
 import OpticsLabColors from "../../../OpticsLabColors.js";
 import {
+  APERTURED_MIRROR_MAX_APERTURE_FRACTION,
   LINE_HIT_HALF_WIDTH_PX,
   MIRROR_BACK_WIDTH,
   MIRROR_FOCAL_MARKER_SIZE_M,
@@ -246,7 +247,10 @@ export class AperturedParabolicMirrorView extends BaseOpticalElementView {
 
     const chordLen = distance(p1, p2);
     const halfAperture = chordLen / 2;
-    const effectiveHalfWidth = Math.min(this.mirror.apertureHalfWidth, halfAperture * 0.99);
+    const effectiveHalfWidth = Math.min(
+      this.mirror.apertureHalfWidth,
+      halfAperture * APERTURED_MIRROR_MAX_APERTURE_FRACTION,
+    );
 
     const allPoints = this.mirror.computePoints();
 
