@@ -40,3 +40,6 @@ Thumbs.db
 
 # Optics simulation template
 optics-template/
+
+# CI / local npm audit artifact (must not be linted)
+audit.json
