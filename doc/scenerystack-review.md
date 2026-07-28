@@ -3,9 +3,7 @@
 **Date:** 2026-07-21
 **Scope:** OpticsLab shared stack (`src/common/`) and screens, reviewed against the six SceneryStack
 pillars: architecture, memory, accessibility, layout, numerics, i18n.
-**Companion:** physics/deserialization defects are covered separately in
-[adversarial-security-review.md](./adversarial-security-review.md); this review focuses on the
-architecture, a11y, and i18n pillars that review did not touch.
+**Focus:** architecture, a11y, and i18n pillars (not a full physics/deserialization audit).
 
 ---
 
