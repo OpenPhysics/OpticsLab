@@ -25,21 +25,26 @@
  *   const panel = new OpticsLabPanel(content, { fill: "transparent" });
  */
 
+import { type EmptySelfOptions, optionize } from "scenerystack/phet-core";
 import type { Node } from "scenerystack/scenery";
-import type { PanelOptions } from "scenerystack/sun";
-import { Panel } from "scenerystack/sun";
+import { Panel, type PanelOptions } from "scenerystack/sun";
 import OpticsLabColors from "../OpticsLabColors.js";
 import { PANEL_CORNER_RADIUS } from "../OpticsLabConstants.js";
 
+export type OpticsLabPanelOptions = PanelOptions;
+
 export class OpticsLabPanel extends Panel {
-  public constructor(content: Node, providedOptions?: PanelOptions) {
-    super(content, {
-      fill: OpticsLabColors.panelBackgroundColorProperty,
-      stroke: OpticsLabColors.panelBorderColorProperty,
-      cornerRadius: PANEL_CORNER_RADIUS,
-      xMargin: 12,
-      yMargin: 10,
-      ...providedOptions,
-    });
+  public constructor(content: Node, providedOptions?: OpticsLabPanelOptions) {
+    const options = optionize<OpticsLabPanelOptions, EmptySelfOptions, PanelOptions>()(
+      {
+        fill: OpticsLabColors.panelBackgroundColorProperty,
+        stroke: OpticsLabColors.panelBorderColorProperty,
+        cornerRadius: PANEL_CORNER_RADIUS,
+        xMargin: 12,
+        yMargin: 10,
+      },
+      providedOptions,
+    );
+    super(content, options);
   }
 }

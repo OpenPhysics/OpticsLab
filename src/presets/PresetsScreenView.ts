@@ -1,10 +1,10 @@
+import { type EmptySelfOptions, optionize } from "scenerystack/phet-core";
 import { Node, Text } from "scenerystack/scenery";
-import type { ScreenViewOptions } from "scenerystack/sim";
 import { ComboBox, type ComboBoxItem } from "scenerystack/sun";
 import { Tandem } from "scenerystack/tandem";
 import type { ComponentKey } from "../common/view/ComponentCarousel.js";
 import { createOpticalElementView } from "../common/view/OpticalElementViewFactory.js";
-import { RayTracingCommonView } from "../common/view/RayTracingCommonView.js";
+import { RayTracingCommonView, type RayTracingCommonViewOptions } from "../common/view/RayTracingCommonView.js";
 import { StringManager } from "../i18n/StringManager.js";
 import OpticsLabColors from "../OpticsLabColors.js";
 import { FONT_13PX, FONT_BOLD_13PX, PANEL_CORNER_RADIUS } from "../OpticsLabConstants.js";
@@ -13,16 +13,22 @@ import type { OpticsLabPreferencesModel } from "../preferences/OpticsLabPreferen
 import { getPresetDescriptors, type PresetId } from "./PresetScenes.js";
 import type { PresetsModel } from "./PresetsModel.js";
 
+export type PresetsScreenViewOptions = RayTracingCommonViewOptions;
+
 export class PresetsScreenView extends RayTracingCommonView {
   public constructor(
     model: PresetsModel,
     opticsLabPreferences: OpticsLabPreferencesModel,
-    options?: ScreenViewOptions,
+    providedOptions?: PresetsScreenViewOptions,
     carouselComponents?: ComponentKey[],
   ) {
+    const options = optionize<PresetsScreenViewOptions, EmptySelfOptions, RayTracingCommonViewOptions>()(
+      {},
+      providedOptions,
+    );
     super(model, opticsLabPreferences, options, carouselComponents);
 
-    const viewTandem = options?.tandem;
+    const viewTandem = options.tandem;
 
     const presetStrings = StringManager.getInstance().getPresetsStrings();
     const descriptors = getPresetDescriptors();
@@ -53,8 +59,7 @@ export class PresetsScreenView extends RayTracingCommonView {
       xMargin: 10,
       yMargin: 6,
       accessibleName: presetStrings.choosePresetStringProperty,
-      ...(viewTandem && { tandem: viewTandem.createTandem("presetComboBox") }),
-      ...(!viewTandem && { tandem: Tandem.OPTIONAL }),
+      tandem: viewTandem ? viewTandem.createTandem("presetComboBox") : Tandem.OPTIONAL,
     });
     this.addChild(comboBox);
 

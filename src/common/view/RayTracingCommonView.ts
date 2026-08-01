@@ -1,6 +1,7 @@
 import { type BooleanProperty, Property } from "scenerystack/axon";
 import { Vector2 } from "scenerystack/dot";
 import { Shape } from "scenerystack/kite";
+import { type EmptySelfOptions, optionize } from "scenerystack/phet-core";
 import { ModelViewTransform2 } from "scenerystack/phetcommon";
 import { Node, Path } from "scenerystack/scenery";
 import { GridNode, InfoButton, ResetAllButton } from "scenerystack/scenery-phet";
@@ -167,6 +168,8 @@ function tryHandleUndoRedo(event: KeyboardEvent, isTextInput: boolean): boolean 
   return false;
 }
 
+export type RayTracingCommonViewOptions = ScreenViewOptions;
+
 export class RayTracingCommonView extends ScreenView {
   private readonly model: RayTracingCommonModel;
   private readonly rayPropagationView: RayPropagationView;
@@ -230,12 +233,18 @@ export class RayTracingCommonView extends ScreenView {
   public constructor(
     model: RayTracingCommonModel,
     _opticsLabPreferences: OpticsLabPreferencesModel,
-    options?: ScreenViewOptions,
+    providedOptions?: RayTracingCommonViewOptions,
     carouselComponents?: ComponentKey[],
   ) {
     // Register the accessible screen summary (Interactive Description), shared by
     // all OpticsLab screens via this common view.
-    super({ ...options, screenSummaryContent: new OpticsLabScreenSummaryContent() });
+    const options = optionize<RayTracingCommonViewOptions, EmptySelfOptions, ScreenViewOptions>()(
+      {
+        screenSummaryContent: new OpticsLabScreenSummaryContent(),
+      },
+      providedOptions,
+    );
+    super(options);
 
     this.model = model;
     sceneHistoryRegistry.setHistory(model.scene.history);
