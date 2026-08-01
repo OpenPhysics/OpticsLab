@@ -6,22 +6,14 @@
  * and runs the ray tracer on demand. Instrumented with PhET-iO tandems.
  */
 
-import { BooleanProperty, Emitter, Multilink, NumberProperty, Property } from "scenerystack/axon";
+import { BooleanProperty, Emitter, Multilink, NumberProperty, Property, StringUnionProperty } from "scenerystack/axon";
 import { Range } from "scenerystack/dot";
 import { BatchPropertyCommand, CommandHistory, EditPropertyCommand, type SceneCommand } from "./CommandHistory.js";
 
 export type { SceneCommand } from "./CommandHistory.js";
 export { BatchPropertyCommand, EditPropertyCommand } from "./CommandHistory.js";
 
-import {
-  IOType,
-  NullableIO,
-  ObjectLiteralIO,
-  PhetioGroup,
-  PhetioObject,
-  StringUnionIO,
-  Tandem,
-} from "scenerystack/tandem";
+import { IOType, NullableIO, ObjectLiteralIO, PhetioGroup, PhetioObject, Tandem } from "scenerystack/tandem";
 import {
   DEFAULT_MAX_RAY_DEPTH,
   DEFAULT_RAY_DENSITY,
@@ -65,8 +57,6 @@ const DEFAULT_SETTINGS: SceneSettings = {
   observer: null,
 };
 
-const ViewModeIO = StringUnionIO(VIEW_MODE_VALUES);
-
 const ObserverCoreIO = new IOType<Observer, { x: number; y: number; radius: number }>("ObserverIO", {
   supertype: ObjectLiteralIO,
   documentation: "Observer position (model metres, y up) and collection radius.",
@@ -86,7 +76,7 @@ const NullableObserverIO = NullableIO(ObserverCoreIO);
 // ── Scene ────────────────────────────────────────────────────────────────────
 
 export class OpticsScene extends PhetioObject {
-  public readonly modeProperty: Property<ViewMode>;
+  public readonly modeProperty: StringUnionProperty<ViewMode>;
   public readonly rayDensityProperty: NumberProperty;
   public readonly maxRayDepthProperty: NumberProperty;
   public readonly showGridProperty: BooleanProperty;
@@ -131,11 +121,11 @@ export class OpticsScene extends PhetioObject {
     const partialReflectionTandem = tandem.createTandem("partialReflectionEnabledProperty");
     const lensRimBlockingTandem = tandem.createTandem("lensRimBlockingProperty");
 
-    this.modeProperty = new Property<ViewMode>(merged.mode, {
+    this.modeProperty = new StringUnionProperty<ViewMode>(merged.mode, {
+      validValues: VIEW_MODE_VALUES,
       tandem: modeTandem,
       phetioFeatured: true,
       phetioDocumentation: "Visualization mode for rays (rays, extended, images, or observer).",
-      phetioValueType: ViewModeIO,
     });
 
     this.rayDensityProperty = new NumberProperty(merged.rayDensity, {
