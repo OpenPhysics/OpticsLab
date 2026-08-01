@@ -17,7 +17,7 @@
  *   3→4: line (bottom aperture edge)
  *   4→5→0: arc (left surface)
  *
- * This class follows optics-template/src/core/sceneObjs/glass/SphericalLens.js
+ * This class follows ../Baseline/OpticsLab/ray-optics/src/core/sceneObjs/glass/SphericalLens.js
  * for the path construction and parameter extraction logic.
  *
  * Sign convention for radii:

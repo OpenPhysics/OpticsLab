@@ -4,7 +4,7 @@
  * Abstract base class for all glass elements. Provides common refractive
  * properties (refIndex, cauchyB, partialReflect) and the core refraction
  * computation (Snell's law vector form + Fresnel equations). Follows the
- * architecture of optics-template/src/core/sceneObjs/BaseGlass.js.
+ * architecture of ../Baseline/OpticsLab/ray-optics/src/core/sceneObjs/BaseGlass.js.
  */
 
 import { CAUCHY_WAVELENGTH_FACTOR, DEFAULT_CAUCHY_B, DEFAULT_REFRACTIVE_INDEX } from "../../../OpticsLabConstants.js";

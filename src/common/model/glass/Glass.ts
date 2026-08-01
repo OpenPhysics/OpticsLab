@@ -4,7 +4,7 @@
  * A glass element whose boundary is a closed path of line segments and/or
  * circular arcs. Rays crossing any edge are refracted by Snell's law.
  * Inside/outside determination uses the test-ray parity approach from
- * optics-template/src/core/sceneObjs/glass/Glass.js.
+ * ../Baseline/OpticsLab/ray-optics/src/core/sceneObjs/glass/Glass.js.
  *
  * Path format:
  *   path[i].arc === false (or undefined): regular vertex.

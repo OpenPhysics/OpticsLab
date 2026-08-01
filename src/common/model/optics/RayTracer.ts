@@ -366,7 +366,7 @@ export class RayTracer {
       return undefined;
     }
 
-    // Use proper line-circle intersection (matching the optics-template approach)
+    // Use proper line-circle intersection (matching the ../Baseline/OpticsLab/ray-optics approach)
     const hits = rayCircleIntersections(ray.origin, ray.direction, {
       center: observer.position,
       radius: observer.radius,
@@ -418,7 +418,7 @@ export class RayTracer {
    * Observer mode post-processing: for consecutive observed rays from the same source,
    * find where their line extensions intersect to locate the apparent image.
    * Creates observer-ray segments from the observer entry point back to the apparent image.
-   * Adapted from the optics-template Simulator.js observer logic.
+   * Adapted from the ../Baseline/OpticsLab/ray-optics Simulator.js observer logic.
    */
   private processObserverImages(allSegments: TracedSegment[], allImages: DetectedImage[]): void {
     const bySource = this.groupObservedSegmentsBySource(allSegments);
@@ -555,7 +555,7 @@ export class RayTracer {
   }
 
   /**
-   * Consecutive-ray-pair image detection, adapted from the optics-template reference.
+   * Consecutive-ray-pair image detection, adapted from the ../Baseline/OpticsLab/ray-optics reference.
    *
    * For each adjacent pair of rays (i-1, i) in emission order, compute their line
    * intersection. An image is detected when two *successive* such intersections are

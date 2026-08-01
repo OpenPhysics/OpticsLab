@@ -6,7 +6,7 @@
  * stroke alpha reflects the physical brightness (brighter ray = more opaque).
  *
  * At high ray density the overlapping semi-transparent strokes naturally
- * produce a continuous filled appearance (same approach as optics-template).
+ * produce a continuous filled appearance (same approach as ../Baseline/OpticsLab/ray-optics).
  *
  * Segment endpoints arrive in MODEL coordinates (metres, y-up). The
  * ModelViewTransform2 is used to convert them to canvas pixel coordinates

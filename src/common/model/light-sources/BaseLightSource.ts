@@ -71,7 +71,7 @@ export abstract class BaseLightSource extends BaseElement {
    * scaled down inversely so that total luminosity is conserved: doubling the
    * number of rays halves each ray's intensity.  This lets overlapping
    * semi-transparent rays produce a continuous filled appearance at high
-   * density (same approach as optics-template).
+   * density (same approach as ../Baseline/OpticsLab/ray-optics).
    *
    * @param rayDensity  The scene ray-density value used for this emission call.
    */
