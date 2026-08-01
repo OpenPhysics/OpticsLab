@@ -11,7 +11,7 @@ Geometric optics simulation: ray tracing through lenses, mirrors, beam splitters
 - **Presets** — curated demonstration scenes
 - **Diffraction** — gratings-focused carousel
 
-**Ignore `optics-template/`** — reference material, not part of the shipped sim.
+**Upstream reference:** `../Baseline/OpticsLab/ray-optics` (OpenPhysics/Baseline); not part of the shipped sim.
 
 Physics for educators: `doc/model.md`. Architecture: `doc/implementation-notes.md`.
 
