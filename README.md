@@ -1,5 +1,7 @@
 # OpticsLab
 
+[![CI](https://github.com/OpenPhysics/OpticsLab/actions/workflows/ci.yml/badge.svg)](https://github.com/OpenPhysics/OpticsLab/actions/workflows/ci.yml)
+
 A web-based geometric optics simulation built with [SceneryStack](https://scenerystack.org/). Build scenes
 with light sources, mirrors, lenses, beam splitters, and refracting interfaces.
 
