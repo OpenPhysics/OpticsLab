@@ -54,6 +54,7 @@ it can be made live by deriving an element-count Property.
 ## Compliance carve-outs
 
 - **Hardcoded colors:** wavelength-derived `rgba(...)` / canvas strokes in ray/SVG exporters and light-source views — physically tinted optics rendering, not UI theme tokens.
+- **PWA icons:** `npm run icons` prefixes `generate-svg-icon` so `public/icons/icon.svg` is regenerated from `scripts/opticsToSVG.ts` before the fleet-standard rasterizer.
 
 
 ### `package.json` overrides
