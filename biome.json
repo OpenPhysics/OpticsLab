@@ -152,17 +152,7 @@
     "lineWidth": 120
   },
   "files": {
-    "includes": [
-      "**/*.ts",
-      "**/*.js",
-      "**/*.json",
-      "**/*.html",
-      "!dist",
-      "!node_modules",
-      "!.claude",
-      "!audit.json",
-      "!optics-template"
-    ]
+    "includes": ["**/*.ts", "**/*.js", "**/*.json", "**/*.html", "!dist", "!node_modules", "!.claude", "!audit.json"]
   },
   "overrides": [
     {

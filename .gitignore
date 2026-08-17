@@ -41,7 +41,9 @@ Thumbs.db
 # Claude Code - local settings excluded, hooks tracked
 .claude/settings.local.json
 
-# Optics simulation template
+# Stray local clone of the ray-optics upstream. Canonical copy is
+# ../Baseline/OpticsLab/ray-optics (see OpenPhysics/Baseline).
+optics-template/
 
 # CI / local npm audit artifact (must not be linted)
 audit.json
