@@ -34,12 +34,12 @@
     "watch": "tsc --watch",
     "test": "vitest run",
     "test:watch": "vitest",
-    "clean": "rm -rf dist",
+    "test:fuzz": "playwright test --project=chromium",
+    "test:fuzz:quick": "FUZZ_DURATION=10 playwright test --project=chromium",
     "generate-svg-icon": "tsx scripts/opticsToSVG.ts",
     "icons": "npm run generate-svg-icon && tsx scripts/generate-icons.ts",
-    "prepare": "git rev-parse --is-inside-work-tree >/dev/null 2>&1 && git config core.hooksPath .githooks || true",
-    "test:fuzz": "playwright test --project=chromium",
-    "test:fuzz:quick": "FUZZ_DURATION=10 playwright test --project=chromium"
+    "clean": "rm -rf dist",
+    "prepare": "git rev-parse --is-inside-work-tree >/dev/null 2>&1 && git config core.hooksPath .githooks || true"
   },
   "dependencies": {
     "scenerystack": "^3.0.0"
