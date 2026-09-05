@@ -91,6 +91,8 @@ export class OpticsScene extends PhetioObject {
   public readonly opticalElementsGroup: PhetioGroup<OpticalElementPhetioObject, [Record<string, unknown>]>;
 
   public readonly sceneChangedEmitter: Emitter;
+  /** Fires when PhET-iO state replaces an element object inside its stable group wrapper. */
+  public readonly elementReplacedEmitter = new Emitter<[OpticalElement, OpticalElement]>();
 
   /** Undo/redo history for add/remove element commands. */
   public readonly history: CommandHistory = new CommandHistory();
@@ -216,11 +218,24 @@ export class OpticsScene extends PhetioObject {
       },
     );
 
-    this.opticalElementsGroup.elementCreatedEmitter.addListener(() => {
+    this.opticalElementsGroup.elementCreatedEmitter.addListener((wrapper) => {
+      this._elementById.set(wrapper.opticalElement.id, wrapper.opticalElement);
+      wrapper.opticalElementReplacedEmitter.addListener((previousElement, replacementElement) => {
+        if (this._elementById.get(previousElement.id) === previousElement) {
+          this._elementById.delete(previousElement.id);
+        }
+        this._elementById.set(replacementElement.id, replacementElement);
+        this.invalidate();
+        this.sceneChangedEmitter.emit();
+        this.elementReplacedEmitter.emit(previousElement, replacementElement);
+      });
       this.invalidate();
       this.sceneChangedEmitter.emit();
     });
-    this.opticalElementsGroup.elementDisposedEmitter.addListener(() => {
+    this.opticalElementsGroup.elementDisposedEmitter.addListener((wrapper) => {
+      if (this._elementById.get(wrapper.opticalElement.id) === wrapper.opticalElement) {
+        this._elementById.delete(wrapper.opticalElement.id);
+      }
       this.invalidate();
       this.sceneChangedEmitter.emit();
     });
@@ -239,6 +254,9 @@ export class OpticsScene extends PhetioObject {
    */
   public addElement(element: OpticalElement, recordHistory = true): void {
     const doAdd = (): void => {
+      if (this._elementById.has(element.id)) {
+        throw new Error(`Cannot add duplicate optical element id "${element.id}"`);
+      }
       this.opticalElementsGroup.createNextElement({
         ...element.serialize(),
         id: element.id,

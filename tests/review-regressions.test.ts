@@ -31,14 +31,19 @@ import { PlanoConvexLens } from "../src/common/model/glass/PlanoConvexLens.js";
 import { SphericalLens } from "../src/common/model/glass/SphericalLens.js";
 import { BeamSource } from "../src/common/model/light-sources/BeamSource.js";
 import { DivergentBeam } from "../src/common/model/light-sources/DivergentBeam.js";
+import { PointSourceElement } from "../src/common/model/light-sources/PointSourceElement.js";
 import { SingleRaySource } from "../src/common/model/light-sources/SingleRaySource.js";
 import { AperturedParabolicMirror } from "../src/common/model/mirrors/AperturedParabolicMirror.js";
 import { ArcMirror } from "../src/common/model/mirrors/ArcMirror.js";
+import { CommandHistory } from "../src/common/model/optics/CommandHistory.js";
 import { deserializeElement } from "../src/common/model/optics/elementSerialization.js";
 import { arcBounds, point } from "../src/common/model/optics/Geometry.js";
+import OpticalElementPhetioObject from "../src/common/model/optics/OpticalElementPhetioObject.js";
 import { OpticsScene } from "../src/common/model/optics/OpticsScene.js";
 import type { OpticalElement, SimulationRay } from "../src/common/model/optics/OpticsTypes.js";
 import { RayTracer } from "../src/common/model/optics/RayTracer.js";
+import { sceneHistoryRegistry } from "../src/common/view/SceneHistoryRegistry.js";
+import { trackRegistry } from "../src/common/view/TrackRegistry.js";
 
 // ── Helpers ──────────────────────────────────────────────────────────────────
 
@@ -346,5 +351,109 @@ describe("tracer culls unphysical rays at the boundary", () => {
       return;
     }
     expect(Number.isFinite(seg.p2.x) && Number.isFinite(seg.p2.y)).toBe(true);
+  });
+});
+
+describe("multi-screen interaction registries", () => {
+  it("does not let an inactive screen clear the active screen history", () => {
+    const inactiveHistory = new CommandHistory();
+    const activeHistory = new CommandHistory();
+    sceneHistoryRegistry.setHistory(inactiveHistory);
+    sceneHistoryRegistry.setHistory(activeHistory);
+
+    sceneHistoryRegistry.clearHistory(inactiveHistory);
+    expect(sceneHistoryRegistry.history).toBe(activeHistory);
+
+    sceneHistoryRegistry.clearHistory(activeHistory);
+    expect(sceneHistoryRegistry.history).toBeNull();
+  });
+
+  it("returns tracks only from the active screen scope", () => {
+    trackRegistry.register(
+      "track-a",
+      "scope-a",
+      () => point(0, 0),
+      () => point(1, 0),
+    );
+    trackRegistry.register(
+      "track-b",
+      "scope-b",
+      () => point(0, 2),
+      () => point(1, 2),
+    );
+    try {
+      trackRegistry.setActiveScope("scope-a");
+      expect(trackRegistry.getAllTracks().map((track) => track.id)).toEqual(["track-a"]);
+
+      trackRegistry.setActiveScope("scope-b");
+      expect(trackRegistry.getAllTracks().map((track) => track.id)).toEqual(["track-b"]);
+    } finally {
+      trackRegistry.unregister("track-a");
+      trackRegistry.unregister("track-b");
+      trackRegistry.clearActiveScope("scope-b");
+    }
+  });
+});
+
+describe("deserialized element identity", () => {
+  it("advances generated IDs beyond a restored sparse ID", () => {
+    const restored = deserializeElement({
+      type: "PointSource",
+      x: 0,
+      y: 0,
+      brightness: 1,
+      wavelength: 550,
+      id: "element-9000000",
+    });
+    const next = new PointSourceElement(point(1, 1), 1, 550);
+
+    expect(restored?.id).toBe("element-9000000");
+    expect(Number(next.id.replace("element-", ""))).toBeGreaterThan(9_000_000);
+  });
+
+  it("rejects duplicate IDs instead of corrupting the scene lookup map", () => {
+    const scene = new OpticsScene(Tandem.OPT_OUT);
+    const first = new PointSourceElement(point(0, 0), 1, 550);
+    const second = new PointSourceElement(point(1, 1), 1, 550);
+    second.reassignIdForDeserialization(first.id);
+    scene.addElement(first, false);
+
+    expect(() => scene.addElement(second, false)).toThrow(/duplicate optical element id/);
+    expect(scene.getElement(first.id)).toBe(first);
+  });
+});
+
+describe("PhET-iO element replacement synchronization", () => {
+  it("updates scene lookup, invalidates tracing, and emits the replacement", () => {
+    const scene = new OpticsScene(Tandem.OPT_OUT);
+    const original = new PointSourceElement(point(0, 0), 1, 550);
+    scene.addElement(original, false);
+    const wrapper = scene.opticalElementsGroup.getArray()[0];
+    expect(wrapper).toBeDefined();
+    if (!wrapper) {
+      return;
+    }
+
+    const cachedResult = scene.simulate();
+    let emittedReplacement: OpticalElement | null = null;
+    scene.elementReplacedEmitter.addListener((_previous, replacement) => {
+      emittedReplacement = replacement;
+    });
+
+    OpticalElementPhetioObject.opticalElementInstanceIO.applyState(wrapper, {
+      type: "PointSource",
+      x: 3,
+      y: 4,
+      brightness: 0.75,
+      wavelength: 600,
+      id: original.id,
+    });
+
+    expect(wrapper.opticalElement).not.toBe(original);
+    expect(scene.getElement(original.id)).toBe(wrapper.opticalElement);
+    expect(emittedReplacement).toBe(wrapper.opticalElement);
+    const updatedResult = scene.simulate();
+    expect(updatedResult).not.toBe(cachedResult);
+    expect(updatedResult.rays[0]?.origin).toEqual(point(3, 4));
   });
 });

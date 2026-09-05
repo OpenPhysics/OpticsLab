@@ -609,6 +609,7 @@ describe("Memory leak regression", () => {
     const trackId = el.id;
 
     const view = createOpticalElementView(el, mvt, Tandem.OPT_OUT, viewOptions);
+    trackRegistry.setActiveScope(viewOptions.scopeId);
 
     // Immediately after construction the track must appear in the registry.
     const registeredBefore = trackRegistry.getAllTracks().some((t) => t.id === trackId);
@@ -620,6 +621,7 @@ describe("Memory leak regression", () => {
     // After disposal the entry must be gone.
     const registeredAfter = trackRegistry.getAllTracks().some((t) => t.id === trackId);
     expect(registeredAfter).toBe(false);
+    trackRegistry.clearActiveScope(viewOptions.scopeId);
   });
 
   // ── Multiple sequential scenes do not cross-retain each other's elements ──

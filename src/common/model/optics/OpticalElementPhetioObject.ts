@@ -2,6 +2,7 @@
  * PhET-iO instrumented wrapper for one {@link OpticalElement} in a {@link PhetioGroup}.
  */
 
+import { Emitter } from "scenerystack/axon";
 import type { Tandem } from "scenerystack/tandem";
 import { IOType, ObjectLiteralIO, PhetioObject } from "scenerystack/tandem";
 import OpticsLabNamespace from "../../../OpticsLabNamespace.js";
@@ -12,6 +13,8 @@ type ElementStateRecord = Record<string, unknown>;
 
 export default class OpticalElementPhetioObject extends PhetioObject {
   public opticalElement: OpticalElement;
+  /** Fires when PhET-iO state replaces the wrapped model object. */
+  public readonly opticalElementReplacedEmitter = new Emitter<[OpticalElement, OpticalElement]>();
 
   public constructor(tandem: Tandem, stateOrLive: ElementStateRecord) {
     const live = stateOrLive[LIVE_ELEMENT_STATE_KEY] as OpticalElement | undefined;
@@ -37,6 +40,7 @@ export default class OpticalElementPhetioObject extends PhetioObject {
 
   public override dispose(): void {
     this.opticalElement.dispose();
+    this.opticalElementReplacedEmitter.dispose();
     super.dispose();
   }
 
@@ -50,12 +54,14 @@ export default class OpticalElementPhetioObject extends PhetioObject {
       toStateObject: (obj) => ({ ...obj.opticalElement.serialize(), id: obj.opticalElement.id }),
       stateObjectToCreateElementArguments: (state: ElementStateRecord) => [state],
       applyState: (obj, state) => {
-        obj.opticalElement.dispose();
         const el = deserializeElement(state);
         if (!el) {
           throw new Error("OpticalElementPhetioObject.applyState: invalid element state");
         }
+        const previousElement = obj.opticalElement;
         obj.opticalElement = el;
+        obj.opticalElementReplacedEmitter.emit(previousElement, el);
+        previousElement.dispose();
       },
     },
   );

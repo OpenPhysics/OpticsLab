@@ -32,6 +32,7 @@ import { RayPropagationView } from "./RayPropagationView.js";
 import { sceneHistoryRegistry } from "./SceneHistoryRegistry.js";
 import { downloadSceneSVG } from "./SceneSVGExporter.js";
 import { ToolsPanel } from "./ToolsPanel.js";
+import { trackRegistry } from "./TrackRegistry.js";
 import { ViewOptionsModel } from "./ViewOptionsModel.js";
 import { viewSnapState } from "./ViewSnapState.js";
 
@@ -247,11 +248,19 @@ export class RayTracingCommonView extends ScreenView {
     super(options);
 
     this.model = model;
-    sceneHistoryRegistry.setHistory(model.scene.history);
     const tandem = options?.tandem;
     const uiStrings = StringManager.getInstance().getUIStrings();
 
     this.viewOptions = new ViewOptionsModel(tandem?.createTandem("viewOptions"));
+    this.visibleProperty.link((visible) => {
+      if (visible) {
+        sceneHistoryRegistry.setHistory(model.scene.history);
+        trackRegistry.setActiveScope(this.viewOptions.scopeId);
+      } else {
+        sceneHistoryRegistry.clearHistory(model.scene.history);
+        trackRegistry.clearActiveScope(this.viewOptions.scopeId);
+      }
+    });
 
     // ── Model-View Transform ────────────────────────────────────────────────
     // Maps model origin (0, 0) to the centre of the visible play area.
@@ -509,6 +518,33 @@ export class RayTracingCommonView extends ScreenView {
       }
     });
 
+    // PhET-iO can replace the model object inside an existing group wrapper.
+    // Rebuild the corresponding view so editing, rendering, and lookup all
+    // continue to reference the same replacement object.
+    model.scene.elementReplacedEmitter.addListener((previousElement, replacementElement) => {
+      if (this.selectedElementProperty.value === previousElement) {
+        this.selectedElementProperty.value = null;
+      }
+      const previousView = this.elementViewMap.get(previousElement.id);
+      if (previousView) {
+        this.elementViewMap.delete(previousElement.id);
+        previousView.dispose();
+      }
+      const previousTandem = this.elementTandemMap.get(previousElement.id);
+      if (previousTandem) {
+        RayTracingCommonView._cleanupElementTandem(previousTandem);
+        this.elementTandemMap.delete(previousElement.id);
+      }
+
+      const tn = replacementElement.id.replace(/-(\d+)$/, (_, n: string) => n);
+      const et = tandem?.createTandem(tn) ?? Tandem.OPTIONAL;
+      const replacementView = createOpticalElementView(replacementElement, modelViewTransform, et, this.viewOptions);
+      if (replacementView) {
+        this.elementTandemMap.set(replacementElement.id, et);
+        this._setupView(replacementElement, replacementView);
+      }
+    });
+
     // ── Tools Panel ───────────────────────────────────────────────────────────
     // ToolsPanel owns the measuring tape, protractor, all toggle checkboxes,
     // the ray-density control, and the accordion box.  It pins the accordion to
@@ -627,6 +663,9 @@ export class RayTracingCommonView extends ScreenView {
     // clicking the trash icon), but only when no text input has focus.
     // Stored as a class field so it can be removed in dispose().
     this._handleKeyDown = (event: KeyboardEvent): void => {
+      if (!this.isVisible()) {
+        return;
+      }
       const target = event.target as HTMLElement;
       const isTextInput = target.tagName === "INPUT" || target.tagName === "TEXTAREA" || target.isContentEditable;
 
@@ -700,6 +739,8 @@ export class RayTracingCommonView extends ScreenView {
 
   public override dispose(): void {
     window.removeEventListener("keydown", this._handleKeyDown);
+    sceneHistoryRegistry.clearHistory(this.model.scene.history);
+    trackRegistry.clearActiveScope(this.viewOptions.scopeId);
     super.dispose();
     this.viewOptions.dispose();
   }

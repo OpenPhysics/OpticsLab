@@ -6,7 +6,8 @@
  * threading the reference through every call site.
  *
  * Lifecycle:
- *   RayTracingCommonView calls setHistory(model.scene.history) during construction.
+ *   A visible RayTracingCommonView registers its model.scene.history and
+ *   conditionally clears it when that screen becomes inactive.
  *   Drag and slider helpers call sceneHistoryRegistry.history to get the
  *   CommandHistory instance (null-safe: no-op when history is not set).
  *
@@ -19,9 +20,16 @@ import type { CommandHistory } from "../model/optics/CommandHistory.js";
 class SceneHistoryRegistryImpl {
   private _history: CommandHistory | null = null;
 
-  /** Called once by RayTracingCommonView during construction. */
+  /** Set the history for the currently visible screen. */
   public setHistory(history: CommandHistory | null): void {
     this._history = history;
+  }
+
+  /** Clear a screen's history only if it is still the active registration. */
+  public clearHistory(history: CommandHistory): void {
+    if (this._history === history) {
+      this._history = null;
+    }
   }
 
   /** Returns the active CommandHistory, or null when not wired up. */

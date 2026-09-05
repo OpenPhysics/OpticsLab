@@ -22,7 +22,11 @@ import { RAY_STUB_LENGTH_MAX_PX, RAY_STUB_LENGTH_MIN_PX } from "../../OpticsLabC
 import OpticsLabNamespace from "../../OpticsLabNamespace.js";
 import opticsLabQueryParameters from "../../preferences/opticsLabQueryParameters.js";
 
+let nextViewScopeId = 1;
+
 export class ViewOptionsModel {
+  /** Identifies the owning screen for process-wide interaction registries. */
+  public readonly scopeId = `view-scope-${nextViewScopeId++}`;
   public readonly handlesVisibleProperty: BooleanProperty;
   public readonly focalMarkersVisibleProperty: BooleanProperty;
   public readonly rayArrowsVisibleProperty: BooleanProperty;
