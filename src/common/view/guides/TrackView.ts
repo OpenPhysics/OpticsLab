@@ -112,6 +112,7 @@ export class TrackView extends BaseOpticalElementView {
     // Register with the track registry for snap logic.
     trackRegistry.register(
       track.id,
+      viewOptions?.scopeId ?? "unscoped",
       () => track.p1,
       () => track.p2,
     );

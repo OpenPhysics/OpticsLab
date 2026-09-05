@@ -56,6 +56,13 @@ export abstract class BaseElement implements OpticalElement {
    */
   public reassignIdForDeserialization(id: string): void {
     this._id = id;
+    const match = /^element-(\d+)$/.exec(id);
+    if (match) {
+      const restoredSequence = Number(match[1]);
+      if (Number.isSafeInteger(restoredSequence)) {
+        nextElementId = Math.max(nextElementId, restoredSequence + 1);
+      }
+    }
   }
 
   /**
